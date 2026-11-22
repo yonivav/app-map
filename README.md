@@ -41,8 +41,6 @@ format that most coding agents now read. Install it once, then ask your agent:
 *"Build an app map of this repo"*. It finds the modules, reads them, writes the pages, indexes
 the code and checks every page. You open `docs/app-map/index.html`.
 
-**Any agent** — Codex, Gemini CLI, GitHub Copilot, Cursor, Claude Code:
-
 ```bash
 git clone https://github.com/yonivav/app-map ~/.app-map
 cd your-app && ~/.app-map/install.sh          # into this repo (commit it to share with your team)
@@ -55,17 +53,10 @@ cd your-app && ~/.app-map/install.sh          # into this repo (commit it to sha
 | Gemini CLI | `.agents/skills/app-map` |
 | GitHub Copilot (CLI, VS Code, JetBrains, cloud agent) | `.agents/skills/app-map` |
 | Cursor | `.cursor/skills/app-map`, plus a `.cursor/rules/app-map.mdc` pointer |
-| Claude Code | `.claude/skills/app-map`, or the plugin below |
+| Claude Code | `.claude/skills/app-map` (or, inside Claude Code: `/plugin marketplace add yonivav/app-map`) |
 | Anything else | point it at `.agents/skills/app-map/SKILL.md` (e.g. from `AGENTS.md`) |
 
 `--link` symlinks instead of copying, so `git -C ~/.app-map pull` updates every repo.
-
-**Claude Code plugin:**
-
-```
-/plugin marketplace add yonivav/app-map
-/plugin install app-map@app-map
-```
 
 **Before you publish a map:** the built site includes excerpts of your source code (that's what
 the popups show). Keep a private app's map private — commit it to the app's own repo, don't host
