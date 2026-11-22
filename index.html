@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>App Map</title>
+<meta name="description" content="Turn a mobile app repo into a clickable App map: UML per module, every box opens its real code, widgets show how they look in the app. An Agent Skill for Claude Code, Cursor, Codex, Gemini CLI and Copilot.">
+<meta property="og:title" content="App Map — your app's architecture, clickable down to the code">
+<meta property="og:description" content="UML per module where every class, method and arrow opens its real source, and widgets show how they look in the running app. Works with Claude Code, Cursor, Codex, Gemini CLI and Copilot.">
+<meta property="og:image" content="https://yonivav.github.io/app-map/docs/social.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:url" content="https://yonivav.github.io/app-map/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yonivav.github.io/app-map/docs/social.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+  :root {
+    --bg: #f6f4fb; --surface: #ffffff; --ink: #1c1a29; --muted: #5d5a70; --line: #dcd6ec;
+    --accent: #36169d; --accent-soft: #ede8f6;
+    --font-display: "Fraunces", Georgia, serif; --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd; --line: #34304a;
+      --accent: #b9a6ff; --accent-soft: #2a2440; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd; --line: #34304a;
+    --accent: #b9a6ff; --accent-soft: #2a2440; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.55;
+    padding: 48px max(16px, env(safe-area-inset-left, 0px)) 80px; }
+  main { max-width: 1120px; margin: 0 auto; display: grid; gap: 56px; }
+  .hero { display: grid; gap: 40px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: center; }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(48px, 7vw, 84px); line-height: 1; margin: 0 0 18px; }
+  .lead { font-size: clamp(19px, 2.2vw, 23px); color: var(--muted); margin: 0 0 28px; max-width: 34ch; }
+  .lead b { color: var(--accent); font-weight: 500; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .button { display: inline-block; padding: 11px 18px; border-radius: 10px; font-weight: 600; text-decoration: none;
+    border: 1px solid var(--accent); color: var(--accent); }
+  .button.primary { background: var(--accent); color: var(--bg); }
+  .button:hover, .button:focus-visible { filter: brightness(1.1); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .agents { font-family: var(--font-mono); font-size: 14px; color: var(--muted); margin-top: 22px; }
+  .stack { position: relative; padding-bottom: 28%; }
+  .stack img { width: 100%; border-radius: 14px; border: 1px solid var(--line); display: block;
+    box-shadow: 0 24px 48px rgba(10, 8, 20, 0.28); }
+  .stack img + img { position: absolute; width: 82%; right: -4%; bottom: 0; }
+  .features { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 0; padding: 0; list-style: none; }
+  .features li { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .features h2 { font-size: 17px; margin: 0 0 6px; }
+  .features p { margin: 0; color: var(--muted); font-size: 15px; }
+  .install { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; display: grid; gap: 10px; }
+  .install h2 { margin: 0; font-size: 18px; }
+  .install p { margin: 0; color: var(--muted); font-size: 15px; }
+  pre { margin: 0; padding: 14px 16px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+    overflow-x: auto; font-family: var(--font-mono); font-size: 14px; line-height: 1.6; }
+  footer { color: var(--muted); font-size: 14px; }
+  footer a, .install a { color: var(--accent); }
+</style>
+<main>
+  <section class="hero">
+    <div>
+      <h1>App Map</h1>
+      <p class="lead">Your app's architecture as UML you can <b>click down to the code</b> — and back.</p>
+      <div class="actions">
+        <a class="button primary" href="examples/wonderous/">Open the live example</a>
+        <a class="button" href="https://github.com/yonivav/app-map">GitHub</a>
+      </div>
+      <p class="agents">An Agent Skill for Claude Code · Cursor · Codex · Gemini CLI · Copilot</p>
+    </div>
+    <div class="stack">
+      <img src="docs/overview.jpg" alt="The Wonderous App Map overview: one card per module with a screenshot">
+      <img src="docs/popup.jpg" alt="A widget's popup: its crop from the running app above its exact source code">
+    </div>
+  </section>
+
+  <ul class="features">
+    <li><h2>Grounded in the code</h2><p>Diagrams start from what each class really builds and calls, and every name is checked against the source.</p></li>
+    <li><h2>Both directions</h2><p>Any box, member or arrow opens its code. Any class or file finds every diagram that draws it.</p></li>
+    <li><h2>Shows the real UI</h2><p>A simulator run crops each page and widget, so a popup shows how it looks next to how it's written.</p></li>
+    <li><h2>Stays current</h2><p>Markdown in your repo, rebuilt in milliseconds. <code>app-map changes</code> and a CI check keep it in step with the code.</p></li>
+  </ul>
+
+  <section class="install" aria-labelledby="install">
+    <h2 id="install">Install</h2>
+    <p>For any agent that reads Agent Skills:</p>
+    <pre>git clone https://github.com/yonivav/app-map ~/.app-map
+cd your-app && ~/.app-map/install.sh</pre>
+    <p>Or as a Claude Code plugin: <code>/plugin marketplace add yonivav/app-map</code>. Then ask your agent to <i>build an app map of this repo</i>. <a href="https://github.com/yonivav/app-map#readme">Full guide →</a></p>
+  </section>
+
+  <footer>The example maps <a href="https://github.com/gskinnerTeam/flutter-wonderous-app">Wonderous</a> by gskinner (MIT). App Map is MIT · Yoni Vizel.</footer>
+</main>
+</html>

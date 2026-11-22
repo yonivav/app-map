@@ -1,5 +1,7 @@
 # App Map
 
+[![Check](https://github.com/yonivav/app-map/actions/workflows/check.yml/badge.svg)](https://github.com/yonivav/app-map/actions/workflows/check.yml) · [Site](https://yonivav.github.io/app-map/) · [Live example](https://yonivav.github.io/app-map/examples/wonderous/)
+
 **Turn a mobile app's repo into a map you can click through.** An agent skill for Claude Code,
 Cursor, Codex, Gemini CLI and Copilot that reads your app and writes one page per module: what it
 does, UML class maps, screen composition, state machines and the main-flow sequence. Click any
@@ -64,6 +66,10 @@ cd your-app && ~/.app-map/install.sh          # into this repo (commit it to sha
 /plugin marketplace add yonivav/app-map
 /plugin install app-map@app-map
 ```
+
+**Before you publish a map:** the built site includes excerpts of your source code (that's what
+the popups show). Keep a private app's map private — commit it to the app's own repo, don't host
+it on public GitHub Pages.
 
 The skill's own tools also work on their own:
 

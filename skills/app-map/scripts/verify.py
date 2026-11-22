@@ -29,7 +29,7 @@ SEQUENCE_KEYWORDS = {
 CHROME_PATHS = [
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     '/Applications/Chromium.app/Contents/MacOS/Chromium',
-    'google-chrome', 'chromium', 'chromium-browser',
+    'google-chrome', 'google-chrome-stable', 'chromium', 'chromium-browser', 'chrome',
 ]
 
 
@@ -124,6 +124,8 @@ def render_errors(browser, page):
     with tempfile.TemporaryDirectory() as profile:
         result = subprocess.run(
             [browser, '--headless=new', '--disable-gpu', f'--user-data-dir={profile}',
+             # CI containers can't use Chrome's sandbox.
+             *(['--no-sandbox'] if os.environ.get('CI') else []),
              '--virtual-time-budget=20000', '--dump-dom', 'file://' + os.path.abspath(page)],
             capture_output=True, text=True, timeout=120)
     # The render script holds the error template itself; only rendered markup counts.
