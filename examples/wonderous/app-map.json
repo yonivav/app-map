@@ -1,0 +1,6 @@
+{
+  "repo": "wonderous-src",
+  "sourceUrl": "https://github.com/gskinnerTeam/flutter-wonderous-app/blob/30ccc36a276223ebbb85dbb290d6ff2facf001ed",
+  "external": ["User", "GoRouter", "GetIt", "MaterialApp", "CupertinoPage", "CustomTransitionPage", "PageView", "PageController", "TabController", "ScrollController", "GridView", "CustomScrollView", "SliverAppBar", "DropCapText"],
+  "synced": {"commit": "30ccc36a276223ebbb85dbb290d6ff2facf001ed", "date": "2026-11-22"}
+}

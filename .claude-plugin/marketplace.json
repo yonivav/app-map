@@ -1,0 +1,14 @@
+{
+  "name": "app-map",
+  "owner": {
+    "name": "Yoni Vizel"
+  },
+  "plugins": [
+    {
+      "name": "app-map",
+      "source": "./",
+      "description": "A clickable App map of a mobile app repo: per-module UML pages where every class, member and arrow opens its real source, and pages and widgets show a crop from the running app."
+    }
+  ],
+  "description": "App Map: clickable, code-grounded architecture maps for mobile apps."
+}

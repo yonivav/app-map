@@ -1,0 +1,426 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Editorial Module</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one reading column of diagram plates, each with a short caption and a legend strip. */
+  :root {
+    --bg: #f6f4fb;
+    --surface: #ffffff;
+    --ink: #1c1a29;
+    --muted: #5d5a70;
+    --line: #dcd6ec;
+    --accent: #36169d;
+    --accent-soft: #ede8f6;
+    --upd: #7a4d00;
+    --upd-soft: #ffe2a8;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+      --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+      --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+    --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+    --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+  }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font-body);
+    font-size: 15px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 32px 64px;
+  }
+  /* Wide: diagrams use the screen; paragraphs stay at a readable measure (.cap, 70ch). */
+  main { max-width: 1880px; margin: 0 auto; display: grid; gap: 28px; }
+  header .sub, .find input { max-width: 70ch; }
+  header { display: grid; gap: 6px; }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 4vw, 40px); margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); margin: 0; }
+  .sub code, .cap code { font-family: var(--font-mono); font-size: 0.9em; color: var(--accent); }
+  section { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; min-width: 0; }
+  h2 { margin: 0; font-size: 18px; font-weight: 600; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  h2 span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+  .cap { margin: 0; color: var(--muted); max-width: 70ch; }
+  .diagram { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-height: 120px; }
+  .diagram .out { display: flex; justify-content: center; width: max-content; min-width: 100%; }
+  .diagram .out svg { max-width: none; height: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+  .legend li { display: flex; gap: 6px; align-items: center; }
+  .legend b { font-family: var(--font-mono); color: var(--ink); font-weight: 500; }
+  .tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--line); }
+  .tag.upd { background: var(--upd-soft); color: var(--upd); border-color: var(--upd); }
+  .updates { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+  .updates code { font-family: var(--font-mono); font-size: 0.9em; color: var(--ink); }
+  .err { color: var(--muted); font-family: var(--font-mono); font-size: 12px; white-space: pre-wrap; }
+  .shots { margin: 0; padding: 0 0 6px; list-style: none; display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; }
+  .shots li { flex: 0 0 180px; scroll-snap-align: start; display: grid; gap: 6px; align-content: start; }
+  .shots img { width: 180px; aspect-ratio: 375 / 812; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); display: block; }
+  .shots figcaption { color: var(--muted); font-size: 13px; }
+  .shots figure { margin: 0; display: grid; gap: 6px; }
+  .sub a { color: var(--accent); }
+</style>
+
+<main>
+  <header>
+    <h1>Editorial Module</h1>
+    <p class="sub"><a href="index.html">← App map</a> · The “information and history” tab: one long, scroll-choreographed article about the wonder.</p>
+  </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/editorial/01_story.jpg"><img src="shots/editorial/01_story.jpg" alt="The scroll-driven story begins" loading="lazy"></a><figcaption>The scroll-driven story begins</figcaption></figure></li>
+      <li><figure><a href="shots/editorial/02_pull_quote.jpg"><img src="shots/editorial/02_pull_quote.jpg" alt="Arched header, pull quote" loading="lazy"></a><figcaption>Arched header, pull quote</figcaption></figure></li>
+      <li><figure><a href="shots/editorial/03_history.jpg"><img src="shots/editorial/03_history.jpg" alt="Circular section title over the text" loading="lazy"></a><figcaption>Circular section title over the text</figcaption></figure></li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-what">
+    <h2 id="h-what">What it does</h2>
+    <p class="cap">A <code>CustomScrollView</code> slides over a fixed illustration of the wonder (150, 250 or 280 px tall for screens under 525, under 700 or taller) that shows through a transparent first sliver and fades out over the first 700 px of scroll. The title block — subtitle, hero title, region, a compass divider that folds away once you scroll, and the date range — drifts down at 30 % of the scroll speed and is gone after 500 px. A pinned app bar collapses from 1.2 × the screen width (width capped at 800 px) to 150 px (80 px on screens under 700 px tall); it shows photo 1 clipped to the wonder’s arch (pyramid, flat pyramid, arch, wide arch or spade), turning into a coloured band below 300 px, with a circular title that rolls 180° to “Facts and History”, “Construction” or “Location Info” as each section divider passes the middle of the screen. The article runs history → pull quote over photo 2 that collapses as it scrolls up → callout → construction → YouTube thumbnail (<code>…/video/</code>, full-screen player that unlocks landscape) → photos 3 and 4 sliding past each other → location → large quote → a Google map (zoom 3) that opens <code>…/maps/</code> as a full-screen hybrid map at zoom 17 (hidden on desktop). Paragraphs open with a drop cap in English only. Four slots can hold this wonder’s first hidden collectible; each wonder uses exactly one of them. Pulling 70 px past the top while dragging pops back to Home, and so does the north-arrow button, which hides once you scroll.</p>
+  </section>
+  <section aria-labelledby="h-classes">
+    <h2 id="h-classes">Logic <span>class diagram</span></h2>
+    <p class="cap">One ScrollController feeds a ValueNotifier of the scroll position; every animated piece listens to it and measures its own place on screen, and the section dividers write the section index back.</p>
+    <div class="diagram"><div class="out" data-src="src-classes"></div></div>
+    <ul class="legend">
+      <li><b>──▷</b> holds</li>
+      <li><b>◇──</b> list of</li>
+      <li><b>┄┄▷</b> uses</li>
+      <li><b>──▷|</b> extends</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-widgets">
+    <h2 id="h-widgets">Screen <span>widget composition</span></h2>
+    <p class="cap">Illustration underneath, then four slivers: a transparent gap, the title block, the pinned arch app bar and the article column.</p>
+    <div class="diagram"><div class="out" data-src="src-widgets"></div></div>
+    <ul class="legend">
+      <li><b>◆──</b> contains</li>
+      <li><b>──▷</b> reads model</li>
+      <li><b>┄┄▷</b> builds</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-state">
+    <h2 id="h-state">Which section the title shows <span>state machine</span></h2>
+    <p class="cap">The circular title is driven by the two section dividers crossing the middle of the screen; each change spins the circle 180° in 600 ms.</p>
+    <div class="diagram"><div class="out" data-src="src-state"></div></div>
+  </section>
+  <section aria-labelledby="h-sequence">
+    <h2 id="h-sequence">Scroll down the story <span>sequence</span></h2>
+    <p class="cap">A scroll tick becomes one notifier update; each listener measures itself and animates, and a divider crossing mid-screen flips the section.</p>
+    <div class="diagram"><div class="out" data-src="src-sequence"></div></div>
+  </section>
+  <section aria-labelledby="h-files">
+    <h2 id="h-files">Key files</h2>
+    <ul class="updates">
+      <li><code>lib/ui/screens/editorial/editorial_screen.dart</code> · scroll view and notifiers</li>
+      <li><code>lib/ui/screens/editorial/widgets/_scrolling_content.dart</code> · article order, video, map</li>
+      <li><code>lib/ui/screens/editorial/widgets/_app_bar.dart</code> · arch-clipped pinned header</li>
+      <li><code>lib/ui/screens/editorial/widgets/_circular_title_bar.dart</code> · rolling section title</li>
+      <li><code>lib/ui/screens/editorial/widgets/_section_divider.dart</code> · sets the section index</li>
+      <li><code>lib/ui/screens/editorial/widgets/_collapsing_pull_quote_image.dart</code> · collapsing pull quote</li>
+      <li><code>lib/ui/common/global_coords_builder.dart</code> · widget’s on-screen position</li>
+      <li><code>lib/ui/common/pop_router_on_over_scroll.dart</code> · pull past top to leave</li>
+      <li><code>lib/ui/common/modals/fullscreen_video_viewer.dart</code> · YouTube player</li>
+      <li><code>lib/ui/common/modals/fullscreen_maps_viewer.dart</code> · full-screen Google map</li>
+    </ul>
+  </section>
+</main>
+
+<script type="text/plain" id="src-classes">
+classDiagram
+  direction LR
+  class WonderEditorialScreen {
+    <<page>>
+    data · contentPadding
+  }
+  class _WonderEditorialScreenState {
+    <<page state>>
+    _scroller · _scrollPos · _sectionIndex
+    _handleScrollChanged()
+    _handleTrackpadScroll()
+    _handleBackPressed()
+  }
+  class WonderData {
+    <<data>>
+    historyInfo1 · historyInfo2
+    constructionInfo1 · constructionInfo2
+    locationInfo1 · locationInfo2
+    pullQuote1Top · pullQuote1Bottom · pullQuote2
+    callout1 · callout2
+    videoId · lat · lng
+  }
+  class PopRouterOnOverScroll {
+    <<widget>>
+    controller
+  }
+  class GlobalCoordsBuilder {
+    <<widget>>
+    builder
+  }
+  class _SectionDividerState {
+    <<widget state>>
+    _isActivated
+    _checkPosition()
+    _getSwitchPt()
+  }
+  class _AnimatedCircleWithTextState {
+    <<widget state>>
+    _anim · _prevIndex
+  }
+  class _CollapsingPullQuoteImage {
+    <<widget>>
+    scrollPos
+  }
+  class _SlidingImageStack {
+    <<widget>>
+    scrollPos
+  }
+  class ScalingListItem {
+    <<widget>>
+    scrollPos
+  }
+  class _YouTubeThumbnail {
+    <<widget>>
+    id · imageUrl
+  }
+  class _MapsThumbnailState {
+    <<widget state>>
+    _mapFuture
+    _loadGoogleMap()
+  }
+  class ScreenPaths {
+    <<data>>
+    video() · maps()
+  }
+  class FullscreenVideoViewer {
+    <<page>>
+    id
+  }
+  class AppLogic {
+    <<logic>>
+    supportedOrientationsOverride
+  }
+  WonderEditorialScreen --> _WonderEditorialScreenState : createState
+  WonderEditorialScreen --> WonderData : data
+  _WonderEditorialScreenState ..> PopRouterOnOverScroll : pops at 70 px overscroll
+  _CollapsingPullQuoteImage ..> _WonderEditorialScreenState : listens to _scrollPos
+  _SlidingImageStack ..> _WonderEditorialScreenState : listens to _scrollPos
+  ScalingListItem ..> _WonderEditorialScreenState : listens to _scrollPos
+  _SectionDividerState ..> _WonderEditorialScreenState : writes _sectionIndex
+  _AnimatedCircleWithTextState ..> _WonderEditorialScreenState : spins on _sectionIndex
+  _CollapsingPullQuoteImage ..> GlobalCoordsBuilder : y on screen
+  _SlidingImageStack ..> GlobalCoordsBuilder : y on screen
+  _SectionDividerState ..> GlobalCoordsBuilder : y on screen
+  _YouTubeThumbnail ..> ScreenPaths : video()
+  _MapsThumbnailState ..> ScreenPaths : maps()
+  _YouTubeThumbnail ..> FullscreenVideoViewer : opens
+  FullscreenVideoViewer ..> AppLogic : supportedOrientationsOverride
+</script>
+
+<script type="text/plain" id="src-widgets">
+classDiagram
+  direction LR
+  class WonderEditorialScreen { <<page>> }
+  class _TopIllustration { <<widget>> }
+  class WonderIllustration { <<bg + mg, shortMode>> }
+  class CustomScrollView { <<slivers>> }
+  class _TitleText { <<widget>> }
+  class WonderTitleText { <<hero title>> }
+  class CompassDivider {
+    <<widget>>
+    isExpanded
+  }
+  class SliverAppBar { <<pinned>> }
+  class _AppBar {
+    <<widget>>
+    _getArchType()
+  }
+  class ScalingListItem { <<widget>> }
+  class _CircularTitleBar {
+    <<widget>>
+    titles · icons · index
+  }
+  class _AnimatedCircleWithText { <<widget>> }
+  class _ScrollingContent { <<widget>> }
+  class DropCapText { <<paragraph>> }
+  class _CollapsingPullQuoteImage { <<widget>> }
+  class _Callout { <<widget>> }
+  class _SectionDivider { <<widget>> }
+  class _YouTubeThumbnail { <<widget>> }
+  class _SlidingImageStack { <<widget>> }
+  class _LargeSimpleQuote { <<widget>> }
+  class _MapsThumbnail { <<widget>> }
+  class HiddenCollectible { <<widget>> }
+  class BackBtn { <<north arrow>> }
+  WonderEditorialScreen *-- _TopIllustration
+  _TopIllustration *-- WonderIllustration
+  WonderEditorialScreen *-- CustomScrollView
+  WonderEditorialScreen *-- BackBtn
+  CustomScrollView *-- _TitleText
+  _TitleText *-- WonderTitleText
+  _TitleText *-- CompassDivider
+  CustomScrollView *-- SliverAppBar
+  SliverAppBar *-- _AppBar
+  _AppBar *-- ScalingListItem : arch-clipped photo 1
+  _AppBar *-- _CircularTitleBar
+  _CircularTitleBar *-- _AnimatedCircleWithText
+  CustomScrollView *-- _ScrollingContent
+  _ScrollingContent *-- DropCapText : x3
+  _ScrollingContent *-- _CollapsingPullQuoteImage
+  _ScrollingContent *-- _Callout : x2
+  _ScrollingContent *-- _SectionDivider : x2
+  _ScrollingContent *-- _YouTubeThumbnail
+  _ScrollingContent *-- _SlidingImageStack
+  _ScrollingContent *-- _LargeSimpleQuote
+  _ScrollingContent *-- _MapsThumbnail
+  _ScrollingContent *-- HiddenCollectible : 4 slots
+  _SectionDivider *-- CompassDivider
+</script>
+
+<script type="text/plain" id="src-state">
+stateDiagram-v2
+  state "Facts and History (0)" as History
+  state "Construction (1)" as Construction
+  state "Location Info (2)" as Location
+  [*] --> History
+  History --> Construction : divider 1 rises above mid-screen
+  Construction --> History : divider 1 drops below mid-screen
+  Construction --> Location : divider 2 rises above mid-screen
+  Location --> Construction : divider 2 drops below mid-screen
+</script>
+
+<script type="text/plain" id="src-sequence">
+sequenceDiagram
+  actor User
+  participant Scroll as ScrollController
+  participant Editorial as _WonderEditorialScreenState
+  participant TitleBlock as _TitleText
+  participant Quote as _CollapsingPullQuoteImage
+  participant Divider as _SectionDividerState
+  participant Circle as _AnimatedCircleWithTextState
+  participant Pop as _PopRouterOnOverScrollState
+  User->>Scroll: drag up
+  Scroll->>Editorial: _handleScrollChanged()
+  Editorial->>Editorial: _scrollPos = pixels
+  Editorial-->>TitleBlock: moves down 0.3 × pos, fades out by 500 px
+  Editorial-->>Quote: GlobalCoordsBuilder y → collapse amount, quote halves meet
+  Editorial-->>Divider: rebuild
+  Divider->>Divider: _checkPosition(), y above half the screen?
+  Divider->>Editorial: _sectionIndex = 1
+  Editorial-->>Circle: didUpdateWidget() → spin 180°, Construction
+  User->>Scroll: back at top, pull down 70 px
+  Scroll->>Pop: _handleScrollChanged()
+  Pop->>Pop: pointer still down → context.pop, back to Home
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="code/editorial.js"></script>
+<script>
+  (function () {
+    const css = () => getComputedStyle(document.documentElement);
+    const token = (name) => css().getPropertyValue(name).trim();
+    let run = 0;
+
+    // Mermaid sometimes puts an arrow's label on top of a box: move each such label up or
+    // down, a label's height at a time, to the nearest spot clear of every box.
+    function freeLabels(svg) {
+      const boxes = Array.from(svg.querySelectorAll('g.node')).map((node) => node.getBoundingClientRect());
+      const hits = (rect) => boxes.some((box) =>
+        rect.left < box.right && rect.right > box.left && rect.top < box.bottom && rect.bottom > box.top);
+      for (const label of svg.querySelectorAll('g.edgeLabel')) {
+        const rect = label.getBoundingClientRect();
+        if (!rect.width || !hits(rect)) continue;
+        const scale = (label.getScreenCTM() || { a: 1 }).a || 1;
+        for (const step of [-1, 1, -2, 2, -3, 3]) {
+          const dy = step * (rect.height + 4);
+          const moved = { left: rect.left, right: rect.right, top: rect.top + dy, bottom: rect.bottom + dy };
+          if (!hits(moved)) {
+            label.setAttribute('transform', (label.getAttribute('transform') || '') + ' translate(0,' + (dy / scale) + ')');
+            break;
+          }
+        }
+      }
+    }
+
+    async function renderAll() {
+      const pass = ++run;
+      const updatedStyle =
+        'fill:' + token('--upd-soft') + ',stroke:' + token('--upd') + ',color:' + token('--upd') + ',stroke-width:2px';
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: 'base',
+        fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+        themeVariables: {
+          edgeLabelBackground: token('--surface'),
+          background: token('--bg'),
+          primaryColor: token('--accent-soft'),
+          primaryTextColor: token('--ink'),
+          primaryBorderColor: token('--accent'),
+          secondaryColor: token('--surface'),
+          tertiaryColor: token('--surface'),
+          lineColor: token('--muted'),
+          textColor: token('--ink'),
+          noteBkgColor: token('--upd-soft'),
+          noteTextColor: token('--upd'),
+          noteBorderColor: token('--upd'),
+          actorBkg: token('--accent-soft'),
+          actorBorder: token('--accent'),
+          actorTextColor: token('--ink'),
+          signalColor: token('--ink'),
+          signalTextColor: token('--ink'),
+          labelBoxBkgColor: token('--surface'),
+          labelTextColor: token('--ink'),
+          loopTextColor: token('--ink'),
+          fontSize: '14px'
+        }
+      });
+      const outs = document.querySelectorAll('.diagram .out');
+      for (let index = 0; index < outs.length; index++) {
+        const out = outs[index];
+        const source = document.getElementById(out.dataset.src).textContent
+          .replace(/UPDATED/g, updatedStyle);
+        try {
+          const result = await mermaid.render('uml-' + pass + '-' + index, source);
+          if (pass !== run) return;
+          out.innerHTML = result.svg;
+          // Keep the diagram's own size: a wide one scrolls sideways instead of shrinking.
+          const svg = out.querySelector('svg');
+          const box = svg && svg.viewBox && svg.viewBox.baseVal;
+          // Arrow labels go on top: Mermaid draws them before the boxes, so a box that
+          // overlaps a label would hide it.
+          if (svg) svg.querySelectorAll('g.edgeLabels').forEach((labels) => labels.parentNode.appendChild(labels));
+          if (box && box.width) {
+            // Shrink a wide diagram to fit, but never below 85% of its size (text stays
+            // readable): past that it scrolls sideways instead, starting at its middle.
+            const room = out.parentElement.clientWidth - 24;
+            const width = box.width <= room ? box.width : Math.max(room, box.width * 0.85);
+            svg.style.width = Math.round(width) + 'px';
+            svg.style.maxWidth = 'none';
+            svg.removeAttribute('width');
+            const frame = out.parentElement;
+            frame.scrollLeft = (frame.scrollWidth - frame.clientWidth) / 2;
+          }
+          if (svg) freeLabels(svg);
+        } catch (error) {
+          out.innerHTML = '<p class="err">Diagram failed to render: ' + String(error && error.message || error) + '</p>';
+        }
+      }
+    }
+
+    renderAll();
+    try {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderAll);
+      new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    } catch (error) { /* theme changes then keep the first render */ }
+  })();
+</script>
+<script src="code-popup.js"></script>

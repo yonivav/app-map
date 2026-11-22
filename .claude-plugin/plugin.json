@@ -1,0 +1,17 @@
+{
+  "name": "app-map",
+  "version": "0.1.0",
+  "description": "Turns a mobile app repo into a clickable App map: per-module UML pages where every class, member and arrow opens its real source, and pages and widgets show a crop of themselves from the running app.",
+  "license": "MIT",
+  "keywords": [
+    "uml",
+    "architecture",
+    "documentation",
+    "flutter",
+    "mermaid",
+    "onboarding"
+  ],
+  "author": {
+    "name": "Yoni Vizel"
+  }
+}

@@ -1,0 +1,390 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Collection Module</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one reading column of diagram plates, each with a short caption and a legend strip. */
+  :root {
+    --bg: #f6f4fb;
+    --surface: #ffffff;
+    --ink: #1c1a29;
+    --muted: #5d5a70;
+    --line: #dcd6ec;
+    --accent: #36169d;
+    --accent-soft: #ede8f6;
+    --upd: #7a4d00;
+    --upd-soft: #ffe2a8;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+      --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+      --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+    --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+    --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+  }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font-body);
+    font-size: 15px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 32px 64px;
+  }
+  /* Wide: diagrams use the screen; paragraphs stay at a readable measure (.cap, 70ch). */
+  main { max-width: 1880px; margin: 0 auto; display: grid; gap: 28px; }
+  header .sub, .find input { max-width: 70ch; }
+  header { display: grid; gap: 6px; }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 4vw, 40px); margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); margin: 0; }
+  .sub code, .cap code { font-family: var(--font-mono); font-size: 0.9em; color: var(--accent); }
+  section { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; min-width: 0; }
+  h2 { margin: 0; font-size: 18px; font-weight: 600; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  h2 span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+  .cap { margin: 0; color: var(--muted); max-width: 70ch; }
+  .diagram { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-height: 120px; }
+  .diagram .out { display: flex; justify-content: center; width: max-content; min-width: 100%; }
+  .diagram .out svg { max-width: none; height: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+  .legend li { display: flex; gap: 6px; align-items: center; }
+  .legend b { font-family: var(--font-mono); color: var(--ink); font-weight: 500; }
+  .tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--line); }
+  .tag.upd { background: var(--upd-soft); color: var(--upd); border-color: var(--upd); }
+  .updates { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+  .updates code { font-family: var(--font-mono); font-size: 0.9em; color: var(--ink); }
+  .err { color: var(--muted); font-family: var(--font-mono); font-size: 12px; white-space: pre-wrap; }
+  .shots { margin: 0; padding: 0 0 6px; list-style: none; display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; }
+  .shots li { flex: 0 0 180px; scroll-snap-align: start; display: grid; gap: 6px; align-content: start; }
+  .shots img { width: 180px; aspect-ratio: 375 / 812; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); display: block; }
+  .shots figcaption { color: var(--muted); font-size: 13px; }
+  .shots figure { margin: 0; display: grid; gap: 6px; }
+  .sub a { color: var(--accent); }
+</style>
+
+<main>
+  <header>
+    <h1>Collection Module</h1>
+    <p class="sub"><a href="index.html">← App map</a> · A treasure hunt: 24 artifacts hidden around the wonders’ tabs, a celebration when you find one, and a collection to keep them in.</p>
+  </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/collection/01_collection.jpg"><img src="shots/collection/01_collection.jpg" alt="Collection, before any find" loading="lazy"></a><figcaption>Collection, before any find</figcaption></figure></li>
+      <li><figure><a href="shots/collection/02_scrolled.jpg"><img src="shots/collection/02_scrolled.jpg" alt="Three tiles per wonder, 24 in all" loading="lazy"></a><figcaption>Three tiles per wonder, 24 in all</figcaption></figure></li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-what">
+    <h2 id="h-what">What it does</h2>
+    <p class="cap"><code>collectiblesData</code> holds 24 collectibles, 3 per wonder, each a Met Museum object with an icon. A wonder’s first is hidden in its editorial, the second in a corner cell of its photo grid and the third at the end of its events list. The icon shimmers, shakes and pulses on a loop; tapping it opens “Artifact Discovered” as a fade dialog — the icon flies in as a hero and grows from 1.5× to 3×, at 1,050 ms the screen swaps to the artifact image, a ribbon, its title and culture, with particles — and 200 ms later the collectible becomes discovered, so the hidden icon folds away. Each state is saved in <code>collectibles.dat</code> (at most every 2 s). On iOS every change also updates the home-screen widget: the found count and the last find’s title, date (fetched through <code>ArtifactAPILogic</code>) and image as base64. “view in my collection” opens <code>…/collection?id=</code> scrolled to that wonder. The collection lists the 8 wonders (300 px cards, or 600 px side by side in landscape) with three tiles each: dark silhouettes for lost, an orange border and glow for newly discovered. An “N new items” bar jumps to the first new one, and the footer shows the share found and “count of 24” with a bar that fills in 1.5 s. Opening a found item goes to its artifact page and marks it explored 300 ms later. A reset button (with confirmation) exists only in debug builds.</p>
+  </section>
+  <section aria-labelledby="h-classes">
+    <h2 id="h-classes">Logic <span>class diagram</span></h2>
+    <p class="cap">CollectiblesLogic is the single source of truth: a ValueNotifier map of id → state that every hidden icon, the collection and the home-screen widget follow.</p>
+    <div class="diagram"><div class="out" data-src="src-classes"></div></div>
+    <ul class="legend">
+      <li><b>──▷</b> holds</li>
+      <li><b>◇──</b> list of</li>
+      <li><b>┄┄▷</b> uses</li>
+      <li><b>──▷|</b> extends</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-widgets">
+    <h2 id="h-widgets">Screen <span>widget composition</span></h2>
+    <p class="cap">The collection is a header, a “new items” bar, a list of one card per wonder with three tiles each, and a progress footer.</p>
+    <div class="diagram"><div class="out" data-src="src-widgets"></div></div>
+    <ul class="legend">
+      <li><b>◆──</b> contains</li>
+      <li><b>──▷</b> reads model</li>
+      <li><b>┄┄▷</b> builds</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-state">
+    <h2 id="h-state">A collectible’s life <span>state machine</span></h2>
+    <p class="cap">Stored per id in CollectiblesLogic.statesById and saved to collectibles.dat; only a debug reset goes backwards.</p>
+    <div class="diagram"><div class="out" data-src="src-state"></div></div>
+  </section>
+  <section aria-labelledby="h-sequence">
+    <h2 id="h-sequence">Find a hidden artifact and look at it <span>sequence</span></h2>
+    <p class="cap">The celebration and the state change run side by side; everything else reacts to the new state.</p>
+    <div class="diagram"><div class="out" data-src="src-sequence"></div></div>
+  </section>
+  <section aria-labelledby="h-files">
+    <h2 id="h-files">Key files</h2>
+    <ul class="updates">
+      <li><code>lib/logic/collectibles_logic.dart</code> · states, counts, widget data</li>
+      <li><code>lib/logic/data/collectible_data.dart</code> · 24 collectibles, states</li>
+      <li><code>lib/logic/native_widget_service.dart</code> · iOS home-screen widget</li>
+      <li><code>lib/ui/common/hidden_collectible.dart</code> · picks this wonder’s item</li>
+      <li><code>lib/ui/common/collectible_item.dart</code> · shimmering icon, tap</li>
+      <li><code>lib/ui/screens/collectible_found/</code> · discovery celebration</li>
+      <li><code>lib/ui/screens/collection/</code> · collection list and footer</li>
+    </ul>
+  </section>
+</main>
+
+<script type="text/plain" id="src-classes">
+classDiagram
+  direction LR
+  class CollectiblesLogic {
+    <<logic>>
+    all · statesById
+    discoveredCount · exploredCount
+    forWonder() · fromId()
+    isLost()
+    getFirstDiscoveredOrNull()
+    setState()
+    reset()
+    _updateCounts()
+    _updateNativeHomeWidgetData()
+  }
+  class CollectibleData {
+    <<data>>
+    title · artifactId · wonder · icon
+    imageUrl · imageUrlSmall · subtitle
+  }
+  class CollectibleState {
+    <<state>>
+    lost · discovered · explored
+  }
+  class ThrottledSaveLoadMixin {
+    <<mixin>>
+    scheduleSave()
+  }
+  class NativeWidgetService {
+    <<service>>
+    isSupported
+    save()
+    markDirty()
+  }
+  class ArtifactAPILogic {
+    <<logic>>
+    getArtifactByID()
+  }
+  class HiddenCollectible {
+    <<widget>>
+    index · matches
+  }
+  class CollectibleItem {
+    <<widget>>
+    collectible
+    _handleTap()
+  }
+  class CollectibleFoundScreen {
+    <<modal>>
+    collectible · imageProvider
+    _handleViewCollectionPressed()
+  }
+  class _CollectionScreenState {
+    <<page state>>
+    _scrollToTarget()
+    _handleReset()
+  }
+  class _CollectionListCard {
+    <<widget>>
+    _showDetails()
+  }
+  ThrottledSaveLoadMixin <|-- CollectiblesLogic
+  CollectiblesLogic o-- CollectibleData : all
+  CollectiblesLogic ..> CollectibleState : statesById values
+  CollectiblesLogic --> NativeWidgetService : _nativeWidget
+  CollectiblesLogic ..> ArtifactAPILogic : getArtifactByID()
+  HiddenCollectible ..> CollectiblesLogic : forWonder()
+  HiddenCollectible *-- CollectibleItem
+  CollectibleItem ..> CollectibleFoundScreen : opens
+  CollectibleItem ..> CollectiblesLogic : setState()
+  CollectibleFoundScreen ..> _CollectionScreenState : go collection?id
+  _CollectionScreenState ..> CollectiblesLogic : reset()
+  _CollectionListCard ..> CollectiblesLogic : setState()
+</script>
+
+<script type="text/plain" id="src-widgets">
+classDiagram
+  direction TB
+  class CollectionScreen {
+    <<page>>
+    fromId
+  }
+  class AppHeader { <<Collection>> }
+  class _NewlyDiscoveredItemsBtn {
+    <<widget>>
+    count
+  }
+  class _CollectionList {
+    <<widget>>
+    fromId · scrollKey
+  }
+  class _CollectionListCard {
+    <<widget>>
+    data · fromId
+  }
+  class _CollectibleImage {
+    <<widget>>
+    collectible · state · heroTag
+  }
+  class _CollectionFooter {
+    <<widget>>
+    count · total
+  }
+  class CollectibleFoundScreen { <<modal>> }
+  class _AnimatedRibbon { <<widget>> }
+  class _CelebrationParticles { <<widget>> }
+  class CollectibleData { <<data>> }
+  CollectionScreen *-- AppHeader
+  CollectionScreen *-- _NewlyDiscoveredItemsBtn
+  CollectionScreen *-- _CollectionList
+  _CollectionList *-- _CollectionListCard : 8 wonders
+  _CollectionListCard *-- _CollectibleImage : x3
+  _CollectibleImage --> CollectibleData
+  CollectionScreen *-- _CollectionFooter
+  CollectibleFoundScreen *-- _CelebrationParticles
+  CollectibleFoundScreen *-- _AnimatedRibbon
+</script>
+
+<script type="text/plain" id="src-state">
+stateDiagram-v2
+  state "lost (0)" as Lost
+  state "discovered (1)" as Discovered
+  state "explored (2)" as Explored
+  [*] --> Lost
+  Lost --> Discovered : tap the hidden icon, after 200 ms
+  Discovered --> Explored : open it from the collection, after 300 ms
+  Discovered --> Lost : debug reset
+  Explored --> Lost : debug reset
+</script>
+
+<script type="text/plain" id="src-sequence">
+sequenceDiagram
+  actor User
+  participant Item as CollectibleItem
+  participant App as AppLogic
+  participant Found as CollectibleFoundScreen
+  participant Logic as CollectiblesLogic
+  participant Widget as NativeWidgetService
+  participant Router as GoRouter
+  participant Collection as _CollectionScreenState
+  participant Card as _CollectionListCard
+  User->>Item: tap the shimmering icon → _handleTap()
+  Item->>App: showFullscreenDialogRoute()
+  App->>Found: hero icon grows, swaps to the reveal at 1,050 ms
+  Item->>Logic: setState() discovered, after 200 ms
+  Logic->>Logic: _updateCounts(), scheduleSave()
+  Logic->>Widget: save() count and last find, markDirty()
+  User->>Found: view in my collection → _handleViewCollectionPressed()
+  Found->>Router: pop, go …/collection?id=artifactId
+  Router->>Collection: _scrollToTarget(), that wonder’s card
+  User->>Card: tap the new tile → _showDetails()
+  Card->>Router: go …/artifact/id
+  Card->>Logic: setState() explored, after 300 ms
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="code/collection.js"></script>
+<script>
+  (function () {
+    const css = () => getComputedStyle(document.documentElement);
+    const token = (name) => css().getPropertyValue(name).trim();
+    let run = 0;
+
+    // Mermaid sometimes puts an arrow's label on top of a box: move each such label up or
+    // down, a label's height at a time, to the nearest spot clear of every box.
+    function freeLabels(svg) {
+      const boxes = Array.from(svg.querySelectorAll('g.node')).map((node) => node.getBoundingClientRect());
+      const hits = (rect) => boxes.some((box) =>
+        rect.left < box.right && rect.right > box.left && rect.top < box.bottom && rect.bottom > box.top);
+      for (const label of svg.querySelectorAll('g.edgeLabel')) {
+        const rect = label.getBoundingClientRect();
+        if (!rect.width || !hits(rect)) continue;
+        const scale = (label.getScreenCTM() || { a: 1 }).a || 1;
+        for (const step of [-1, 1, -2, 2, -3, 3]) {
+          const dy = step * (rect.height + 4);
+          const moved = { left: rect.left, right: rect.right, top: rect.top + dy, bottom: rect.bottom + dy };
+          if (!hits(moved)) {
+            label.setAttribute('transform', (label.getAttribute('transform') || '') + ' translate(0,' + (dy / scale) + ')');
+            break;
+          }
+        }
+      }
+    }
+
+    async function renderAll() {
+      const pass = ++run;
+      const updatedStyle =
+        'fill:' + token('--upd-soft') + ',stroke:' + token('--upd') + ',color:' + token('--upd') + ',stroke-width:2px';
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: 'base',
+        fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+        themeVariables: {
+          edgeLabelBackground: token('--surface'),
+          background: token('--bg'),
+          primaryColor: token('--accent-soft'),
+          primaryTextColor: token('--ink'),
+          primaryBorderColor: token('--accent'),
+          secondaryColor: token('--surface'),
+          tertiaryColor: token('--surface'),
+          lineColor: token('--muted'),
+          textColor: token('--ink'),
+          noteBkgColor: token('--upd-soft'),
+          noteTextColor: token('--upd'),
+          noteBorderColor: token('--upd'),
+          actorBkg: token('--accent-soft'),
+          actorBorder: token('--accent'),
+          actorTextColor: token('--ink'),
+          signalColor: token('--ink'),
+          signalTextColor: token('--ink'),
+          labelBoxBkgColor: token('--surface'),
+          labelTextColor: token('--ink'),
+          loopTextColor: token('--ink'),
+          fontSize: '14px'
+        }
+      });
+      const outs = document.querySelectorAll('.diagram .out');
+      for (let index = 0; index < outs.length; index++) {
+        const out = outs[index];
+        const source = document.getElementById(out.dataset.src).textContent
+          .replace(/UPDATED/g, updatedStyle);
+        try {
+          const result = await mermaid.render('uml-' + pass + '-' + index, source);
+          if (pass !== run) return;
+          out.innerHTML = result.svg;
+          // Keep the diagram's own size: a wide one scrolls sideways instead of shrinking.
+          const svg = out.querySelector('svg');
+          const box = svg && svg.viewBox && svg.viewBox.baseVal;
+          // Arrow labels go on top: Mermaid draws them before the boxes, so a box that
+          // overlaps a label would hide it.
+          if (svg) svg.querySelectorAll('g.edgeLabels').forEach((labels) => labels.parentNode.appendChild(labels));
+          if (box && box.width) {
+            // Shrink a wide diagram to fit, but never below 85% of its size (text stays
+            // readable): past that it scrolls sideways instead, starting at its middle.
+            const room = out.parentElement.clientWidth - 24;
+            const width = box.width <= room ? box.width : Math.max(room, box.width * 0.85);
+            svg.style.width = Math.round(width) + 'px';
+            svg.style.maxWidth = 'none';
+            svg.removeAttribute('width');
+            const frame = out.parentElement;
+            frame.scrollLeft = (frame.scrollWidth - frame.clientWidth) / 2;
+          }
+          if (svg) freeLabels(svg);
+        } catch (error) {
+          out.innerHTML = '<p class="err">Diagram failed to render: ' + String(error && error.message || error) + '</p>';
+        }
+      }
+    }
+
+    renderAll();
+    try {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderAll);
+      new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    } catch (error) { /* theme changes then keep the first render */ }
+  })();
+</script>
+<script src="code-popup.js"></script>

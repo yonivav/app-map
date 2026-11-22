@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+skills/app-map/scripts/dart_declarations/.dart_tool/
+skills/app-map/scripts/dart_declarations/pubspec.lock
+.DS_Store
+examples/wonderous/wonderous-src
