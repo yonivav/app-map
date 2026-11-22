@@ -1,0 +1,43 @@
+name: Check
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  skill:
+    name: Skill (Agent Skills spec, installer)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Validate against the Agent Skills reference
+        run: |
+          pip install -q skills-ref
+          skills-ref validate skills/app-map
+      - name: Install into a fresh repo
+        run: |
+          git init -q /tmp/sample && ./install.sh --repo /tmp/sample
+          test -f /tmp/sample/.agents/skills/app-map/SKILL.md
+          test -f /tmp/sample/.claude/skills/app-map/SKILL.md
+          test -f /tmp/sample/.cursor/skills/app-map/SKILL.md
+          test -f /tmp/sample/.cursor/rules/app-map.mdc
+          /tmp/sample/.agents/skills/app-map/scripts/app-map | head -3
+
+  example:
+    name: Example (build + verify Wonderous on a clean machine)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: The app the example maps, at the commit it was synced to
+        run: |
+          commit=$(python3 -c "import json; print(json.load(open('examples/wonderous/app-map.json'))['synced']['commit'])")
+          git clone -q https://github.com/gskinnerTeam/flutter-wonderous-app examples/wonderous/wonderous-src
+          git -C examples/wonderous/wonderous-src checkout -q "$commit"
+      - uses: dart-lang/setup-dart@v1
+      - uses: browser-actions/setup-chrome@v1
+      - name: Build the map
+        run: skills/app-map/scripts/app-map build examples/wonderous
+      - name: Verify every page (renders in headless Chrome, every name exists)
+        run: skills/app-map/scripts/app-map verify examples/wonderous
+      - name: The committed pages are what the sources build
+        run: git diff --exit-code -- examples/wonderous ':!examples/wonderous/wonderous-src'
