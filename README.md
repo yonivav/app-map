@@ -1,12 +1,16 @@
-# App Map
+# App Map — an AI agent skill for mobile apps
 
 [![Check](https://github.com/yonivav/app-map/actions/workflows/check.yml/badge.svg)](https://github.com/yonivav/app-map/actions/workflows/check.yml) · [Site](https://yonivav.github.io/app-map/) · [Live example](https://yonivav.github.io/app-map/examples/wonderous/)
 
-**Turn a mobile app's repo into a map you can click through.** An agent skill for Claude Code,
-Cursor, Codex, Gemini CLI and Copilot that reads your app and writes one page per module: what it
-does, UML class maps, screen composition, state machines and the main-flow sequence. Click any
-class, method or arrow to see its **real source code**. Pages and widgets also show **how they
-look in the running app**.
+**Give your AI coding agent one skill, and it maps your mobile app.** Install App Map into
+Claude Code, Cursor, Codex, Gemini CLI or GitHub Copilot, then ask: *"build an app map of this
+repo"*. The agent reads your app and writes one page per module — what it does, UML class maps,
+screen composition, state machines and the main-flow sequence. Click any class, method or arrow
+to see its **real source code**; pages and widgets also show **how they look in the running app**.
+Ask again after code changes and it updates only what changed.
+
+**For mobile apps:** Flutter (Dart) today; native iOS (Swift, Objective-C) and Android (Kotlin,
+Java) are in progress.
 
 > **[▶ Open the live example: Wonderous](https://yonivav.github.io/app-map/examples/wonderous/)**
 > — the Flutter team's showcase app by gskinner (~31k lines, MIT), mapped by this skill.

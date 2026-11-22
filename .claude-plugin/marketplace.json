@@ -7,8 +7,8 @@
     {
       "name": "app-map",
       "source": "./",
-      "description": "A clickable App map of a mobile app repo: per-module UML pages where every class, member and arrow opens its real source, and pages and widgets show a crop from the running app."
+      "description": "An AI agent skill for mobile apps: your coding agent turns the app's repo into clickable UML where every class, member and arrow opens its real source, and widgets show how they look in the running app."
     }
   ],
-  "description": "App Map: clickable, code-grounded architecture maps for mobile apps."
+  "description": "App Map \u2014 an AI agent skill that maps mobile apps."
 }

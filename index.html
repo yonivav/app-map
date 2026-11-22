@@ -3,9 +3,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>App Map</title>
-<meta name="description" content="Turn a mobile app repo into a clickable App map: UML per module, every box opens its real code, widgets show how they look in the app. An Agent Skill for Claude Code, Cursor, Codex, Gemini CLI and Copilot.">
-<meta property="og:title" content="App Map — your app's architecture, clickable down to the code">
-<meta property="og:description" content="UML per module where every class, method and arrow opens its real source, and widgets show how they look in the running app. Works with Claude Code, Cursor, Codex, Gemini CLI and Copilot.">
+<meta name="description" content="An AI agent skill for mobile apps: your coding agent (Claude Code, Cursor, Codex, Gemini CLI, Copilot) turns your app's repo into clickable UML where every box opens its real code.">
+<meta property="og:title" content="App Map — an AI agent skill that maps your mobile app">
+<meta property="og:description" content="Ask your AI coding agent to map your mobile app: UML per module where every class, method and arrow opens its real source, and widgets show how they look in the running app. Claude Code, Cursor, Codex, Gemini CLI, Copilot.">
 <meta property="og:image" content="https://yonivav.github.io/app-map/docs/social.png">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
@@ -39,6 +39,8 @@
   .hero { display: grid; gap: 40px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: center; }
   @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
   h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(48px, 7vw, 84px); line-height: 1; margin: 0 0 18px; }
+  .eyebrow { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 14px; }
   .lead { font-size: clamp(19px, 2.2vw, 23px); color: var(--muted); margin: 0 0 28px; max-width: 34ch; }
   .lead b { color: var(--accent); font-weight: 500; }
   .actions { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -66,13 +68,14 @@
 <main>
   <section class="hero">
     <div>
+      <p class="eyebrow">AI agent skill · for mobile apps</p>
       <h1>App Map</h1>
-      <p class="lead">Your app's architecture as UML you can <b>click down to the code</b> — and back.</p>
+      <p class="lead">Ask your AI coding agent to map your app: UML you can <b>click down to the code</b> — and back.</p>
       <div class="actions">
         <a class="button primary" href="examples/wonderous/">Open the live example</a>
         <a class="button" href="https://github.com/yonivav/app-map">GitHub</a>
       </div>
-      <p class="agents">An Agent Skill for Claude Code · Cursor · Codex · Gemini CLI · Copilot</p>
+      <p class="agents">Works in Claude Code · Cursor · Codex · Gemini CLI · Copilot<br>Flutter today · native iOS &amp; Android in progress</p>
     </div>
     <div class="stack">
       <img src="docs/overview.jpg" alt="The Wonderous App Map overview: one card per module with a screenshot">

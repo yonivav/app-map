@@ -1,7 +1,7 @@
 {
   "name": "app-map",
   "version": "0.2.0",
-  "description": "Turns a mobile app repo into a clickable App map: per-module UML pages where every class, member and arrow opens its real source, and pages and widgets show a crop of themselves from the running app.",
+  "description": "An AI agent skill for mobile apps: your coding agent turns the app's repo into clickable UML where every class, member and arrow opens its real source, and widgets show how they look in the running app.",
   "license": "MIT",
   "keywords": [
     "uml",
