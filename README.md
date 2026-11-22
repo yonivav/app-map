@@ -1,9 +1,10 @@
 # App Map
 
-**Turn a mobile app's repo into a map you can click through.** A Claude Code skill that reads
-your app and writes one page per module: what it does, UML class maps, screen composition, state
-machines and the main-flow sequence. Click any class, method or arrow to see its **real source
-code**. Pages and widgets also show **how they look in the running app**.
+**Turn a mobile app's repo into a map you can click through.** An agent skill for Claude Code,
+Cursor, Codex, Gemini CLI and Copilot that reads your app and writes one page per module: what it
+does, UML class maps, screen composition, state machines and the main-flow sequence. Click any
+class, method or arrow to see its **real source code**. Pages and widgets also show **how they
+look in the running app**.
 
 > **[▶ Open the live example: Wonderous](https://yonivav.github.io/app-map/examples/wonderous/)**
 > — the Flutter team's showcase app by gskinner (~31k lines, MIT), mapped by this skill.
@@ -31,16 +32,38 @@ An App map is different:
 - **Stays current.** The map remembers the commit it describes; `app-map changes` lists, per
   module, what changed since. A GitHub Action builds and checks the map on every PR.
 
-## Use it
+## Use it — with any AI coding agent
+
+App Map is an [Agent Skill](https://agentskills.io): a `SKILL.md` with scripts, in the open
+format that most coding agents now read. Install it once, then ask your agent:
+*"Build an app map of this repo"*. It finds the modules, reads them, writes the pages, indexes
+the code and checks every page. You open `docs/app-map/index.html`.
+
+**Any agent** — Codex, Gemini CLI, GitHub Copilot, Cursor, Claude Code:
 
 ```bash
-# in Claude Code
+git clone https://github.com/yonivav/app-map ~/.app-map
+cd your-app && ~/.app-map/install.sh          # into this repo (commit it to share with your team)
+~/.app-map/install.sh --user                  # or once, for every repo on your machine
+```
+
+| Agent | Reads it from |
+|---|---|
+| OpenAI Codex | `.agents/skills/app-map` |
+| Gemini CLI | `.agents/skills/app-map` |
+| GitHub Copilot (CLI, VS Code, JetBrains, cloud agent) | `.agents/skills/app-map` |
+| Cursor | `.cursor/skills/app-map`, plus a `.cursor/rules/app-map.mdc` pointer |
+| Claude Code | `.claude/skills/app-map`, or the plugin below |
+| Anything else | point it at `.agents/skills/app-map/SKILL.md` (e.g. from `AGENTS.md`) |
+
+`--link` symlinks instead of copying, so `git -C ~/.app-map pull` updates every repo.
+
+**Claude Code plugin:**
+
+```
 /plugin marketplace add yonivav/app-map
 /plugin install app-map@app-map
 ```
-
-Then ask: *"Build an app map of this repo"*. Claude finds the modules, reads them, writes the
-pages, indexes the code and checks every page. You open `docs/app-map/index.html`.
 
 The skill's own tools also work on their own:
 

@@ -1,17 +1,15 @@
 ---
 name: app-map
 description: >
-  Builds and keeps current an "App map" of a mobile app repo: one Markdown page per module (what
-  it does, UML class map, screen composition, state machine, main-flow sequence, key files) plus
-  an overview, built into a clickable site. High level → code: every class, member, arrow and
-  sequence call opens its real source; pages and widgets show a crop from the running app.
-  Code → high level: popups say where else a class appears, the overview finds any class or
-  file, `app-map where` does it from the terminal. Phase 1: Flutter/Dart.
-when_to_use: >
-  Use when the user asks for an app map, architecture map, UML of the whole app, a visual tour of
-  a codebase or onboarding docs — and to update an existing map after code changes ("update the
-  app map", "is the map current", or before a PR that changes a mapped module).
-argument-hint: "[map dir, default docs/app-map]"
+  Builds and keeps current an "App map" of a mobile app repo: one Markdown page per module (UML
+  class map, screen composition, state machine, main-flow sequence, key files) plus an overview,
+  built into a clickable site where every class, member and arrow opens its real source and
+  widgets show a crop from the running app; from code back to the map, any class or file finds
+  the diagrams that draw it. Use when the user asks for an app map, architecture map, UML of the
+  whole app, a visual tour of a codebase or onboarding docs, and to update an existing map after
+  code changes ("update the app map", "is the map current"). Flutter/Dart today.
+license: MIT
+compatibility: Flutter/Dart repos. Needs Python 3.9+ and git; Dart SDK recommended; Chrome for verify; macOS + Xcode for screenshots.
 ---
 
 # App map
