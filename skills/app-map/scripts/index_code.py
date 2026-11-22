@@ -20,6 +20,7 @@ CACHE_VERSION = 1
 SKIP_DIRS = {
     '.git', '.dart_tool', 'build', 'Pods', 'DerivedData', 'node_modules', '.gradle', '.idea',
     '.build', 'dist', '.next', 'out', 'ephemeral', '.symlinks', 'test', 'tests', 'integration_test',
+    'test_driver',
     'androidTest', 'Tests', 'UITests', 'docs',
 }
 

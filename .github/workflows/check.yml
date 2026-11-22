@@ -13,7 +13,7 @@ jobs:
       - name: Validate against the Agent Skills reference
         run: |
           pip install -q skills-ref
-          skills-ref validate skills/app-map
+          agentskills validate skills/app-map
       - name: Install into a fresh repo
         run: |
           git init -q /tmp/sample && ./install.sh --repo /tmp/sample
