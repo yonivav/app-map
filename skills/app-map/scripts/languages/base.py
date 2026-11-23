@@ -1,4 +1,6 @@
 """Shared helpers for tree-sitter language modules."""
+import hashlib
+import inspect
 import os
 
 from tree_sitter_language_pack import get_parser
@@ -11,12 +13,13 @@ class Language:
         self._generated = generated_suffixes
         self._extract = extract
         self._parser = None
+        # The parser that produced the cached declarations; a change re-parses every file. The
+        # code that reads the tree counts too, so a fix here reaches files already cached.
+        code = b''.join(open(path, 'rb').read() for path in (__file__, inspect.getsourcefile(extract)))
+        self.backend = 'tree-sitter-' + hashlib.sha1(code).hexdigest()[:10]
 
     def is_generated(self, filename):
         return filename.endswith(self._generated)
-
-    # The parser that produced the cached declarations; a change re-parses every file.
-    backend = 'tree-sitter'
 
     def declarations(self, rel, source):
         if self._parser is None:

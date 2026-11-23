@@ -68,7 +68,12 @@ def _walk_members(source, body, decl):
         if child.type in LEADING:
             start = start or line(child)
             continue
-        if child.type in MEMBER_KINDS:
+        if child.type == 'companion_object':
+            # `companion object { fun create() }` is called as `Foo.create()`: Foo's members.
+            body = first(child, 'class_body')
+            if body is not None:
+                _walk_members(source, body, decl)
+        elif child.type in MEMBER_KINDS:
             name = _member_name(source, child)
             if name:
                 add_member(decl, name, start or line(child), end_line(child))
