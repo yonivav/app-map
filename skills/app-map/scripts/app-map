@@ -47,6 +47,13 @@ index() {
 }
 
 cmd="${1:-}"; shift || true
+# Folders of the repo the map leaves out ("exclude" in app-map.json), e.g. another platform's
+# target whose classes share names with this one's.
+map_arg="${1:-}"; [ "$cmd" = crop ] && map_arg="${2:-}"
+if [ -n "$map_arg" ] && [ -f "$map_arg/app-map.json" ]; then
+  APP_MAP_EXCLUDE="$("$py" -c "import json,sys; print('\n'.join(json.load(open(sys.argv[1])).get('exclude') or []))" "$map_arg/app-map.json")"
+  export APP_MAP_EXCLUDE
+fi
 case "$cmd" in
   build)
     map="${1:?usage: app-map build <map>}"

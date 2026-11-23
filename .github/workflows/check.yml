@@ -48,9 +48,6 @@ jobs:
           commit=$(python3 -c "import json; print(json.load(open('examples/${{ matrix.map }}/app-map.json'))['synced']['commit'])")
           git clone -q ${{ matrix.repo }} examples/${{ matrix.map }}/${{ matrix.src }}
           git -C examples/${{ matrix.map }}/${{ matrix.src }} checkout -q "$commit"
-      - name: This map is iOS-only; drop the Mac target's same-named classes (AppDelegate, ErrorHandler, …)
-        if: matrix.map == 'netnewswire'
-        run: rm -rf examples/netnewswire/netnewswire-src/Mac
       - uses: dart-lang/setup-dart@v1
         if: matrix.dart
       - uses: browser-actions/setup-chrome@v1

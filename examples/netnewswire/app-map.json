@@ -4,6 +4,9 @@
   "external": [
     "User"
   ],
+  "exclude": [
+    "Mac"
+  ],
   "synced": {
     "commit": "bf58016574c448d184ae3ece18f50105b16fe7f6",
     "date": "2026-11-23"

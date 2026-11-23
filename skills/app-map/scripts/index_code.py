@@ -25,9 +25,17 @@ SKIP_DIRS = {
 }
 
 
+def excluded_paths():
+    """Repo-relative folders the map leaves out: app-map.json's "exclude", passed by `app-map`."""
+    return {path.strip().strip('/') for path in os.environ.get('APP_MAP_EXCLUDE', '').splitlines() if path.strip()}
+
+
 def source_files(root):
+    excluded = excluded_paths()
     for directory, subdirs, files in os.walk(root):
-        subdirs[:] = [name for name in subdirs if name not in SKIP_DIRS and not name.startswith('.')]
+        relative = os.path.relpath(directory, root)
+        subdirs[:] = [name for name in subdirs if name not in SKIP_DIRS and not name.startswith('.')
+                      and os.path.normpath(os.path.join(relative, name)) not in excluded]
         for name in files:
             language = language_for(name)
             if language and not language.is_generated(name):

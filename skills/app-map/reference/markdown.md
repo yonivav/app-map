@@ -69,6 +69,8 @@ The overview's "Modules" cards (from each module's `card_*` and first screenshot
   "repo": "..",                       // the app's repo, relative to the map (default: git root)
   "sourceUrl": "https://github.com/o/r/blob/<commit>",   // popups link here instead of the editor
   "external": ["TextButton", "OS"],   // names drawn on purpose that aren't in the code
+  "exclude": ["Mac"],                 // repo folders to leave out, e.g. another platform's target
+  "exclude": ["Mac"],                 // repo folders to leave out, e.g. another platform's target
   "synced": {"commit": "…", "date": "…"}                 // written by `app-map sync`
 }
 ```

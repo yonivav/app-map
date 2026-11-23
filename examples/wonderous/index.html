@@ -113,7 +113,7 @@
       .find li a { color: var(--accent); font-size: 14px; }
       .find .file { color: var(--muted); font-size: 12px; font-family: var(--font-mono); }
     </style>
-    <input type="search" placeholder="e.g. WondersLogic or wonders_logic.dart" aria-label="Find a class or file in the map" autocomplete="off">
+    <input type="search" placeholder="A class or file name" aria-label="Find a class or file in the map" autocomplete="off">
     <ul></ul>
   </section>
   <section aria-labelledby="h-screens">
@@ -396,6 +396,10 @@ flowchart LR
     const input = section.querySelector('input');
     const list = section.querySelector('ul');
     const escape = (text) => String(text).replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+    // The example is this map's most-drawn class, so it names something in this app.
+    const [example] = Object.keys(data.classes).filter((name) => data.files[name])
+      .sort((a, b) => data.classes[b].length - data.classes[a].length || a.localeCompare(b));
+    if (example) input.placeholder = 'e.g. ' + example + ' or ' + data.files[example].split('/').pop();
     const title = (page) => page.replace(/-/g, ' ').replace(/^./, (c) => c.toUpperCase());
     input.addEventListener('input', () => {
       const query = input.value.trim().toLowerCase();
