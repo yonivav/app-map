@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>App Map Examples</title>
+<meta name="description" content="Live App Maps of three open-source mobile apps: Wonderous (Flutter), NetNewsWire (iOS) and Now in Android, each built by the App Map AI agent skill.">
+<meta property="og:title" content="App Map — live examples: Flutter, iOS and Android">
+<meta property="og:description" content="Clickable UML of Wonderous (Flutter), NetNewsWire (iOS) and Now in Android, where every box opens its real source.">
+<meta property="og:image" content="https://yonivav.github.io/app-map/docs/social.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+  :root {
+    --bg: #f6f4fb; --surface: #ffffff; --ink: #1c1a29; --muted: #5d5a70; --line: #dcd6ec;
+    --accent: #36169d; --accent-soft: #ede8f6;
+    --font-display: "Fraunces", Georgia, serif; --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd; --line: #34304a;
+      --accent: #b9a6ff; --accent-soft: #2a2440; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd; --line: #34304a;
+    --accent: #b9a6ff; --accent-soft: #2a2440; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.55;
+    padding: 48px max(16px, env(safe-area-inset-left, 0px)) 80px; }
+  main { max-width: 1120px; margin: 0 auto; display: grid; gap: 32px; }
+  .back { font-family: var(--font-mono); font-size: 14px; color: var(--accent); }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(40px, 6vw, 64px); line-height: 1.05; margin: 8px 0 12px; }
+  .lead { font-size: 19px; color: var(--muted); margin: 0; max-width: 60ch; }
+  .maps { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin: 0; padding: 0; list-style: none; }
+  .maps a { display: grid; grid-template-rows: auto 1fr; height: 100%; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 14px; overflow: hidden; color: inherit; text-decoration: none; transition: transform .15s, box-shadow .15s; }
+  .maps a:hover, .maps a:focus-visible { transform: translateY(-3px); box-shadow: 0 18px 36px rgba(10, 8, 20, 0.18); outline: none; }
+  .maps img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; display: block; border-bottom: 1px solid var(--line); }
+  .maps div { padding: 18px 20px 20px; display: grid; gap: 6px; align-content: start; }
+  .platform { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .maps h2 { margin: 0; font-size: 21px; }
+  .maps p { margin: 0; color: var(--muted); font-size: 15px; }
+  .open { margin-top: 6px; font-weight: 600; color: var(--accent); }
+  footer { color: var(--muted); font-size: 14px; }
+  footer a { color: var(--accent); }
+</style>
+<main>
+  <header>
+    <a class="back" href="../">← App Map</a>
+    <h1>Live examples</h1>
+    <p class="lead">Three open-source mobile apps, each mapped by the App Map skill. Click any class, method or arrow to open its real source.</p>
+  </header>
+  <ul class="maps">
+    <li><a href="wonderous/">
+      <img src="../docs/examples/wonderous.jpg" alt="The Wonderous map: one card per module, each with a screenshot">
+      <div><span class="platform">Flutter · Dart</span><h2>Wonderous</h2>
+        <p>The Flutter team's showcase app by gskinner (~31k lines, MIT). Popups also show each widget as it looks in the app.</p>
+        <span class="open">Open the map →</span></div></a></li>
+    <li><a href="netnewswire/">
+      <img src="../docs/examples/netnewswire.jpg" alt="The NetNewsWire map: how the user moves between the app's screens">
+      <div><span class="platform">iOS · Swift, Objective-C</span><h2>NetNewsWire</h2>
+        <p>Brent Simmons' RSS reader (~25k lines, MIT): a UIKit split view, a scene coordinator and a share extension.</p>
+        <span class="open">Open the map →</span></div></a></li>
+    <li><a href="now-in-android/">
+      <img src="../docs/examples/now-in-android.jpg" alt="The Now in Android map: how the user moves between the app's screens">
+      <div><span class="platform">Android · Kotlin</span><h2>Now in Android</h2>
+        <p>Google's Jetpack Compose showcase app (~29k lines, Apache-2.0): view-models, offline-first repositories and sync.</p>
+        <span class="open">Open the map →</span></div></a></li>
+  </ul>
+  <footer>None of these apps is affiliated with App Map. Source excerpts are © their authors under their licenses, linked from each map.</footer>
+</main>
+</html>
