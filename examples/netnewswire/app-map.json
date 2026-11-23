@@ -2,6 +2,9 @@
   "repo": "netnewswire-src",
   "sourceUrl": "https://github.com/Ranchero-Software/NetNewsWire/blob/bf58016574c448d184ae3ece18f50105b16fe7f6",
   "external": [
+    "Home",
+    "Safari",
+    "UIHostingController",
     "User"
   ],
   "exclude": [
