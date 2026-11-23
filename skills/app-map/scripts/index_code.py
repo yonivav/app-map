@@ -248,9 +248,12 @@ def load_declarations(root):
             for decl in decls:
                 by_name.setdefault(decl['name'], []).append(decl)
     cache.save()
-    # Prefer app code over a same-named declaration in a sample or tool folder.
+    # Prefer app code over a same-named declaration in a sample or tool folder. The file path
+    # itself breaks a tie deterministically — two files of the same length (e.g. a parallel
+    # iOS/Mac target's same-named class) would otherwise order however the filesystem happened
+    # to walk them, which differs by OS and made the committed output non-reproducible.
     for found in by_name.values():
-        found.sort(key=lambda decl: (decl['file'].count('example'), len(decl['file'])))
+        found.sort(key=lambda decl: (decl['file'].count('example'), len(decl['file']), decl['file']))
     merge_reopened(by_name)
     return by_name, parsed, len(cache.seen)
 
