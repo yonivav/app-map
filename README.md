@@ -101,6 +101,19 @@ cd your-app && ~/.app-map/install.sh          # into this repo (commit it to sha
 
 The map's Python environment sets itself up on first use (`~/.cache/app-map/venv`).
 
+### How long it takes, what it costs
+
+Measured with Claude Code (Claude Opus 5.5), each a fresh agent given only the prompt a user
+would type, on open-source apps it had never seen:
+
+| Task | App | Time | Cost |
+|---|---|---|---|
+| *"Build an app map of this repo"* | [Sunflower](https://github.com/android/sunflower) (Kotlin, ~4.8k lines) | 3.6 min | $1.26 |
+| *"Build an app map of this repo"*, with screenshots | [Now in Android](https://github.com/android/nowinandroid) (Kotlin, ~29k lines) | 12.8 min | $3.26 |
+| *"Update the app map"* after renaming a method | Sunflower | 50 s | $0.30 |
+
+Other agents and models will differ.
+
 ## Ask your agent
 
 Once installed, talk to your agent in plain words. For example:
