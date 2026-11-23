@@ -12,6 +12,9 @@ Two parts; `install.sh --auto --map <folder> [--agent <name>]` in the app-map re
    - [../assets/app-map-update.yml](../assets/app-map-update.yml): when `app-map changes
      --exit-code` says the map is behind, an AI agent updates it and commits it to the PR's
      branch. `AGENT` picks Claude Code, Codex, Gemini CLI, Cursor or Copilot; the file lists
-     each one's repository secret.
+     each one's repository secret. The agent's own exit code doesn't decide what's committed:
+     the map is rebuilt and verified first, and only a map `changes` calls current is pushed;
+     otherwise the job fails and says so. Gemini runs a Flash model by default (Google's free
+     tier); set the repository variable `GEMINI_MODEL` to pick another.
 
 Screenshots stay manual: they need a simulator.

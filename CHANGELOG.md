@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The pull-request bot commits only a map that passes its checks, whatever the agent's exit code;
+  Gemini runs a Flash model by default (`GEMINI_MODEL` to change it).
 - Leaner `SKILL.md` (the automation details load only when needed).
 - `app-map changes --exit-code`: exits 1 when the map is behind the code.
 - `app-map sync` remembers code that wasn't committed yet, so updating the map in the same change
