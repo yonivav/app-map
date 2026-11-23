@@ -42,10 +42,10 @@ dest="$module/src/androidTest/kotlin/appmap"
 mkdir -p "$dest"
 cp "$here/AppMapShots.kt" "$dest/AppMapShots.kt"
 cp "$scenario" "$dest/AppMapScenario.kt"
-exclude="$(git -C "$root" rev-parse --absolute-git-dir 2>/dev/null || true)"; [ -n "$exclude" ] && exclude="$exclude/info/exclude"
-if [ -n "$exclude" ]; then
-  relative="$(python3 -c 'import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))' "$dest" "$(git -C "$root" rev-parse --show-toplevel)")"
-  grep -qxF "/$relative/" "$exclude" 2>/dev/null || echo "/$relative/" >>"$exclude"
+if git -C "$module" rev-parse --git-dir >/dev/null 2>&1; then
+  exclude="$(git -C "$module" rev-parse --path-format=absolute --git-common-dir)/info/exclude"
+  entry="/$(git -C "$module" rev-parse --show-prefix)src/androidTest/kotlin/appmap/"
+  grep -qxF "$entry" "$exclude" 2>/dev/null || echo "$entry" >>"$exclude"
 fi
 
 # 2. An emulator of its own.
@@ -79,24 +79,23 @@ until [ "$("$adb" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = 
 
 # 3. Build, install, run.
 echo "building $gradle_path ($variant)…"
-(cd "$root" && ./gradlew -q "$gradle_path:assemble$variant")
-outputs="$module/build/outputs/apk"
-suffix="$(python3 -c 'import re,sys; print(re.sub(r"(?<!^)([A-Z])", r"-\1", sys.argv[1]).lower())' "$variant")"
-app_apk="$(find "$outputs" -name "*-$suffix.apk" -not -path '*androidTest*' | head -1)"
-aapt="$(ls "$sdk"/build-tools/*/aapt | sort -V | tail -1)"
-app_id="$("$aapt" dump badging "$app_apk" | sed -n "s/^package: name='\([^']*\)'.*/\1/p")"
 init=()
 if [ "$real_app" = yes ]; then
   cp "$here/AppMapRunner.kt" "$dest/AppMapRunner.kt"
   init=(-I "$here/app-map.init.gradle")
 fi
-(cd "$root" && ./gradlew -q ${init[@]+"${init[@]}"} "$gradle_path:assemble${variant}AndroidTest")
+(cd "$root" && ./gradlew -q ${init[@]+"${init[@]}"} "$gradle_path:assemble$variant" "$gradle_path:assemble${variant}AndroidTest")
+outputs="$module/build/outputs/apk"
+suffix="$(python3 -c 'import re,sys; print(re.sub(r"(?<!^)([A-Z])", r"-\1", sys.argv[1]).lower())' "$variant")"
+app_apk="$(find "$outputs" -name "*-$suffix.apk" -not -path '*androidTest*' | head -1)"
 test_apk="$(find "$outputs" -name "*-$suffix-androidTest.apk" | head -1)"
+aapt="$(ls "$sdk"/build-tools/*/aapt | sort -V | tail -1)"
+app_id="$("$aapt" dump badging "$app_apk" | sed -n "s/^package: name='\([^']*\)'.*/\1/p")"
 "$adb" install -r -t "$app_apk" >/dev/null
 "$adb" install -r -t "$test_apk" >/dev/null
 test_id="$("$aapt" dump badging "$test_apk" | sed -n "s/^package: name='\([^']*\)'.*/\1/p")"
 if [ "$real_app" = yes ]; then runner="$test_id/appmap.AppMapRunner"
-else runner="$("$adb" shell pm list instrumentation | tr -d '\r' | grep "^instrumentation:$test_id/" | grep -v appmap.AppMapRunner | sed 's/^instrumentation:\([^ ]*\) .*/\1/' | head -1)"; fi
+else runner="$("$adb" shell pm list instrumentation | tr -d '\r' | grep "^instrumentation:$test_id/" | sed 's/^instrumentation:\([^ ]*\) .*/\1/' | head -1)"; fi
 "$adb" shell pm clear "$app_id" >/dev/null
 echo "running the scenario on $serial ($app_id)…"
 "$adb" shell am instrument -w -e class appmap.AppMapScenario "$runner" >"$out.instrument.log" 2>&1 &

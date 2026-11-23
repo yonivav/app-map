@@ -11,6 +11,7 @@ the same `SHOT RECT` lines the Flutter adapter writes, for `app-map crop`: one p
 (or owning view controller, or hosted SwiftUI view) the map's diagrams draw.
 """
 import argparse
+import json
 import os
 import re
 import shutil
@@ -63,13 +64,15 @@ def map_classes(map_dir):
 
 
 def simulator():
-    listing = run('xcrun', 'simctl', 'list', 'devices').stdout
-    match = re.search(re.escape(SIMULATOR) + r' \(([0-9A-F-]{36})\)', listing)
-    if match:
-        udid = match.group(1)
-    else:
-        runtimes = re.findall(r'(com\.apple\.CoreSimulator\.SimRuntime\.iOS-[\d-]+)', run('xcrun', 'simctl', 'list', 'runtimes').stdout)
-        udid = run('xcrun', 'simctl', 'create', SIMULATOR, 'iPhone 17', runtimes[-1]).stdout.strip()
+    """This adapter's own simulator, created on the newest iOS runtime the first time."""
+    devices = json.loads(run('xcrun', 'simctl', 'list', 'devices', '-j').stdout)['devices']
+    udid = next((device['udid'] for group in devices.values() for device in group
+                 if device['name'] == SIMULATOR and device.get('isAvailable', True)), None)
+    if not udid:
+        runtimes = [runtime for runtime in json.loads(run('xcrun', 'simctl', 'list', 'runtimes', '-j').stdout)['runtimes']
+                    if runtime['platform'] == 'iOS' and runtime['isAvailable']]
+        newest = max(runtimes, key=lambda runtime: [int(part) for part in runtime['version'].split('.')])
+        udid = run('xcrun', 'simctl', 'create', SIMULATOR, 'iPhone 17', newest['identifier']).stdout.strip()
     run('xcrun', 'simctl', 'boot', udid)
     run('xcrun', 'simctl', 'bootstatus', udid, '-b')
     return udid
@@ -165,7 +168,7 @@ def main():
             shows = [item for item in (lines_in[1] if len(lines_in) > 1 else '').split(',') if item.strip()]
             pid = process_pid(udid, hint) if hint else app_pid(udid, args.bundle)
             views = dump_views(pid) if pid else []
-            hosted = swiftui_area(views)
+            hosted = swiftui_area(views) if shows else None
             for type_name in shows:
                 if hosted and type_name in classes:
                     lines.append(f'SHOT RECT {name} {type_name} {hosted}')

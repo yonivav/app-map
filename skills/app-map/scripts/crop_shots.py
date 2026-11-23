@@ -2,11 +2,12 @@
 
 Usage: python3 crop_shots.py <shots run dir> <out dir> [<map dir>]
 Reads the `SHOT RECT <shot> <Type> <l> <t> <w> <h> <hits>` lines a screenshot adapter logs to
-drive.log, picks the best view of each type (fully on screen first, then the largest) and
-saves it as <out dir>/<Type>.jpg at 2x. Rects are in the screen's logical units (points, dp):
+drive.log, picks the best view of each type (uncovered and fully on screen first, then clearly
+larger, then nearest the middle of the screen) and saves it as <out dir>/<Type>.jpg at 2x. Rects are in the screen's logical units (points, dp):
 `SHOT SCREEN <w> <h>` in the log gives the screen's size in them (default 375×812, the Flutter
 adapter's iPhone).
 """
+import json
 import math
 import os
 import re
@@ -51,9 +52,20 @@ for match in line.finditer(text):
     if name not in best or score > best[name][0]:
         best[name] = (score, shot, (left, top, right, bottom))
 
+# "noCrop" in the map's app-map.json: classes whose best shot still shows them wrong (a sliver,
+# a blank placeholder), kept out on every run.
+skip = set()
+if map_dir and os.path.exists(os.path.join(map_dir, 'app-map.json')):
+    skip = set(json.load(open(os.path.join(map_dir, 'app-map.json'))).get('noCrop') or [])
+for name in skip:
+    best.pop(name, None)
+
 os.makedirs(out_dir, exist_ok=True)
+images = {}  # each screenshot is opened once, however many crops come from it
 for name, (_, shot, (left, top, right, bottom)) in sorted(best.items()):
-    image = Image.open(os.path.join(run_dir, shot + '.png'))
+    if shot not in images:
+        images[shot] = Image.open(os.path.join(run_dir, shot + '.png'))
+    image = images[shot]
     scale = image.width / SCREEN_W
     box = (
         int(max(left - PAD, 0) * scale), int(max(top - PAD, 0) * scale),
@@ -62,7 +74,6 @@ for name, (_, shot, (left, top, right, bottom)) in sorted(best.items()):
     crop = image.crop(box).convert('RGB')
     size = (round(crop.width * OUT_SCALE / scale), round(crop.height * OUT_SCALE / scale))
     crop.resize(size, Image.LANCZOS).save(os.path.join(out_dir, name + '.jpg'), quality=72, optimize=True)
-    print(f'{name}: {shot} {int(right - left)}x{int(bottom - top)}pt')
 print(f'{len(best)} crops in {out_dir}')
 
 # Coverage: every page and widget the map draws should have a picture. List those without one,
@@ -76,7 +87,7 @@ if map_dir:
                 if stereotype.strip() in UI_STEREOTYPES:
                     drawn.add(type_name)
     have = {name[:-4] for name in os.listdir(out_dir) if name.endswith('.jpg')}
-    missing = sorted(drawn - have)
+    missing = sorted(drawn - have - skip)
     if missing:
         print(f'no picture yet for {len(missing)} page(s)/widget(s): {", ".join(missing)}')
         print('  add scenario steps that show them (or a snap with the screen named, for SwiftUI);')

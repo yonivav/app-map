@@ -45,22 +45,12 @@ final class AppMapShots {
 
     /// Taps the first element with this label or identifier (a button, a cell, a tab, text).
     func tap(_ label: String, timeout: TimeInterval = 15) throws {
-        let element = app.descendants(matching: .any).matching(
-            NSPredicate(format: "label == %@ OR identifier == %@", label, label)).firstMatch
-        guard find(element, timeout: timeout) else { throw Missing(label) }
-        if !element.isHittable { scrollTo(element) }
-        element.tap()
-        settle()
+        try tap(NSPredicate(format: "label == %@ OR identifier == %@", label, label), named: label, timeout: timeout)
     }
 
     /// Taps the first element whose label contains this text.
     func tapContaining(_ text: String, timeout: TimeInterval = 15) throws {
-        let element = app.descendants(matching: .any).matching(
-            NSPredicate(format: "label CONTAINS[c] %@", text)).firstMatch
-        guard find(element, timeout: timeout) else { throw Missing(text) }
-        if !element.isHittable { scrollTo(element) }
-        element.tap()
-        settle()
+        try tap(NSPredicate(format: "label CONTAINS[c] %@", text), named: text, timeout: timeout)
     }
 
     /// Taps a cell of the visible list, by position.
@@ -126,6 +116,14 @@ final class AppMapShots {
         let file = requests.appendingPathComponent("failures")
         let old = (try? String(contentsOf: file, encoding: .utf8)) ?? ""
         try? (old + line).write(to: file, atomically: true, encoding: .utf8)
+    }
+
+    private func tap(_ predicate: NSPredicate, named name: String, timeout: TimeInterval) throws {
+        let element = app.descendants(matching: .any).matching(predicate).firstMatch
+        guard find(element, timeout: timeout) else { throw Missing(name) }
+        if !element.isHittable { scrollTo(element) }
+        element.tap()
+        settle()
     }
 
     /// Waits for the element; if it isn't there, scrolls down to it (a lazy list only has the

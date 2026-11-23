@@ -63,5 +63,6 @@ step — fix that step and run again. Look at every `small/` image before using 
   and list them under `screenshots:` in the module's frontmatter (the first one is its overview card).
 - **Popup crops**: `scripts/app-map crop <out dir> <map>` crops each class from its best
   shot (nothing covering it, then the largest) into `<map>/shots/code/<Class>.jpg` and re-indexes.
-  Look through the crops: delete one that shows something wrong (a blank placeholder, a widget
-  under a dialog) and run `app-map build <map>` — a missing picture beats a wrong one.
+  Look through the crops: one that shows something wrong (a blank placeholder, a widget under a
+  dialog) goes in `noCrop` in app-map.json, so no run brings it back — a missing picture beats a
+  wrong one.

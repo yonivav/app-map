@@ -57,6 +57,7 @@ def key_files(map_dir, module):
 
 
 def changes(map_dir, root):
+    """Prints, per module, what changed since the sync; returns how many modules it listed."""
     config = load_config(map_dir)
     commit = (config.get('synced') or {}).get('commit')
     if not commit:
@@ -74,6 +75,7 @@ def changes(map_dir, root):
                 in_changed.setdefault(decl['file'], []).append(name)
     drawn_anywhere = set(where_drawn(module_pages(map_dir)))
     print(f'Synced at {commit[:10]}; {len(log)} commit(s) and {len(changed)} changed file(s) since.\n')
+    listed = 0
     for page in module_pages(map_dir):
         module = os.path.splitext(os.path.basename(page))[0]
         with open(page, encoding='utf-8') as handle:
@@ -89,6 +91,7 @@ def changes(map_dir, root):
                       and name not in drawn_anywhere and not name.startswith('_')})
         if not (review or gone or new):
             continue
+        listed += 1
         print(module)
         if review:
             print('  review (file changed): ' + ', '.join(f'{name} ({file_of[name]})' for name in review))
@@ -97,6 +100,7 @@ def changes(map_dir, root):
         if new:
             print('  new or changed, not drawn yet: ' + ', '.join(new))
     print('\nUpdate those pages\' Markdown, run `app-map build`, `app-map verify`, then `app-map sync`.')
+    return listed
 
 
 def sync(map_dir, root):
@@ -134,7 +138,10 @@ def where(map_dir, root, query):
 def main():
     command, map_dir, root = sys.argv[1], sys.argv[2], os.path.realpath(sys.argv[3])
     if command == 'changes':
-        changes(map_dir, root)
+        # --exit-code: exit 1 when a module is listed (the map is behind), like `git diff`.
+        listed = changes(map_dir, root)
+        if '--exit-code' in sys.argv[4:] and listed:
+            sys.exit(1)
     elif command == 'sync':
         sync(map_dir, root)
     elif command == 'where':

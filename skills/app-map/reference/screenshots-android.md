@@ -42,7 +42,7 @@ Navigate with the app's own test tools: Compose test (`onNodeWithText`, `onNodeW
 - Wait for the first data load before the first snap (e.g. `compose.waitUntil { … }` until a
   loading indicator is gone), so screenshots don't catch a spinner.
 - Images loaded from the network may not arrive in time: wait for them (`Thread.sleep`) before
-  the snap, and drop a crop that still shows a placeholder.
+  the snap; a crop that still shows a placeholder goes in `noCrop` in app-map.json.
 
 ## 2. Run it
 
@@ -62,4 +62,5 @@ runner at it with a Gradle init script; the project's build files aren't touched
 
 As for Flutter ([screenshots-flutter.md](screenshots-flutter.md) §3): pick 2–5 per module into
 `<map>/shots/<module>/` (at the screen's dp size, e.g. 411 px wide), list them in the
-frontmatter, then `scripts/app-map crop <out dir> <map>` and look through every crop.
+frontmatter, then `scripts/app-map crop <out dir> <map>` and look through every crop (a wrong one goes in
+`noCrop` in app-map.json).

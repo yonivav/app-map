@@ -40,6 +40,8 @@ class AppMapShots(classes: Collection<String>) {
     private val density = instrumentation.targetContext.resources.displayMetrics.density
     private val failed = mutableListOf<String>()
     private var shots = 0
+    private val opensDialog = mutableSetOf<String>()  // composables that only open a dialog
+    private val dialogCalls = setOf("Dialog", "AlertDialog", "BasicAlertDialog", "DatePickerDialog", "ModalBottomSheet", "Popup")
 
     companion object {
         fun enable() {
@@ -133,9 +135,6 @@ class AppMapShots(classes: Collection<String>) {
         }
         if (view is ViewGroup) for (index in 0 until view.childCount) walkViews(view.getChildAt(index), found)
     }
-
-    private val opensDialog = mutableSetOf<String>()
-    private val dialogCalls = setOf("Dialog", "AlertDialog", "BasicAlertDialog", "DatePickerDialog", "ModalBottomSheet", "Popup")
 
     private fun callsDialog(group: Group, depth: Int = 0): Boolean =
         group.name in dialogCalls || (depth < 40 && group.children.any { callsDialog(it, depth + 1) })

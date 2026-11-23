@@ -49,7 +49,7 @@ cp "$here/app_map_shots.dart" "$appdir/integration_test/app_map_shots.dart"
 cp "$here/app_map_driver.dart" "$appdir/test_driver/app_map_driver.dart"
 cp "$scenario" "$appdir/integration_test/app_map_scenario_test.dart"
 if git -C "$appdir" rev-parse --git-dir >/dev/null 2>&1; then
-  exclude="$(git -C "$appdir" rev-parse --git-common-dir)/info/exclude"
+  exclude="$(git -C "$appdir" rev-parse --path-format=absolute --git-common-dir)/info/exclude"
   prefix="$(git -C "$appdir" rev-parse --show-prefix)"
   for f in integration_test/app_map_shots.dart integration_test/app_map_scenario_test.dart \
            test_driver/app_map_driver.dart; do

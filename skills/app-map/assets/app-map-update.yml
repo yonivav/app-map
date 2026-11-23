@@ -46,9 +46,9 @@ jobs:
       - name: Is the map behind the code?
         id: changes
         run: |
-          report="$(.app-map/skills/app-map/scripts/app-map changes "$MAP_DIR" || true)"
-          echo "$report" >> "$GITHUB_STEP_SUMMARY"
-          if echo "$report" | grep -qE '^  (review|not in the code|new or changed)'; then echo "behind=true" >> "$GITHUB_OUTPUT"; fi
+          if ! .app-map/skills/app-map/scripts/app-map changes "$MAP_DIR" --exit-code >> "$GITHUB_STEP_SUMMARY"; then
+            echo "behind=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Update the map (Claude Code)
         if: steps.changes.outputs.behind == 'true' && env.AGENT == 'claude'

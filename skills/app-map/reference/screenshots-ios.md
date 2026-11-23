@@ -74,4 +74,5 @@ test's own errors.
 
 As for Flutter ([screenshots-flutter.md](screenshots-flutter.md) §3): pick 2–5 per module into
 `<map>/shots/<module>/` (at the screen's point size, e.g. 402 px wide), list them in the
-frontmatter, then `scripts/app-map crop <out dir> <map>` and look through every crop.
+frontmatter, then `scripts/app-map crop <out dir> <map>` and look through every crop (a wrong one goes in
+`noCrop` in app-map.json).

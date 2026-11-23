@@ -1,14 +1,12 @@
 ---
 name: app-map
 description: >
-  Builds and keeps current an "App map" of a mobile app repo: one Markdown page per module (UML
-  class map, screen composition, state machine, main-flow sequence, key files) plus an overview,
-  built into a clickable site where every class, member and arrow opens its real source and
-  widgets show a crop from the running app; from code back to the map, any class or file finds
-  the diagrams that draw it. Use when the user asks for an app map, architecture map, UML of the
-  whole app, a visual tour of a codebase or onboarding docs, and to update an existing map after
-  code changes ("update the app map", "is the map current"). Flutter/Dart, native iOS
-  (Swift/Objective-C) and native Android (Kotlin/Java).
+  Builds and keeps current an "App map" of a mobile app repo (Flutter, native iOS, native
+  Android): Markdown UML pages per module, built into a clickable site where every class, member
+  and arrow opens its real source and widgets show a crop from the running app. Use when the user
+  asks for an app map, architecture map, UML of the app, a visual tour of a codebase or
+  onboarding docs, or to update the map after code changes ("update the app map", "is the map
+  current").
 license: MIT
 compatibility: Flutter/Dart, native iOS (Swift/Objective-C) or native Android (Kotlin/Java) repos. Needs Python 3.9+ and git; Dart SDK recommended for Flutter; Chrome for verify; for screenshots, macOS + Xcode (Flutter, iOS) or the Android SDK (Android).
 ---
@@ -56,14 +54,10 @@ scripts/app-map facts <map> HomeScreen WondersLogic SettingsLogic
 scripts/app-map facts <map> --dir lib/ui/screens/home       # every class in a folder
 ```
 
-`facts` lists what each class **builds** and **uses** (by role, design tokens set apart) — that
-depth needs Dart's own analyzer, so it's Dart-only (and only with the Dart SDK installed; without
-it, Dart falls back to the same reduced output as native languages). For Swift, Kotlin, Java and
-Objective-C, `facts` gives the role, file, line and `extends`/`implements`/`with`/category only —
-no builds/uses breakdown. Use it as a checklist for parents and conformances either way, then read
-every file end to end for what it builds and calls — it can't see framework widgets that carry
-meaning, or UI built from data (follow a component registry by hand).
-**Diagram what the code does, never what names suggest.**
+`facts` lists each class's role, parents and conformances; for Dart with the Dart SDK also what
+it **builds** and **uses**. Use it as a checklist, then read every file end to end: it can't see
+framework widgets that carry meaning, or UI built from data (follow a component registry by
+hand). **Diagram what the code does, never what names suggest.**
 
 | Section | Contains |
 |---|---|
@@ -90,29 +84,20 @@ scripts/app-map verify <map>    # headless render + checks
 scripts/app-map sync <map>      # record the commit the map now describes
 ```
 
-`verify` fails (✗) on a diagram that doesn't render, a `{{placeholder}}` and Mermaid pitfalls. It
-lists (?) every member, relation label and sequence call that names nothing in the code: fix
-stale ones; keep deliberate descriptions (a widget's role, like `logo`). `build` prints
-`not found:` for drawn names with no declaration: framework, native classes and actors belong in
-`external` in app-map.json; anything else is a typo. Then check every number in the text
-against its constant in the code.
+`verify` fails (✗) on a diagram that doesn't render, a `{{placeholder}}` or a Mermaid pitfall,
+and lists (?) names that match nothing in the code: fix stale ones, keep deliberate descriptions
+(a widget's role, like `logo`). `build` prints `not found:` for drawn names with no declaration:
+framework classes and actors go in `external` in app-map.json; anything else is a typo. Then
+check every number in the text against its constant in the code.
 
 ### 4. Screenshots (optional)
 
-Run the app on a simulator or emulator of its own, take each module's screenshots into
-`<map>/shots/<module>/`, list them in the module's frontmatter, and crop every page and widget
-for the popups with `app-map crop`. One guide per platform:
-[Flutter](reference/screenshots-flutter.md) (an `integration_test`),
-[iOS](reference/screenshots-ios.md) (an XCUITest by bundle id, views read with lldb),
-[Android](reference/screenshots-android.md) (an instrumented test; composables read from
-Compose's inspector data).
-
-Aim for a picture of every page and widget the map draws:
-- Visit every screen and sub-screen the diagrams name (each settings page, each sheet, each
-  extension), and show states before changing them (an empty list before adding to it).
-- `app-map crop` ends with **no picture yet for …**: add steps for those and run again. Leave
-  out only what never shows on its own (a transient indicator, a tablet-only pane) and crops
-  that show something wrong.
+Follow the platform's guide: [Flutter](reference/screenshots-flutter.md),
+[iOS](reference/screenshots-ios.md), [Android](reference/screenshots-android.md). A scenario runs
+the app on a simulator of its own; pick module screenshots into `<map>/shots/<module>/`, then
+`app-map crop` cuts a picture for every page and widget. Visit every screen the diagrams name,
+and show states before changing them (an empty list before adding to it). `crop` ends with **no
+picture yet for …**: add steps for those; leave out only what never shows on its own.
 
 ## Update
 
@@ -129,20 +114,9 @@ in the module's key files that no page draws (**consider**). For each listed mod
 - Screens that look different → rerun the screenshot scenario for them and `app-map crop`.
 
 Then `build`, `verify`, `sync`. Commit the Markdown and the built site with the code change.
-### Automatic updates
 
-When the user wants the map kept current without asking (or at the hand-over of a first
-build, offer it):
-- Append [assets/agents-rule.md](assets/agents-rule.md), with `MAP_DIR` replaced by the map's
-  folder, to `AGENTS.md` and `CLAUDE.md` at the repo root (and `GEMINI.md` if there is one):
-  every agent then updates the map in the same change as the code.
-- Copy [assets/app-map-check.yml](assets/app-map-check.yml) (builds and verifies the map on
-  every PR, lists what changed) and [assets/app-map-update.yml](assets/app-map-update.yml) (an
-  AI agent updates the map on every PR and commits it: `AGENT` picks Claude Code, Codex, Gemini
-  CLI, Cursor or Copilot, each with its key as a repository secret, listed in the file)
-  into `.github/workflows/`, with `MAP_DIR` set.
-
-`install.sh --auto --map <folder>` in the app-map repo does both.
+To keep the map current without asking (offer it at the hand-over of a first build):
+[reference/automatic.md](reference/automatic.md).
 
 ## Code → map
 

@@ -3,7 +3,7 @@
 #
 #   app-map build <map>                      Markdown → site pages, code popups, search
 #   app-map verify <map>                     placeholders, Mermaid pitfalls, dead clicks, rendering
-#   app-map changes <map>                    what changed in the code since the map was synced
+#   app-map changes <map> [--exit-code]      what changed in the code since the map was synced
 #   app-map sync <map>                       mark the map as current with the repo's HEAD
 #   app-map where <map> <Class|file>         where the map draws a class or a file's classes
 #   app-map facts <map> <Class>... | --dir <folder>   what each class builds and uses
@@ -64,8 +64,8 @@ case "$cmd" in
   index) index "${1:?usage: app-map index <map>}" ;;
   verify) "$py" "$here/verify.py" "${1:?usage: app-map verify <map>}" ;;
   changes|sync)
-    map="${1:?usage: app-map $cmd <map>}"
-    "$py" "$here/changes.py" "$cmd" "$map" "$(repo_of "$map")" ;;
+    map="${1:?usage: app-map $cmd <map> [--exit-code]}"; shift
+    "$py" "$here/changes.py" "$cmd" "$map" "$(repo_of "$map")" "$@" ;;
   where)
     map="${1:?usage: app-map where <map> <Class|file>}"
     "$py" "$here/changes.py" where "$map" "$(repo_of "$map")" "${2:?Class or file}" ;;
@@ -83,7 +83,7 @@ case "$cmd" in
   crop)
     shots="${1:?usage: app-map crop <shots dir> <map>}"; map="${2:?map dir}"
     rm -rf "$map/shots/code"
-    "$py" "$here/crop_shots.py" "$shots" "$map/shots/code" "$map" | grep -E '^([0-9]+ crops|no picture|  )' 
+    "$py" "$here/crop_shots.py" "$shots" "$map/shots/code" "$map"
     index "$map" | tail -1 ;;
   compare) "$py" "$here/compare_maps.py" "$@" ;;
   *) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
