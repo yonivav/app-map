@@ -122,12 +122,19 @@
     </ul>
   </section>
   <section aria-labelledby="h-services">
-    <h2 id="h-services">Services <span>what the screens talk through</span></h2>
-    <p class="cap">Every repository is offline-first: screens only ever read <code>Flow</code>s backed by the Room database, and a separate <code>SyncManager</code>/<code>SyncWorker</code> pulls from the network and writes into that same database — a screen never calls the network directly.</p>
+    <h2 id="h-services">Services <span>what the screens call</span></h2>
+    <p class="cap">Screens never touch the network or the database: they call a repository, or a use case in <code>core/domain</code> that combines repositories.</p>
     <div class="diagram"><div class="out" data-src="src-services" data-links='{"ForYouS": "for-you.html", "BookmarksS": "bookmarks.html", "InterestsS": "interests.html", "TopicS": "topic.html", "SearchS": "search.html", "SettingsS": "settings.html", "ShellS": "app-shell.html"}'></div></div>
     <ul class="legend">
       <li><b>───▷</b> calls, labelled with the method</li>
-      <li><b>▭</b> tap to open its module</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-data">
+    <h2 id="h-data">Data <span>offline first</span></h2>
+    <p class="cap">Every repository reads <code>Flow</code>s backed by the Room database. A separate <code>SyncManager</code>/<code>SyncWorker</code> pulls from the network and writes into that same database, so screens update when a sync lands.</p>
+    <div class="diagram"><div class="out" data-src="src-data"></div></div>
+    <ul class="legend">
+      <li><b>───▷</b> calls, labelled with the method</li>
     </ul>
   </section>
 </main>
@@ -168,34 +175,29 @@ flowchart TB
 <script type="text/plain" id="src-services">
 flowchart LR
   subgraph Screens
+    ShellS["App Shell"]
     ForYouS["For You"]
     BookmarksS["Bookmarks"]
     InterestsS["Interests"]
     TopicS["Topic"]
     SearchS["Search"]
     SettingsS["Settings"]
-    ShellS["App Shell"]
-  end
-  subgraph Repos ["core/data repositories"]
-    UserNewsRepo["UserNewsResourceRepository"]
-    UserDataRepo["UserDataRepository"]
-    TopicsRepo["TopicsRepository"]
-    NewsRepo["NewsRepository"]
-    SearchContentsRepo["SearchContentsRepository"]
-    RecentSearchRepo["RecentSearchRepository"]
-    SyncMgr["SyncManager"]
   end
   subgraph UseCases ["core/domain"]
     GetTopicsUse["GetFollowableTopicsUseCase"]
     GetSearchUse["GetSearchContentsUseCase"]
     GetRecentUse["GetRecentSearchQueriesUseCase"]
   end
-  subgraph Infra ["database, network and sync"]
-    Database["NiaDatabase"]
-    NetworkSrc["NiaNetworkDataSource"]
-    Prefs["NiaPreferencesDataSource"]
-    SyncWorker["SyncWorker"]
+  subgraph Repos ["core/data repositories"]
+    UserNewsRepo["UserNewsResourceRepository"]
+    UserDataRepo["UserDataRepository"]
+    TopicsRepo["TopicsRepository"]
+    SearchContentsRepo["SearchContentsRepository"]
+    RecentSearchRepo["RecentSearchRepository"]
+    SyncMgr["SyncManager"]
   end
+  ShellS -->|userData| UserDataRepo
+  ShellS -->|observeAllForFollowedTopics, observeAllBookmarked| UserNewsRepo
   ForYouS -->|observeAllForFollowedTopics| UserNewsRepo
   ForYouS -->|invoke| GetTopicsUse
   ForYouS -->|isSyncing| SyncMgr
@@ -205,28 +207,46 @@ flowchart LR
   InterestsS -->|setTopicIdFollowed| UserDataRepo
   TopicS -->|getTopic| TopicsRepo
   TopicS -->|observeAll, filterTopicIds| UserNewsRepo
-  SearchS -->|getSearchContentsCount| SearchContentsRepo
   SearchS -->|invoke, query| GetSearchUse
   SearchS -->|invoke| GetRecentUse
+  SearchS -->|getSearchContentsCount| SearchContentsRepo
   SearchS -->|insertOrReplaceRecentSearch| RecentSearchRepo
   SettingsS -->|setThemeBrand, setDarkThemeConfig| UserDataRepo
-  ShellS -->|userData| UserDataRepo
-  ShellS -->|observeAllForFollowedTopics, observeAllBookmarked| UserNewsRepo
-  UserNewsRepo -->|joins topics + news| TopicsRepo
-  UserNewsRepo -->|joins topics + news| NewsRepo
   GetTopicsUse -->|getTopics, userData| TopicsRepo
   GetTopicsUse -->|followedTopics| UserDataRepo
   GetSearchUse -->|searchContents| SearchContentsRepo
   GetRecentUse -->|getRecentSearchQueries| RecentSearchRepo
-  TopicsRepo -->|Room queries| Database
+</script>
+
+<script type="text/plain" id="src-data">
+flowchart LR
+  subgraph Sync ["sync"]
+    SyncMgr["SyncManager"]
+    SyncWorker["SyncWorker"]
+  end
+  subgraph Repos ["core/data repositories"]
+    UserNewsRepo["UserNewsResourceRepository"]
+    NewsRepo["NewsRepository"]
+    TopicsRepo["TopicsRepository"]
+    RecentSearchRepo["RecentSearchRepository"]
+    UserDataRepo["UserDataRepository"]
+  end
+  subgraph Storage ["database and network"]
+    NetworkSrc["NiaNetworkDataSource"]
+    Database["NiaDatabase"]
+    Prefs["NiaPreferencesDataSource"]
+  end
+  SyncMgr -->|requestSync| SyncWorker
+  SyncWorker -->|syncWith| NewsRepo
+  SyncWorker -->|syncWith| TopicsRepo
+  UserNewsRepo -->|joins topics + news| NewsRepo
+  UserNewsRepo -->|joins topics + news| TopicsRepo
+  NewsRepo -->|getNewsResources, getNewsResourceChangeList| NetworkSrc
+  TopicsRepo -->|getTopics, getTopicChangeList| NetworkSrc
   NewsRepo -->|Room queries| Database
+  TopicsRepo -->|Room queries| Database
   RecentSearchRepo -->|Room queries| Database
   UserDataRepo -->|reads and writes| Prefs
-  SyncMgr -->|requestSync| SyncWorker
-  SyncWorker -->|syncWith| TopicsRepo
-  SyncWorker -->|syncWith| NewsRepo
-  TopicsRepo -->|getTopics, getTopicChangeList| NetworkSrc
-  NewsRepo -->|getNewsResources, getNewsResourceChangeList| NetworkSrc
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
 <script>

@@ -72,43 +72,37 @@ flowchart TB
 - `───▷` opens
 - `▭` tap to open its module
 
-## Services · what the screens talk through
+## Services · what the screens call {#services}
 
-Every repository is offline-first: screens only ever read `Flow`s backed by the Room database,
-and a separate `SyncManager`/`SyncWorker` pulls from the network and writes into that same
-database — a screen never calls the network directly.
+Screens never touch the network or the database: they call a repository, or a use case in
+`core/domain` that combines repositories.
 
 ```mermaid
 flowchart LR
   subgraph Screens
+    ShellS["App Shell"]
     ForYouS["For You"]
     BookmarksS["Bookmarks"]
     InterestsS["Interests"]
     TopicS["Topic"]
     SearchS["Search"]
     SettingsS["Settings"]
-    ShellS["App Shell"]
-  end
-  subgraph Repos ["core/data repositories"]
-    UserNewsRepo["UserNewsResourceRepository"]
-    UserDataRepo["UserDataRepository"]
-    TopicsRepo["TopicsRepository"]
-    NewsRepo["NewsRepository"]
-    SearchContentsRepo["SearchContentsRepository"]
-    RecentSearchRepo["RecentSearchRepository"]
-    SyncMgr["SyncManager"]
   end
   subgraph UseCases ["core/domain"]
     GetTopicsUse["GetFollowableTopicsUseCase"]
     GetSearchUse["GetSearchContentsUseCase"]
     GetRecentUse["GetRecentSearchQueriesUseCase"]
   end
-  subgraph Infra ["database, network and sync"]
-    Database["NiaDatabase"]
-    NetworkSrc["NiaNetworkDataSource"]
-    Prefs["NiaPreferencesDataSource"]
-    SyncWorker["SyncWorker"]
+  subgraph Repos ["core/data repositories"]
+    UserNewsRepo["UserNewsResourceRepository"]
+    UserDataRepo["UserDataRepository"]
+    TopicsRepo["TopicsRepository"]
+    SearchContentsRepo["SearchContentsRepository"]
+    RecentSearchRepo["RecentSearchRepository"]
+    SyncMgr["SyncManager"]
   end
+  ShellS -->|userData| UserDataRepo
+  ShellS -->|observeAllForFollowedTopics, observeAllBookmarked| UserNewsRepo
   ForYouS -->|observeAllForFollowedTopics| UserNewsRepo
   ForYouS -->|invoke| GetTopicsUse
   ForYouS -->|isSyncing| SyncMgr
@@ -118,29 +112,53 @@ flowchart LR
   InterestsS -->|setTopicIdFollowed| UserDataRepo
   TopicS -->|getTopic| TopicsRepo
   TopicS -->|observeAll, filterTopicIds| UserNewsRepo
-  SearchS -->|getSearchContentsCount| SearchContentsRepo
   SearchS -->|invoke, query| GetSearchUse
   SearchS -->|invoke| GetRecentUse
+  SearchS -->|getSearchContentsCount| SearchContentsRepo
   SearchS -->|insertOrReplaceRecentSearch| RecentSearchRepo
   SettingsS -->|setThemeBrand, setDarkThemeConfig| UserDataRepo
-  ShellS -->|userData| UserDataRepo
-  ShellS -->|observeAllForFollowedTopics, observeAllBookmarked| UserNewsRepo
-  UserNewsRepo -->|joins topics + news| TopicsRepo
-  UserNewsRepo -->|joins topics + news| NewsRepo
   GetTopicsUse -->|getTopics, userData| TopicsRepo
   GetTopicsUse -->|followedTopics| UserDataRepo
   GetSearchUse -->|searchContents| SearchContentsRepo
   GetRecentUse -->|getRecentSearchQueries| RecentSearchRepo
-  TopicsRepo -->|Room queries| Database
-  NewsRepo -->|Room queries| Database
-  RecentSearchRepo -->|Room queries| Database
-  UserDataRepo -->|reads and writes| Prefs
-  SyncMgr -->|requestSync| SyncWorker
-  SyncWorker -->|syncWith| TopicsRepo
-  SyncWorker -->|syncWith| NewsRepo
-  TopicsRepo -->|getTopics, getTopicChangeList| NetworkSrc
-  NewsRepo -->|getNewsResources, getNewsResourceChangeList| NetworkSrc
 ```
 
 - `───▷` calls, labelled with the method
-- `▭` tap to open its module
+
+## Data · offline first {#data}
+
+Every repository reads `Flow`s backed by the Room database. A separate `SyncManager`/`SyncWorker`
+pulls from the network and writes into that same database, so screens update when a sync lands.
+
+```mermaid
+flowchart LR
+  subgraph Sync ["sync"]
+    SyncMgr["SyncManager"]
+    SyncWorker["SyncWorker"]
+  end
+  subgraph Repos ["core/data repositories"]
+    UserNewsRepo["UserNewsResourceRepository"]
+    NewsRepo["NewsRepository"]
+    TopicsRepo["TopicsRepository"]
+    RecentSearchRepo["RecentSearchRepository"]
+    UserDataRepo["UserDataRepository"]
+  end
+  subgraph Storage ["database and network"]
+    NetworkSrc["NiaNetworkDataSource"]
+    Database["NiaDatabase"]
+    Prefs["NiaPreferencesDataSource"]
+  end
+  SyncMgr -->|requestSync| SyncWorker
+  SyncWorker -->|syncWith| NewsRepo
+  SyncWorker -->|syncWith| TopicsRepo
+  UserNewsRepo -->|joins topics + news| NewsRepo
+  UserNewsRepo -->|joins topics + news| TopicsRepo
+  NewsRepo -->|getNewsResources, getNewsResourceChangeList| NetworkSrc
+  TopicsRepo -->|getTopics, getTopicChangeList| NetworkSrc
+  NewsRepo -->|Room queries| Database
+  TopicsRepo -->|Room queries| Database
+  RecentSearchRepo -->|Room queries| Database
+  UserDataRepo -->|reads and writes| Prefs
+```
+
+- `───▷` calls, labelled with the method
