@@ -15,10 +15,13 @@ on-screen crops in popups) are Flutter-only so far; native screenshots are in pr
 
 ![Demo: click a module, a widget's popup shows how it looks and its exact code; "Appears in" links to every diagram that draws a class; an arrow opens the method it calls; search finds any class or file](docs/demo.gif)
 
-> **[▶ Wonderous](https://yonivav.github.io/app-map/examples/wonderous/)** — the Flutter team's
-> showcase app by gskinner (~31k lines, MIT) · **[NetNewsWire](https://yonivav.github.io/app-map/examples/netnewswire/)**
-> — Brent Simmons' iOS RSS reader (~25k lines, MIT) · **[Now in Android](https://yonivav.github.io/app-map/examples/now-in-android/)**
-> — Google's Compose showcase app (~29k lines, Apache-2.0), all mapped by this skill.
+**Live examples**, each mapped by this skill from a real open-source app:
+
+| App | Platform | Open the map |
+|---|---|---|
+| Wonderous — the Flutter team's showcase app by gskinner (~31k lines, MIT) | Flutter | [▶ Wonderous](https://yonivav.github.io/app-map/examples/wonderous/) |
+| NetNewsWire — Brent Simmons' RSS reader (~25k lines, MIT) | iOS · Swift, Objective-C | [▶ NetNewsWire](https://yonivav.github.io/app-map/examples/netnewswire/) |
+| Now in Android — Google's Compose showcase app (~29k lines, Apache-2.0) | Android · Kotlin | [▶ Now in Android](https://yonivav.github.io/app-map/examples/now-in-android/) |
 
 ![The Wonderous App Map: one card per module, with a screenshot of each](docs/overview.jpg)
 
