@@ -28,12 +28,14 @@ final class AppMapShots {
 
     /// A screenshot, and where every view and view controller of the app sits on it. `process`
     /// reads another process instead, by part of its executable's path: an app extension (a
-    /// share sheet, a widget's configuration) runs in a process of its own.
-    func snap(_ name: String, process: String? = nil) {
+    /// share sheet, a widget's configuration) runs in a process of its own. `shows` names the
+    /// SwiftUI views filling the screen: SwiftUI screens pushed inside one hosting controller
+    /// have no view class of their own, so the crop takes the visible SwiftUI area for them.
+    func snap(_ name: String, process: String? = nil, shows: [String] = []) {
         Thread.sleep(forTimeInterval: 1.0)
         let request = requests.appendingPathComponent(name)
         let done = requests.appendingPathComponent(name + ".done")
-        try? Data((process ?? "").utf8).write(to: request)
+        try? Data(((process ?? "") + "\n" + shows.joined(separator: ",")).utf8).write(to: request)
         let deadline = Date().addingTimeInterval(120)
         while !FileManager.default.fileExists(atPath: done.path), Date() < deadline {
             Thread.sleep(forTimeInterval: 0.3)
@@ -45,7 +47,7 @@ final class AppMapShots {
     func tap(_ label: String, timeout: TimeInterval = 15) throws {
         let element = app.descendants(matching: .any).matching(
             NSPredicate(format: "label == %@ OR identifier == %@", label, label)).firstMatch
-        guard element.waitForExistence(timeout: timeout) else { throw Missing(label) }
+        guard find(element, timeout: timeout) else { throw Missing(label) }
         if !element.isHittable { scrollTo(element) }
         element.tap()
         settle()
@@ -55,7 +57,7 @@ final class AppMapShots {
     func tapContaining(_ text: String, timeout: TimeInterval = 15) throws {
         let element = app.descendants(matching: .any).matching(
             NSPredicate(format: "label CONTAINS[c] %@", text)).firstMatch
-        guard element.waitForExistence(timeout: timeout) else { throw Missing(text) }
+        guard find(element, timeout: timeout) else { throw Missing(text) }
         if !element.isHittable { scrollTo(element) }
         element.tap()
         settle()
@@ -102,7 +104,13 @@ final class AppMapShots {
 
     func swipeUp() { app.swipeUp(); settle() }
     func swipeDown() { app.swipeDown(); settle() }
-    func back() { app.navigationBars.buttons.element(boundBy: 0).tap(); settle() }
+    /// The back button of the screen on top (a sheet's own navigation bar, not the one under it).
+    func back() {
+        let button = app.navigationBars.buttons.matching(identifier: "BackButton").allElementsBoundByIndex.last(where: { $0.isHittable })
+            ?? app.navigationBars.buttons.element(boundBy: 0)
+        button.tap()
+        settle()
+    }
     func wait(_ seconds: TimeInterval) { Thread.sleep(forTimeInterval: seconds) }
 
     /// The last line of the scenario: what ran and what didn't.
@@ -118,6 +126,17 @@ final class AppMapShots {
         let file = requests.appendingPathComponent("failures")
         let old = (try? String(contentsOf: file, encoding: .utf8)) ?? ""
         try? (old + line).write(to: file, atomically: true, encoding: .utf8)
+    }
+
+    /// Waits for the element; if it isn't there, scrolls down to it (a lazy list only has the
+    /// rows on screen).
+    private func find(_ element: XCUIElement, timeout: TimeInterval) -> Bool {
+        if element.waitForExistence(timeout: min(timeout, 4)) { return true }
+        for _ in 0..<6 {
+            app.swipeUp()
+            if element.waitForExistence(timeout: 1) { return true }
+        }
+        return element.waitForExistence(timeout: max(timeout - 4, 1))
     }
 
     private func scrollTo(_ element: XCUIElement) {

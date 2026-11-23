@@ -12,6 +12,8 @@ screenshots:
   caption: Add Feed
 - file: shots/main-feed/04_feed_info.jpg
   caption: A feed's inspector
+- file: shots/main-feed/05_add_folder.jpg
+  caption: Add Folder
 ---
 
 ## What it does {#what}

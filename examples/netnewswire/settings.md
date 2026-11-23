@@ -6,8 +6,14 @@ card: Accounts, appearance, OPML, about
 screenshots:
 - file: shots/settings/01_settings.jpg
   caption: 'Settings: accounts, feeds, appearance'
-- file: shots/settings/02_scrolled.jpg
-  caption: Troubleshooting and help
+- file: shots/settings/02_GeneralSettingsView.jpg
+  caption: General
+- file: shots/settings/03_AccountInspectorView.jpg
+  caption: An account's settings
+- file: shots/settings/04_ArticlesSettingsView.jpg
+  caption: 'Articles: theme and reader options'
+- file: shots/settings/05_AboutView.jpg
+  caption: About
 ---
 
 ## What it does {#what}

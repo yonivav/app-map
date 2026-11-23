@@ -6,6 +6,8 @@ card: Saved articles, with undo
 screenshots:
 - file: shots/bookmarks/01_saved.jpg
   caption: A saved article
+- file: shots/bookmarks/02_empty.jpg
+  caption: Nothing saved yet
 ---
 
 ## What it does {#what}

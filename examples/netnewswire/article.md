@@ -6,6 +6,8 @@ card: The reading view, Reader view, find-in-article
 screenshots:
 - file: shots/article/01_article.jpg
   caption: An article, with the toolbar to star, mark unread and share
+- file: shots/article/02_find.jpg
+  caption: Find in Article, from the share sheet
 ---
 
 ## What it does {#what}

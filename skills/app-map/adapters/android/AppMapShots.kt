@@ -74,12 +74,17 @@ class AppMapShots(classes: Collection<String>) {
         val hidden = mutableSetOf<Int>()
         instrumentation.runOnMainSync {
             val roots = rootViews()
+            opensDialog.clear()
             roots.forEachIndexed { index, root ->
                 val dimmedAbove = roots.drop(index + 1).any { it.isDimming() }
                 val start = found.size
                 walkViews(root, found)
                 if (dimmedAbove) (start until found.size).forEach { hidden += it }
             }
+            // A composable that only opens a dialog has no size of its own: it gets the dialog's.
+            val activityRoot = currentActivity()?.window?.decorView
+            val dialog = roots.lastOrNull { it !== activityRoot }?.let { composeContent(it) }
+            if (dialog != null) opensDialog.forEach { found += it to dialog }
             currentActivity()?.let { activity ->
                 val window = activity.window.decorView
                 if (activity.javaClass.simpleName in classes) found += activity.javaClass.simpleName to window.screenRect()
@@ -129,11 +134,27 @@ class AppMapShots(classes: Collection<String>) {
         if (view is ViewGroup) for (index in 0 until view.childCount) walkViews(view.getChildAt(index), found)
     }
 
+    private val opensDialog = mutableSetOf<String>()
+    private val dialogCalls = setOf("Dialog", "AlertDialog", "BasicAlertDialog", "DatePickerDialog", "ModalBottomSheet", "Popup")
+
+    private fun callsDialog(group: Group, depth: Int = 0): Boolean =
+        group.name in dialogCalls || (depth < 40 && group.children.any { callsDialog(it, depth + 1) })
+
+    /** Where a dialog window's Compose content is drawn on screen. */
+    private fun composeContent(root: View): Rect? {
+        if (root.getTag(androidx.compose.ui.R.id.inspection_slot_table_set) != null) return root.screenRect()
+        if (root is ViewGroup) for (index in 0 until root.childCount) composeContent(root.getChildAt(index))?.let { return it }
+        return null
+    }
+
     /** A composable's box, clipped to its parents' (a list item under the app bar is cut). */
     private fun walkGroup(group: Group, origin: Rect, clip: Rect?, found: MutableList<Pair<String, Rect>>) {
         val box = group.box
         val own = Rect(origin.left + box.left, origin.top + box.top, origin.left + box.right, origin.top + box.bottom)
         val name = group.name
+        if (name != null && name in classes && (own.width() <= 0 || own.height() <= 0) && callsDialog(group)) {
+            opensDialog += name
+        }
         if (name != null && name in classes && own.width() > 0 && own.height() > 0) {
             val visible = Rect(own)
             if (clip == null || visible.intersect(clip)) {

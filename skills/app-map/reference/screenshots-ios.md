@@ -49,6 +49,7 @@ shots.step("timeline") {
 | `answerAlert("Allow")` | answers a system prompt (notifications, paste) if one shows |
 | `open("https://…")`, `other("com.apple.mobilesafari")` | opens a URL the system way; drives another app (to reach a share sheet) |
 | `snap("name", process: "Share Extension")` | for an app extension: it runs in its own process, named by part of its path |
+| `snap("name", shows: ["GeneralSettingsView"])` | names the SwiftUI screen on show: SwiftUI screens pushed inside one hosting controller have no view class of their own, so their crop is the visible SwiftUI area |
 | `tapOutside()`, `back()`, `swipeUp()`, `swipeDown()`, `wait(2)` | |
 | `report()` | the last line of the test |
 

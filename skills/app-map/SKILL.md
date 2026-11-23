@@ -107,6 +107,13 @@ for the popups with `app-map crop`. One guide per platform:
 [Android](reference/screenshots-android.md) (an instrumented test; composables read from
 Compose's inspector data).
 
+Aim for a picture of every page and widget the map draws:
+- Visit every screen and sub-screen the diagrams name (each settings page, each sheet, each
+  extension), and show states before changing them (an empty list before adding to it).
+- `app-map crop` ends with **no picture yet for …**: add steps for those and run again. Leave
+  out only what never shows on its own (a transient indicator, a tablet-only pane) and crops
+  that show something wrong.
+
 ## Update
 
 ```bash

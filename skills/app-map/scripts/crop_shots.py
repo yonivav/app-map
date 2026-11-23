@@ -1,6 +1,6 @@
 """Crops every page and widget the App map draws out of a shots run.
 
-Usage: python3 crop_shots.py <shots run dir> <out dir>
+Usage: python3 crop_shots.py <shots run dir> <out dir> [<map dir>]
 Reads the `SHOT RECT <shot> <Type> <l> <t> <w> <h> <hits>` lines a screenshot adapter logs to
 drive.log, picks the best view of each type (fully on screen first, then the largest) and
 saves it as <out dir>/<Type>.jpg at 2x. Rects are in the screen's logical units (points, dp):
@@ -20,6 +20,8 @@ OUT_SCALE = 2.0
 MIN_SIDE = 12.0
 
 run_dir, out_dir = sys.argv[1], sys.argv[2]
+map_dir = sys.argv[3] if len(sys.argv) > 3 else None
+UI_STEREOTYPES = ('page', 'widget', 'modal', 'dialog', 'screen', 'view', 'cell', 'split view', 'sheet')
 line = re.compile(r'SHOT RECT (\S+) (\S+) (-?[\d.]+) (-?[\d.]+) ([\d.]+) ([\d.]+)(?: (\d))?')
 best = {}
 with open(os.path.join(run_dir, 'drive.log'), errors='replace') as log:
@@ -62,3 +64,20 @@ for name, (_, shot, (left, top, right, bottom)) in sorted(best.items()):
     crop.resize(size, Image.LANCZOS).save(os.path.join(out_dir, name + '.jpg'), quality=72, optimize=True)
     print(f'{name}: {shot} {int(right - left)}x{int(bottom - top)}pt')
 print(f'{len(best)} crops in {out_dir}')
+
+# Coverage: every page and widget the map draws should have a picture. List those without one,
+# so the scenario gets the steps that show them.
+if map_dir:
+    drawn = set()
+    for name in os.listdir(map_dir):
+        if name.endswith('.md'):
+            text = open(os.path.join(map_dir, name)).read()
+            for type_name, stereotype in re.findall(r'class ([A-Za-z_]\w*)\s*\{\s*<<([^>]+)>>', text):
+                if stereotype.strip() in UI_STEREOTYPES:
+                    drawn.add(type_name)
+    have = {name[:-4] for name in os.listdir(out_dir) if name.endswith('.jpg')}
+    missing = sorted(drawn - have)
+    if missing:
+        print(f'no picture yet for {len(missing)} page(s)/widget(s): {", ".join(missing)}')
+        print('  add scenario steps that show them (or a snap with the screen named, for SwiftUI);')
+        print('  leave out only what never shows on its own (a transient view, a tablet-only pane)')

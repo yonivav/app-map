@@ -82,6 +82,19 @@ def app_pid(udid, bundle):
     return pids[0] if pids else None
 
 
+def swiftui_area(views):
+    """The largest uncovered SwiftUI hosting view: where a SwiftUI screen named by `shows` is."""
+    best = None
+    for line in views:
+        parts = line.split()
+        if parts[0] != 'V' or 'Hosting' not in parts[1] or int(parts[6]) < 4:
+            continue
+        area = float(parts[4]) * float(parts[5])
+        if best is None or area > best[0]:
+            best = (area, ' '.join(parts[2:7]))
+    return best[1] if best else None
+
+
 def process_pid(udid, hint):
     """The newest process of this simulator whose executable path contains `hint`."""
     pids = run('pgrep', '-n', '-f', f'Devices/{udid}/.*{re.escape(hint)}').stdout.split()
@@ -147,9 +160,15 @@ def main():
                 continue
             taken.add(name)
             run('xcrun', 'simctl', 'io', udid, 'screenshot', os.path.join(out, name + '.png'))
-            hint = open(os.path.join(requests, name)).read().strip()
+            lines_in = open(os.path.join(requests, name)).read().split('\n')
+            hint = lines_in[0].strip()
+            shows = [item for item in (lines_in[1] if len(lines_in) > 1 else '').split(',') if item.strip()]
             pid = process_pid(udid, hint) if hint else app_pid(udid, args.bundle)
             views = dump_views(pid) if pid else []
+            hosted = swiftui_area(views)
+            for type_name in shows:
+                if hosted and type_name in classes:
+                    lines.append(f'SHOT RECT {name} {type_name} {hosted}')
             for line in views:
                 parts = line.split()
                 if parts[0] == 'W' and screen is None:

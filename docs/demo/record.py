@@ -1,5 +1,6 @@
-"""Records docs/demo.gif from the live Wonderous example: open a module, click a widget, see its
-code and how it looks, follow "Appears in", open a method from an arrow, find a file's classes.
+"""Records docs/demo.gif from the live examples: open a Wonderous module, click a widget, see its
+code and how it looks, follow "Appears in", open a method from an arrow, find a file's classes;
+then the same popups on the native iOS (NetNewsWire) and Android (Now in Android) maps.
 
 Usage: python record.py [base url]     (needs `pip install playwright pillow` and Google Chrome)
 """
@@ -143,7 +144,23 @@ def main():
         for char in 'timeline_logic.dart':
             search.type(char)
             shot(page, 70)
-        hold(page, 3200)
+        hold(page, 2600)
+
+        # 7. Native apps too: the same popups on an iOS and an Android map.
+        root = BASE.split('examples/')[0]
+        for url, name, text in [
+            ('examples/netnewswire/main-timeline.html', 'MainTimelineCell', 'Native iOS too: Swift and Objective-C'),
+            ('examples/now-in-android/topic.html', 'TopicHeader', 'And Android: Kotlin and Jetpack Compose'),
+        ]:
+            page.goto(root + url, wait_until='networkidle')
+            page.wait_for_timeout(2000)
+            page.evaluate('(y) => window.scrollTo(0, y)', element_y(page, name))
+            page.wait_for_timeout(300)
+            caption(page, text)
+            hold(page, 900)
+            click_link(page, name)
+            hold(page, 2800)
+            page.keyboard.press('Escape')
         browser.close()
 
     first, *rest = [image for image, _ in frames]

@@ -83,7 +83,7 @@ case "$cmd" in
   crop)
     shots="${1:?usage: app-map crop <shots dir> <map>}"; map="${2:?map dir}"
     rm -rf "$map/shots/code"
-    "$py" "$here/crop_shots.py" "$shots" "$map/shots/code" | tail -1
+    "$py" "$here/crop_shots.py" "$shots" "$map/shots/code" "$map" | grep -E '^([0-9]+ crops|no picture|  )' 
     index "$map" | tail -1 ;;
   compare) "$py" "$here/compare_maps.py" "$@" ;;
   *) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
