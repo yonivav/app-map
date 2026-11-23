@@ -2,28 +2,37 @@
 
 [![Check](https://github.com/yonivav/app-map/actions/workflows/check.yml/badge.svg)](https://github.com/yonivav/app-map/actions/workflows/check.yml) [![Release](https://img.shields.io/github/v/release/yonivav/app-map)](https://github.com/yonivav/app-map/releases) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE) · [Site](https://yonivav.github.io/app-map/) · [Live examples](https://yonivav.github.io/app-map/examples/)
 
-**Give your AI coding agent one skill, and it maps your mobile app.** Install App Map into
-Claude Code, Cursor, Codex, Gemini CLI or GitHub Copilot, then ask: *"build an app map of this
-repo"*. The agent reads your app and writes one page per module — what it does, UML class maps,
-screen composition, state machines and the main-flow sequence. Click any class, method or arrow
-to see its **real source code**; pages and widgets also show **how they look in the running app**.
-Ask again after code changes and it updates only what changed.
+**Your AI coding assistant draws a map of your app's code, and keeps it up to date.**
 
-**For mobile apps:** Flutter (Dart), native iOS (Swift, Objective-C) and native Android (Kotlin,
-Java) — class maps, screen composition, state machines and screenshots for all of them.
+Each part of your app gets a page of diagrams. Click any box or arrow to see the real code behind
+it, and a picture of how that screen looks in the app. For **Flutter, iOS and Android** apps, with
+**Claude Code, Cursor, Codex, Gemini CLI or GitHub Copilot**.
 
-## Quick start
+## How to use it
 
-```bash
-git clone https://github.com/yonivav/app-map ~/.app-map
-cd your-app && ~/.app-map/install.sh --auto
-```
+> **1. Install it once.** In a terminal, inside your app's folder:
+>
+> ```bash
+> git clone https://github.com/yonivav/app-map ~/.app-map
+> ~/.app-map/install.sh --auto
+> ```
+>
+> **2. Ask your AI assistant:** *"Build an app map of this repo"*
+>
+> **3. Open `docs/app-map/index.html`** in your browser.
 
-Then ask your agent: *"Build an app map of this repo"*. It proposes the modules, writes one page
-each, indexes the code and checks every page. Open `docs/app-map/index.html`.
+## Make it automatic
 
-From then on the map keeps itself current: **you write the code, the map follows** (see
-[Make it automatic](#make-it-automatic)). Leave out `--auto` to update the map only when you ask.
+> **Already done by step 1.** From now on, whenever your AI assistant changes your code, it
+> updates the map too. You write code; the map follows.
+>
+> **Optional: also on GitHub, for every pull request** (even code written by hand). Add one key
+> to your repository, once: `gh secret set ANTHROPIC_API_KEY`, or on GitHub: your repository →
+> **Settings → Secrets and variables → Actions → New repository secret**.
+>
+> No Claude key? A [Gemini key](https://aistudio.google.com/apikey) is free: install with
+> `--agent gemini` and name the secret `GEMINI_API_KEY`. Other assistants:
+> [details](#automatic-updates-in-detail).
 
 ![Demo: click a module, a widget's popup shows how it looks and its exact code; "Appears in" links to every diagram that draws a class; an arrow opens the method it calls; search finds any class or file](docs/demo.gif)
 
@@ -39,7 +48,7 @@ From then on the map keeps itself current: **you write the code, the map follows
 
 ![Clicking a widget opens its crop from the running app and its exact source, linked to GitHub](docs/popup.jpg)
 
-## Make it automatic
+## Automatic updates, in detail
 
 `install.sh --auto` sets up three layers, so nobody has to remember the map:
 
