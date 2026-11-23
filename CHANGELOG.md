@@ -6,6 +6,8 @@
 - `app-map changes --exit-code`: exits 1 when the map is behind the code.
 - `noCrop` in `app-map.json`: a crop that shows something wrong stays out on every run.
 - New link-preview and LinkedIn images showing all three platforms.
+- Kotlin `companion object` members are indexed: `Foo.create()` opens its code.
+- The parse cache follows each language module's code, so an indexer fix reaches files parsed before.
 
 ## 0.4.0 — 2026-11-23
 
