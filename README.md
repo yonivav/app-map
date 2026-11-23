@@ -1,6 +1,6 @@
 # App Map — an AI agent skill for mobile apps
 
-[![Check](https://github.com/yonivav/app-map/actions/workflows/check.yml/badge.svg)](https://github.com/yonivav/app-map/actions/workflows/check.yml) [![Release](https://img.shields.io/github/v/release/yonivav/app-map)](https://github.com/yonivav/app-map/releases) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE) · [Site](https://yonivav.github.io/app-map/) · [Live examples](https://yonivav.github.io/app-map/examples/)
+[![Check](https://github.com/yonivav/app-map/actions/workflows/check.yml/badge.svg)](https://github.com/yonivav/app-map/actions/workflows/check.yml) [![Release](https://img.shields.io/github/v/release/yonivav/app-map)](https://github.com/yonivav/app-map/releases) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE) · [Site](https://yonivav.github.io/app-map/) · [Live examples](https://yonivav.github.io/app-map/examples/) · [The story on dev.to](https://dev.to/yonivav/i-gave-my-ai-coding-agent-one-skill-and-now-it-draws-and-updates-my-apps-architecture-85m)
 
 **Your AI coding assistant draws a map of your app's code, and keeps it up to date.**
 
