@@ -49,6 +49,11 @@
   .button.primary { background: var(--accent); color: var(--bg); }
   .button:hover, .button:focus-visible { filter: brightness(1.1); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
   .agents { font-family: var(--font-mono); font-size: 14px; color: var(--muted); margin-top: 22px; }
+  .demo { width: 100%; border-radius: 14px; border: 1px solid var(--line); display: block;
+    box-shadow: 0 24px 48px rgba(10, 8, 20, 0.28); }
+  .asks { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .asks li { font-size: 15px; color: var(--muted); }
+  .asks i { color: var(--ink); font-style: normal; font-weight: 500; }
   .stack { position: relative; padding-bottom: 28%; }
   .stack img { width: 100%; border-radius: 14px; border: 1px solid var(--line); display: block;
     box-shadow: 0 24px 48px rgba(10, 8, 20, 0.28); }
@@ -77,10 +82,7 @@
       </div>
       <p class="agents">Works in Claude Code · Cursor · Codex · Gemini CLI · Copilot<br>Flutter today · native iOS &amp; Android in progress</p>
     </div>
-    <div class="stack">
-      <img src="docs/overview.jpg" alt="The Wonderous App Map overview: one card per module with a screenshot">
-      <img src="docs/popup.jpg" alt="A widget's popup: its crop from the running app above its exact source code">
-    </div>
+    <img class="demo" src="docs/demo.gif" alt="Demo: open a module, click a widget to see how it looks and its exact code, follow where a class appears, open the method an arrow calls, find any file in the map">
   </section>
 
   <ul class="features">
@@ -95,7 +97,14 @@
     <p>Once, for any agent that reads Agent Skills (Claude Code, Cursor, Codex, Gemini CLI, Copilot):</p>
     <pre>git clone https://github.com/yonivav/app-map ~/.app-map
 cd your-app && ~/.app-map/install.sh</pre>
-    <p>Then ask your agent to <i>build an app map of this repo</i>. <a href="https://github.com/yonivav/app-map#readme">Full guide →</a></p>
+    <p>Then just ask your agent:</p>
+    <ul class="asks">
+      <li><i>"Build an app map of this repo"</i> — one page per module, checked against the code</li>
+      <li><i>"Update the app map"</i> — only what changed since it was synced</li>
+      <li><i>"Where is WondersLogic on the map?"</i> — every diagram that draws it</li>
+      <li><i>"Take screenshots for the app map"</i> — real crops of every page and widget</li>
+    </ul>
+    <p><a href="https://github.com/yonivav/app-map#ask-your-agent">More prompts and the full guide →</a></p>
   </section>
 
   <footer>The example maps <a href="https://github.com/gskinnerTeam/flutter-wonderous-app">Wonderous</a> by gskinner (MIT). App Map is MIT · Yoni Vizel.</footer>

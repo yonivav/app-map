@@ -12,6 +12,8 @@ Ask again after code changes and it updates only what changed.
 **For mobile apps:** Flutter (Dart) today; native iOS (Swift, Objective-C) and Android (Kotlin,
 Java) are in progress.
 
+![Demo: click a module, a widget's popup shows how it looks and its exact code; "Appears in" links to every diagram that draws a class; an arrow opens the method it calls; search finds any class or file](docs/demo.gif)
+
 > **[▶ Open the live example: Wonderous](https://yonivav.github.io/app-map/examples/wonderous/)**
 > — the Flutter team's showcase app by gskinner (~31k lines, MIT), mapped by this skill.
 
@@ -61,6 +63,20 @@ cd your-app && ~/.app-map/install.sh          # into this repo (commit it to sha
 | Anything else | point it at `.agents/skills/app-map/SKILL.md` (e.g. from `AGENTS.md`) |
 
 `--link` symlinks instead of copying, so `git -C ~/.app-map pull` updates every repo.
+
+## Ask your agent
+
+Once installed, talk to your agent in plain words. For example:
+
+| Ask | What happens |
+|---|---|
+| *"Build an app map of this repo"* | It proposes the modules, then writes one page each, builds the site and checks every page |
+| *"Update the app map"* | It lists what changed in the code since the map was synced and edits only those pages |
+| *"Is the app map up to date?"* | It reports, per module, the classes that changed, the names that no longer exist, and new classes not on the map |
+| *"Where is `WondersLogic` on the map?"* or *"…`lib/logic/wonders_logic.dart`?"* | It lists every diagram that draws that class, or that file's classes |
+| *"Add the new Settings screen to the app map"* | It adds the screen to the right module (or a new one) and to the overview |
+| *"Take screenshots for the app map"* | It runs the app on a simulator, adds each module's screenshots, and crops every page and widget for the popups |
+| *"Using the app map, explain how the timeline works"* | It reads the module's page and code to answer, with links to the exact lines |
 
 **Before you publish a map:** the built site includes excerpts of your source code (that's what
 the popups show). Keep a private app's map private — commit it to the app's own repo, don't host
