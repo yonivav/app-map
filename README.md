@@ -1,6 +1,6 @@
 # App Map — an AI agent skill for mobile apps
 
-[![Check](https://github.com/yonivav/app-map/actions/workflows/check.yml/badge.svg)](https://github.com/yonivav/app-map/actions/workflows/check.yml) · [Site](https://yonivav.github.io/app-map/) · [Live examples](https://yonivav.github.io/app-map/examples/)
+[![Check](https://github.com/yonivav/app-map/actions/workflows/check.yml/badge.svg)](https://github.com/yonivav/app-map/actions/workflows/check.yml) [![Release](https://img.shields.io/github/v/release/yonivav/app-map)](https://github.com/yonivav/app-map/releases) [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE) · [Site](https://yonivav.github.io/app-map/) · [Live examples](https://yonivav.github.io/app-map/examples/)
 
 **Give your AI coding agent one skill, and it maps your mobile app.** Install App Map into
 Claude Code, Cursor, Codex, Gemini CLI or GitHub Copilot, then ask: *"build an app map of this
@@ -89,6 +89,17 @@ cd your-app && ~/.app-map/install.sh          # into this repo (commit it to sha
 | Anything else | point it at `.agents/skills/app-map/SKILL.md` (e.g. from `AGENTS.md`) |
 
 `--link` symlinks instead of copying, so `git -C ~/.app-map pull` updates every repo.
+
+### What you need
+
+| | Maps (diagrams, code popups, updates) | Screenshots |
+|---|---|---|
+| **Any app** | Python 3.9+, git, Chrome (for `verify`); macOS or Linux (CI builds the examples on Linux) | — |
+| **Flutter** | the Dart SDK recommended (reads every syntax; works without it) | macOS with Xcode (an iOS simulator) |
+| **iOS** (Swift, Objective-C) | nothing more | macOS with Xcode; the app builds for the simulator |
+| **Android** (Kotlin, Java) | nothing more | the Android SDK with an emulator image; tested on macOS, not yet on Linux |
+
+The map's Python environment sets itself up on first use (`~/.cache/app-map/venv`).
 
 ## Ask your agent
 

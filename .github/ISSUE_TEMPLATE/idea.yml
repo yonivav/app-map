@@ -1,0 +1,14 @@
+name: Idea or new platform
+description: Something App Map should do, or an app stack it should support.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What you'd like the map (or your agent) to do, and why.
+    validations: { required: true }
+  - type: input
+    id: example
+    attributes:
+      label: An open-source app it should work on (optional)

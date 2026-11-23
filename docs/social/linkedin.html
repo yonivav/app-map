@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- The LinkedIn post's image (1200×627): render with docs/social/render.py. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=block">
+<style>
+  html, body { margin: 0; width: 1200px; height: 627px; overflow: hidden; }
+  body { background: radial-gradient(110% 130% at 50% 0%, #2a2440 0%, #15131d 60%); color: #ece9f6;
+    font-family: "IBM Plex Sans", sans-serif; position: relative; }
+  .head { position: absolute; left: 0; right: 0; top: 40px; text-align: center; }
+  h1 { font-family: Fraunces, serif; font-weight: 600; font-size: 47px; line-height: 1.08; white-space: nowrap; margin: 0 0 12px; letter-spacing: -0.5px; }
+  h1 b { color: #b9a6ff; font-weight: 600; }
+  .sub { font-size: 23px; color: #d6d1ea; margin: 0; }
+  .row { position: absolute; left: 56px; right: 56px; top: 186px; display: flex; gap: 26px; }
+  .col { flex: 1; position: relative; }
+  .card { height: 340px; overflow: hidden; border-radius: 14px; border: 1px solid #3a3552;
+    box-shadow: 0 24px 48px rgba(0,0,0,.5); background: #1d1a28; }
+  .card img { width: 100%; display: block; }
+  .chip { position: absolute; top: -15px; left: 16px; z-index: 2; font: 500 17px "IBM Plex Sans"; padding: 5px 14px;
+    border-radius: 999px; background: #b9a6ff; color: #15131d; white-space: nowrap; }
+  .foot { position: absolute; left: 56px; right: 56px; bottom: 26px; display: flex; justify-content: space-between;
+    font-family: "IBM Plex Mono", monospace; font-size: 18px; color: #a6a1bd; }
+  .foot b { color: #b9a6ff; font-weight: 400; }
+</style>
+<div class="head">
+  <h1>Your app's architecture, <b>clickable down to the code</b></h1>
+  <p class="sub">One AI agent skill maps your mobile app. Every box opens its real source and how it looks.</p>
+</div>
+<div class="row">
+  <div class="col"><span class="chip">Flutter</span><div class="card"><img src="parts/flutter.png"></div></div>
+  <div class="col"><span class="chip">iOS · Swift</span><div class="card"><img src="parts/ios.png"></div></div>
+  <div class="col"><span class="chip">Android · Compose</span><div class="card"><img src="parts/android.png"></div></div>
+</div>
+<div class="foot"><span>Claude Code · Cursor · Codex · Gemini CLI · Copilot</span><b>github.com/yonivav/app-map</b></div>

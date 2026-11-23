@@ -1,0 +1,30 @@
+name: Something didn't work
+description: A command failed, a diagram or crop came out wrong, or the agent got stuck.
+labels: [bug]
+body:
+  - type: input
+    id: platform
+    attributes:
+      label: App platform
+      placeholder: Flutter / iOS (Swift, Objective-C) / Android (Kotlin, Java)
+    validations: { required: true }
+  - type: input
+    id: agent
+    attributes:
+      label: Agent
+      placeholder: Claude Code / Cursor / Codex / Gemini CLI / Copilot
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command you ran (or what you asked the agent) and what came out. Paste errors as text.
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+  - type: input
+    id: version
+    attributes:
+      label: App Map version
+      description: The release, or `git -C ~/.app-map log -1 --oneline`.
