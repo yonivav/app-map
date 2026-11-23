@@ -74,6 +74,13 @@
     <h1>Topic Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · One topic's detail: its header with a follow button, and the news written about it.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/topic/01_header.jpg"><img src="shots/topic/01_header.jpg" alt="A topic&#x27;s header and its news" loading="lazy"></a><figcaption>A topic's header and its news</figcaption></figure></li>
+      <li><figure><a href="shots/topic/02_news.jpg"><img src="shots/topic/02_news.jpg" alt="The topic&#x27;s news, scrolled" loading="lazy"></a><figcaption>The topic's news, scrolled</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap">Reached from For You, Interests or Search with just a topic id (<code>TopicNavKey(id)</code>), the screen combines two independent streams into two separate sealed states: <code>TopicUiState</code> (the topic's name, description, image and whether you follow it) and <code>NewsUiState</code> (the news written about it, each with its own bookmark state) — each can be <code>Loading</code>, <code>Error</code> or <code>Success</code> on its own clock, so the header can appear before the news list finishes loading. <code>TopicToolbar</code> shows a back arrow and, once the topic has loaded, a follow toggle right there in the app bar; toggling it calls straight through to <code>UserDataRepository</code>, same as everywhere else in the app.</p>

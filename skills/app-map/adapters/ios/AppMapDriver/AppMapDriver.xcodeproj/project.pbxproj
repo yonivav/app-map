@@ -1,0 +1,250 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1000000000000000000B001 /* HostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000F001 /* HostApp.swift */; };
+		A1000000000000000000B002 /* AppMapShots.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000F002 /* AppMapShots.swift */; };
+		A1000000000000000000B003 /* AppMapScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000F003 /* AppMapScenario.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A1000000000000000000C001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000009001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A10000000000000000007001;
+			remoteInfo = AppMapHost;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A1000000000000000000F001 /* HostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostApp.swift; sourceTree = "<group>"; };
+		A1000000000000000000F002 /* AppMapShots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMapShots.swift; sourceTree = "<group>"; };
+		A1000000000000000000F003 /* AppMapScenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMapScenario.swift; sourceTree = "<group>"; };
+		A1000000000000000000F101 /* AppMapHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppMapHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000000000000000000F102 /* AppMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1000000000000000000D001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000000000000000000D002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1000000000000000000A001 = {
+			isa = PBXGroup;
+			children = (
+				A1000000000000000000A002 /* Host */,
+				A1000000000000000000A003 /* UITests */,
+				A1000000000000000000A004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1000000000000000000A002 /* Host */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000000000000000F001 /* HostApp.swift */,
+			);
+			path = Host;
+			sourceTree = "<group>";
+		};
+		A1000000000000000000A003 /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000000000000000F002 /* AppMapShots.swift */,
+				A1000000000000000000F003 /* AppMapScenario.swift */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		A1000000000000000000A004 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000000000000000F101 /* AppMapHost.app */,
+				A1000000000000000000F102 /* AppMapUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A10000000000000000007001 /* AppMapHost */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000000000000000006002 /* Build configuration list for PBXNativeTarget "AppMapHost" */;
+			buildPhases = (
+				A10000000000000000005001 /* Sources */,
+				A1000000000000000000D001 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AppMapHost;
+			productName = AppMapHost;
+			productReference = A1000000000000000000F101 /* AppMapHost.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A10000000000000000007002 /* AppMapUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000000000000000006003 /* Build configuration list for PBXNativeTarget "AppMapUITests" */;
+			buildPhases = (
+				A10000000000000000005002 /* Sources */,
+				A1000000000000000000D002 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1000000000000000000E001 /* PBXTargetDependency */,
+			);
+			name = AppMapUITests;
+			productName = AppMapUITests;
+			productReference = A1000000000000000000F102 /* AppMapUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A10000000000000000009001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					A10000000000000000007002 = {
+						TestTargetID = A10000000000000000007001;
+					};
+				};
+			};
+			buildConfigurationList = A10000000000000000006001 /* Build configuration list for PBXProject "AppMapDriver" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1000000000000000000A001;
+			productRefGroup = A1000000000000000000A004 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A10000000000000000007001 /* AppMapHost */,
+				A10000000000000000007002 /* AppMapUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A10000000000000000005001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000000000000000000B001 /* HostApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000005002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000000000000000000B002 /* AppMapShots.swift in Sources */,
+				A1000000000000000000B003 /* AppMapScenario.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A1000000000000000000E001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000000000000000007001 /* AppMapHost */;
+			targetProxy = A1000000000000000000C001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A10000000000000000008001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				ONLY_ACTIVE_ARCH = YES;
+				ENABLE_TESTABILITY = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A10000000000000000008002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.appmap.host;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A10000000000000000008003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.appmap.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AppMapHost;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A10000000000000000006001 /* Build configuration list for PBXProject "AppMapDriver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000008001 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A10000000000000000006002 /* Build configuration list for PBXNativeTarget "AppMapHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000008002 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A10000000000000000006003 /* Build configuration list for PBXNativeTarget "AppMapUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000008003 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A10000000000000000009001 /* Project object */;
+}

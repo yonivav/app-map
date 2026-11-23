@@ -10,7 +10,7 @@ description: >
   code changes ("update the app map", "is the map current"). Flutter/Dart, native iOS
   (Swift/Objective-C) and native Android (Kotlin/Java).
 license: MIT
-compatibility: Flutter/Dart, native iOS (Swift/Objective-C) or native Android (Kotlin/Java) repos. Needs Python 3.9+ and git; Dart SDK recommended for Flutter; Chrome for verify; macOS + Xcode for Flutter screenshots (native screenshots aren't supported yet).
+compatibility: Flutter/Dart, native iOS (Swift/Objective-C) or native Android (Kotlin/Java) repos. Needs Python 3.9+ and git; Dart SDK recommended for Flutter; Chrome for verify; for screenshots, macOS + Xcode (Flutter, iOS) or the Android SDK (Android).
 ---
 
 # App map
@@ -97,13 +97,15 @@ stale ones; keep deliberate descriptions (a widget's role, like `logo`). `build`
 `external` in app-map.json; anything else is a typo. Then check every number in the text
 against its constant in the code.
 
-### 4. Screenshots (Flutter only, optional)
+### 4. Screenshots (optional)
 
-[reference/screenshots-flutter.md](reference/screenshots-flutter.md): run the app on a simulator,
-take each module's screenshots into `<map>/shots/<module>/`, list them in the module's
-frontmatter, and crop every page and widget for the popups with `app-map crop`. Native iOS and
-Android apps don't have this yet — skip this step; everything else (facts, diagrams, build,
-verify, changes) works the same as for Flutter.
+Run the app on a simulator or emulator of its own, take each module's screenshots into
+`<map>/shots/<module>/`, list them in the module's frontmatter, and crop every page and widget
+for the popups with `app-map crop`. One guide per platform:
+[Flutter](reference/screenshots-flutter.md) (an `integration_test`),
+[iOS](reference/screenshots-ios.md) (an XCUITest by bundle id, views read with lldb),
+[Android](reference/screenshots-android.md) (an instrumented test; composables read from
+Compose's inspector data).
 
 ## Update
 

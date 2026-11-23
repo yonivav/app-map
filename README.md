@@ -10,8 +10,7 @@ to see its **real source code**; pages and widgets also show **how they look in 
 Ask again after code changes and it updates only what changed.
 
 **For mobile apps:** Flutter (Dart), native iOS (Swift, Objective-C) and native Android (Kotlin,
-Java) — class maps, screen composition and state machines for all of them. Screenshots (the
-on-screen crops in popups) are Flutter-only so far; native screenshots are in progress.
+Java) — class maps, screen composition, state machines and screenshots for all of them.
 
 ![Demo: click a module, a widget's popup shows how it looks and its exact code; "Appears in" links to every diagram that draws a class; an arrow opens the method it calls; search finds any class or file](docs/demo.gif)
 
@@ -119,7 +118,7 @@ The skill's own tools also work on their own:
 | `app-map where <map> <Class or file>` | code → map: every diagram that draws it |
 | `app-map facts <map> <Class>…` | what each class builds and uses, by role: the raw material for its diagrams (Dart, with the Dart SDK; role/`extends`/`implements` only for Swift, Kotlin, Java, Objective-C, or Dart without an SDK) |
 | `app-map verify <map>` | renders every page in headless Chrome; flags Mermaid pitfalls, leftover placeholders and names that won't click |
-| `app-map shots <app> <scenario> <out>` | runs a Flutter screenshot scenario on its own iOS simulator |
+| `app-map shots [ios\|android] …` | runs a screenshot scenario on a simulator or emulator of its own (Flutter, iOS or Android) |
 | `app-map crop <shots> <map>` | crops each page/widget from its best shot (nothing covering it) |
 
 ## How it works
@@ -131,17 +130,19 @@ The skill's own tools also work on their own:
   file, so a rerun only parses what changed.
 - **Diagrams.** The diagrams are Mermaid, rendered in the page with the page's own theme (light
   and dark). Each source sits in a `<script type="text/plain">`, so `<<stereotypes>>` survive.
-- **Screenshots.** The Flutter adapter is an `integration_test` helper. At each shot it records
-  every diagram widget's on-screen rectangle. It also hit-tests five points per widget to know
-  whether a panel or dialog covers it, and scrolls widgets that were cut off into view for a
-  shot of their own.
+- **Screenshots.** At each shot a small adapter records where every class of the map sits on
+  screen, and whether something covers it. Flutter: an `integration_test` helper that also
+  hit-tests five points per widget and scrolls cut-off widgets into view. iOS: an XCUITest that
+  drives any installed app by bundle id, while lldb reads each view's class and frame (UIKit, and
+  the SwiftUI view a hosting controller shows). Android: an instrumented test that reads Views,
+  Fragments and `@Composable` functions from Compose's own inspector data, the way Android
+  Studio's Layout Inspector does.
 
 ## Status
 
 - **Phase 1 (done):** Flutter/Dart, with screenshots on the iOS simulator.
-- **Phase 2 (done):** native Android (Kotlin/Java) and iOS (Swift/Objective-C) class maps, screen
-  composition and state machines. Native screenshots (crops via `uiautomator` on Android, XCUITest
-  on iOS) are next.
+- **Phase 2 (done):** native Android (Kotlin/Java) and iOS (Swift/Objective-C): class maps, screen
+  composition, state machines and screenshots.
 - **Phase 3:** web (React).
 
 ## Credits
@@ -152,10 +153,10 @@ The examples map three open-source apps, none affiliated with or endorsing this 
   excerpts and screenshots in `examples/wonderous/` are © gskinner.com under the MIT license; see
   `examples/wonderous/LICENSE-wonderous`.
 - [NetNewsWire](https://github.com/Ranchero-Software/NetNewsWire) by Brent Simmons and
-  contributors (MIT). Source excerpts in `examples/netnewswire/` are © Brent Simmons under the
+  contributors (MIT). Source excerpts and screenshots in `examples/netnewswire/` are © Brent Simmons under the
   MIT license; see `examples/netnewswire/LICENSE-netnewswire`.
 - [Now in Android](https://github.com/android/nowinandroid) by Google (Apache-2.0). Source
-  excerpts in `examples/now-in-android/` are © The Android Open Source Project under the
+  excerpts and screenshots in `examples/now-in-android/` are © The Android Open Source Project under the
   Apache-2.0 license; see `examples/now-in-android/LICENSE-now-in-android`.
 
 MIT © 2026 Yoni Vizel

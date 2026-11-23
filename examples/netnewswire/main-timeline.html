@@ -74,6 +74,13 @@
     <h1>Main Timeline Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · The article list for whichever feed, folder or smart feed is selected, with search and "mark all as read".</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/main-timeline/01_feed.jpg"><img src="shots/main-timeline/01_feed.jpg" alt="One feed&#x27;s articles, unread dots on the left" loading="lazy"></a><figcaption>One feed's articles, unread dots on the left</figcaption></figure></li>
+      <li><figure><a href="shots/main-timeline/02_mark_all_read.jpg"><img src="shots/main-timeline/02_mark_all_read.jpg" alt="Mark All as Read asks first" loading="lazy"></a><figcaption>Mark All as Read asks first</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap"><code>MainTimelineViewController</code> reads <code>coordinator.articles</code> — whatever the sidebar selection resolved to — and feeds it to a <code>UICollectionViewDiffableDataSource&lt;Int, Article&gt;</code> of <code>MainTimelineCell</code> rows. A built-in <code>UISearchController</code> has two scopes: search this feed, or search everywhere; <code>showSearchAll()</code> (reached from the sidebar's search button, a keyboard shortcut, or a Home Screen quick action) activates it straight into the "everywhere" scope. Swiping a row, or a toolbar button, calls <code>markAllAsRead(_:)</code>; when more than one article would be marked, <code>MarkAsReadAlertController</code> first shows an action-sheet confirmation anchored to wherever the user tapped (a <code>CGRect</code>, a <code>UIView</code> or a <code>UIBarButtonItem</code> — three source types, one alert). Selecting a row calls <code>coordinator.selectArticle()</code>, which is how the Article module finds out what to show; it doesn't select the row back the other way. Marking as read updates the row's unread dot without a full reload, since <code>applyChanges</code> only runs on real additions/removals.</p>

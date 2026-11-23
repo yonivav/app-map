@@ -74,6 +74,12 @@
     <h1>Article Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · Reading an article as rendered HTML, swiping between articles, Reader-view extraction, and "find in article".</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/article/01_article.jpg"><img src="shots/article/01_article.jpg" alt="An article, with the toolbar to star, mark unread and share" loading="lazy"></a><figcaption>An article, with the toolbar to star, mark unread and share</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap"><code>ArticleViewController</code> hosts a <code>UIPageViewController</code> of <code>WebViewController</code>s, one per article, so swiping left/right between unread articles is a page transition rather than a reload. Each <code>WebViewController</code> renders the article through a <code>PreloadedWebView</code> — a <code>WKWebView</code> kept pre-warmed in a small pool (<code>WebViewProvider</code>) because a fresh <code>WKWebView</code> flashes white on its first load in dark mode; the pool is flushed and refilled whenever the app returns to the foreground, since a backgrounded web view can silently lose its content process. Tapping the Reader-view button calls <code>toggleArticleExtractor()</code>, which starts an <code>ArticleExtractor</code> fetching a simplified, ad-free version of the page; while it's <code>.processing</code> the button animates, and on success the extracted HTML replaces the normal rendering until toggled off. <code>ArticleSearchBar</code>'s "find in article" scope searches the loaded page's text directly (not the article list) via <code>FindInArticleActivity</code>. An article's favicon loads through a custom <code>WKURLSchemeHandler</code> (<code>ArticleIconSchemeHandler</code>) rather than a network request, since it's already cached locally.</p>

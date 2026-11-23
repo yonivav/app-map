@@ -74,6 +74,12 @@
     <h1>Bookmarks Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · The saved tab: every bookmarked article in the same staggered grid as For You, with an undo snackbar.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/bookmarks/01_saved.jpg"><img src="shots/bookmarks/01_saved.jpg" alt="A saved article" loading="lazy"></a><figcaption>A saved article</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap">The grid lists only news resources you've bookmarked (<code>observeAllBookmarked()</code>), reusing the same <code>newsFeed()</code> composable as the For You module. Un-bookmarking a card doesn't remove it from the list right away: the view-model flips <code>shouldDisplayUndoBookmark</code> and remembers the id, the screen shows a snackbar with an <b>Undo</b> action, and only once the snackbar is dismissed without being undone does <code>clearUndoState()</code> run — the underlying <code>setNewsResourceBookmarked(id, false)</code> already happened, so the list re-filters itself out on the next <code>observeAllBookmarked()</code> emission. An empty list shows a dedicated illustration and caption instead of a blank grid.</p>

@@ -74,6 +74,12 @@
     <h1>Interests Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · Every topic you can follow, alphabetically, with a follow toggle; tapping one opens its Topic detail.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/interests/01_topics.jpg"><img src="shots/interests/01_topics.jpg" alt="Every topic, with a follow toggle" loading="lazy"></a><figcaption>Every topic, with a follow toggle</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap">A single tab lists every topic (<code>GetFollowableTopicsUseCase</code>, sorted by name) with a toggle for whether you follow it; toggling calls <code>setTopicIdFollowed</code> straight through to <code>UserDataRepository</code>, no local state. Tapping a topic name (not the toggle) opens the Topic module. On a wide screen, the Interests list is the <b>list pane</b> of a two-pane layout (<code>ListDetailSceneStrategy</code>) — the Topic module then renders as its <b>detail pane</b> alongside it, and before any topic is picked the detail pane shows <code>InterestsDetailPlaceholder</code>, a plain "pick a topic" card, instead of being empty. On a narrow screen there's no detail pane: tapping a topic pushes it onto the current tab's back stack instead.</p>

@@ -74,6 +74,13 @@
     <h1>App Shell Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · MainActivity, the splash-to-theme handoff, and the Navigator that gives each bottom-nav tab its own back stack.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/app-shell/01_feed.jpg"><img src="shots/app-shell/01_feed.jpg" alt="The bottom bar&#x27;s three tabs, each with its own back stack" loading="lazy"></a><figcaption>The bottom bar's three tabs, each with its own back stack</figcaption></figure></li>
+      <li><figure><a href="shots/app-shell/02_dark.jpg"><img src="shots/app-shell/02_dark.jpg" alt="Dark theme, picked in Settings" loading="lazy"></a><figcaption>Dark theme, picked in Settings</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap"><code>MainActivity</code> installs the splash screen before <code>super.onCreate</code>, and keeps it up (<code>setKeepOnScreenCondition</code>) until <code>MainActivityViewModel.uiState</code> leaves <code>Loading</code> for <code>Success</code> — the first <code>userData</code> emission decides the real theme (brand, dark mode, dynamic color) before a single themed pixel is drawn, and that <code>themeSettings</code> is then tracked as its own <code>mutableStateOf</code> so a system dark-mode change recomposes independently of the view-model. <code>NiaApp</code> builds three bottom-nav items — For You, Bookmarks, Interests — each with its <b>own</b> back stack (<code>NavigationState.subStacks</code>); tapping a different tab only ever switches which sub-stack <code>NavDisplay</code> shows, tapping the <b>current</b> tab again clears that tab's stack back to its root, and Search/Topic/Settings push onto whichever tab's stack was active when they opened. A tab's icon gets a small notification dot while it has unread news (<code>topLevelNavKeysWithUnreadResources</code>, recomputed from both the For You feed and the bookmarks list). On a wide screen, Interests and Topic render side by side instead of one pushing over the other (<code>ListDetailSceneStrategy</code>).</p>

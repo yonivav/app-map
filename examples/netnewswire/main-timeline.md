@@ -3,6 +3,11 @@ title: Main Timeline Module
 sub: The article list for whichever feed, folder or smart feed is selected, with search and "mark all as read".
 card_title: Main Timeline
 card: Article list, search, mark as read
+screenshots:
+- file: shots/main-timeline/01_feed.jpg
+  caption: One feed's articles, unread dots on the left
+- file: shots/main-timeline/02_mark_all_read.jpg
+  caption: Mark All as Read asks first
 ---
 
 ## What it does {#what}

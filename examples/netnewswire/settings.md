@@ -3,6 +3,11 @@ title: Settings Module
 sub: Accounts, appearance, troubleshooting and About — one SwiftUI screen with a value-based navigation stack.
 card_title: Settings
 card: Accounts, appearance, OPML, about
+screenshots:
+- file: shots/settings/01_settings.jpg
+  caption: 'Settings: accounts, feeds, appearance'
+- file: shots/settings/02_scrolled.jpg
+  caption: Troubleshooting and help
 ---
 
 ## What it does {#what}

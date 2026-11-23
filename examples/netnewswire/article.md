@@ -3,6 +3,9 @@ title: Article Module
 sub: Reading an article as rendered HTML, swiping between articles, Reader-view extraction, and "find in article".
 card_title: Article
 card: The reading view, Reader view, find-in-article
+screenshots:
+- file: shots/article/01_article.jpg
+  caption: An article, with the toolbar to star, mark unread and share
 ---
 
 ## What it does {#what}

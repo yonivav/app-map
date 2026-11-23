@@ -7,3 +7,5 @@ skills/app-map/scripts/dart_declarations/pubspec.lock
 examples/wonderous/wonderous-src
 examples/netnewswire/netnewswire-src
 examples/now-in-android/now-in-android-src
+# The iOS screenshot driver is an Xcode project: keep it even where a global ignore drops pbxproj.
+!skills/app-map/adapters/ios/AppMapDriver/AppMapDriver.xcodeproj/project.pbxproj

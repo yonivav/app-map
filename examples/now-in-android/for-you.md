@@ -1,8 +1,17 @@
 ---
 title: For You Module
-sub: "The home feed: a one-time topic-picking onboarding, then a staggered grid of news from your followed topics."
+sub: 'The home feed: a one-time topic-picking onboarding, then a staggered grid of news from your followed topics.'
 card_title: For You
 card: Topic onboarding + the staggered news feed
+screenshots:
+- file: shots/for-you/01_onboarding.jpg
+  caption: 'First run: pick the topics you follow'
+- file: shots/for-you/02_topics_picked.jpg
+  caption: Done turns on once a topic is followed
+- file: shots/for-you/03_feed.jpg
+  caption: News from the followed topics
+- file: shots/for-you/04_scrolled.jpg
+  caption: The staggered feed, scrolled
 ---
 
 ## What it does {#what}

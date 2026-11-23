@@ -9,6 +9,8 @@
 #   app-map facts <map> <Class>... | --dir <folder>   what each class builds and uses
 #   app-map convert <map>                    HTML pages (older maps) → Markdown sources
 #   app-map shots <app> <scenario> <out>     run a Flutter screenshot scenario
+#   app-map shots ios --bundle <id> --map <map> [--app <.app>] <Scenario.swift> <out>
+#   app-map shots android <app module> <Scenario.kt> <out> [--variant Debug]
 #   app-map crop <shots dir> <map>           one picture per page/widget, then rebuild
 #   app-map compare <expected> <actual>      structural diff of two maps
 #
@@ -71,12 +73,18 @@ case "$cmd" in
     map="${1:?usage: app-map facts <map> <Class>... | --dir <folder>}"; shift
     "$py" "$here/facts.py" "$(repo_of "$map")" "$@" ;;
   convert) "$py" "$here/html_to_md.py" "${1:?usage: app-map convert <map>}" ;;
-  shots) "$here/../adapters/flutter/run_shots.sh" "$@" ;;
+  shots)
+    case "${1:-}" in
+      ios) shift; "$py" "$here/../adapters/ios/run_shots.py" "$@" ;;
+      android) shift; "$here/../adapters/android/run_shots.sh" "$@" ;;
+      flutter) shift; "$here/../adapters/flutter/run_shots.sh" "$@" ;;
+      *) "$here/../adapters/flutter/run_shots.sh" "$@" ;;
+    esac ;;
   crop)
     shots="${1:?usage: app-map crop <shots dir> <map>}"; map="${2:?map dir}"
     rm -rf "$map/shots/code"
     "$py" "$here/crop_shots.py" "$shots" "$map/shots/code" | tail -1
     index "$map" | tail -1 ;;
   compare) "$py" "$here/compare_maps.py" "$@" ;;
-  *) sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
+  *) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
 esac

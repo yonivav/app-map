@@ -74,6 +74,13 @@
     <h1>Search Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · Search topics and news as you type, with recent-search chips; opened from the top app bar's search icon.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/search/01_results.jpg"><img src="shots/search/01_results.jpg" alt="Typing a query" loading="lazy"></a><figcaption>Typing a query</figcaption></figure></li>
+      <li><figure><a href="shots/search/02_empty.jpg"><img src="shots/search/02_empty.jpg" alt="Search opens with the keyboard up" loading="lazy"></a><figcaption>Search opens with the keyboard up</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap">Opened from the search icon in the top app bar (<code>navigator.navigate(SearchNavKey)</code>), not a bottom tab. The result state is gated two ways before a query ever runs a search: <code>SearchNotReady</code> while the full-text-search table hasn't been populated yet (fewer than 1 indexed item), then <code>EmptyQuery</code> while the typed query is under 2 characters — only past both does typing actually search topics and news live, one <code>FullTextSearch</code> query per keystroke via <code>GetSearchContentsUseCase</code>. A separate <code>RecentSearchQueriesUiState</code> lists up to the most recent searches as tappable chips while the query box is otherwise empty; explicitly triggering a search (the IME's search action, not just typing) saves it to that list, and a trash icon clears the whole history.</p>

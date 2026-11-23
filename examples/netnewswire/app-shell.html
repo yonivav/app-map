@@ -74,6 +74,12 @@
     <h1>App Shell Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · The three-column split view (feeds · timeline · article), launch, and deep links from widgets, notifications and the <code>feed:</code>/<code>netnewswire:</code> URL schemes.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/app-shell/01_feeds.jpg"><img src="shots/app-shell/01_feeds.jpg" alt="On iPhone the three columns are one navigation stack, opening on the feeds" loading="lazy"></a><figcaption>On iPhone the three columns are one navigation stack, opening on the feeds</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap"><code>AppDelegate</code> starts <code>AccountManager</code> before anything else, registers background refresh tasks and notification handling, and imports the default feeds on first run. Each window scene gets its own <code>SceneDelegate</code>, which builds one <code>SceneCoordinator</code> and hands it the <code>RootSplitViewController</code> — a <code>UISplitViewController</code> with three columns: the feed sidebar (primary), the article timeline (supplementary) and the reading view (secondary). On iPhone the columns collapse into a single navigation stack instead. A cold launch restores the previous selection unless an external action — a notification tap, a Home Screen quick action, a Siri shortcut, a widget tap, or a <code>feed:</code>/<code>feeds:</code>/<code>netnewswire://theme</code> URL — is pending, in which case that action's navigation wins and selection restoration is skipped so the two don't race. Widget taps for the Today, Starred and Unread smart feeds open that feed and, after a fixed 0.6 s to let the sidebar rebuild, select the specific article by ID.</p>

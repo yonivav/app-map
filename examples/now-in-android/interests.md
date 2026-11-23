@@ -1,8 +1,11 @@
 ---
 title: Interests Module
-sub: "Every topic you can follow, alphabetically, with a follow toggle; tapping one opens its Topic detail."
+sub: Every topic you can follow, alphabetically, with a follow toggle; tapping one opens its Topic detail.
 card_title: Interests
 card: All topics, with a follow toggle
+screenshots:
+- file: shots/interests/01_topics.jpg
+  caption: Every topic, with a follow toggle
 ---
 
 ## What it does {#what}

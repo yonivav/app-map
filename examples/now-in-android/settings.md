@@ -1,8 +1,13 @@
 ---
 title: Settings Module
-sub: "A modal dialog over the top app bar's gear icon: theme brand, dark mode, dynamic color, plus privacy/license links."
+sub: 'A modal dialog over the top app bar''s gear icon: theme brand, dark mode, dynamic color, plus privacy/license links.'
 card_title: Settings
 card: Theme, dark mode and dynamic color, as a dialog
+screenshots:
+- file: shots/settings/01_dialog.jpg
+  caption: Settings as a dialog over any tab
+- file: shots/settings/02_dark.jpg
+  caption: Picking the dark theme
 ---
 
 ## What it does {#what}

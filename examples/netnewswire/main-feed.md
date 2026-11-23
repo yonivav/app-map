@@ -3,6 +3,15 @@ title: Main Feed Module
 sub: The sidebar of accounts, smart feeds, feeds and folders; adding a feed or folder, and inspecting one.
 card_title: Main Feed
 card: The feeds/folders sidebar, add, inspect
+screenshots:
+- file: shots/main-feed/01_feeds.jpg
+  caption: Smart feeds, then each account's feeds and folders
+- file: shots/main-feed/02_add_menu.jpg
+  caption: 'The + button: add a feed or a folder'
+- file: shots/main-feed/03_add_feed.jpg
+  caption: Add Feed
+- file: shots/main-feed/04_feed_info.jpg
+  caption: A feed's inspector
 ---
 
 ## What it does {#what}

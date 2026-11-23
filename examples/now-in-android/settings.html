@@ -74,6 +74,13 @@
     <h1>Settings Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · A modal dialog over the top app bar's gear icon: theme brand, dark mode, dynamic color, plus privacy/license links.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/settings/01_dialog.jpg"><img src="shots/settings/01_dialog.jpg" alt="Settings as a dialog over any tab" loading="lazy"></a><figcaption>Settings as a dialog over any tab</figcaption></figure></li>
+      <li><figure><a href="shots/settings/02_dark.jpg"><img src="shots/settings/02_dark.jpg" alt="Picking the dark theme" loading="lazy"></a><figcaption>Picking the dark theme</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap">Settings is a <code>Dialog</code>, not a navigation destination — <code>NiaApp</code> just flips a local <code>showSettingsDialog</code> boolean when the top app bar's gear icon is tapped, so there's no back-stack entry to undo. Each row commits straight through <code>UserDataRepository</code> the moment you tap it (a radio button for the theme brand — Default or Android — a radio group for dark mode — Follow System, Light, Dark — and a dynamic-color switch, hidden on the Android brand since that theme doesn't use it and only offered on Android 12+ where the platform API exists). Until the first <code>userData</code> emission arrives the dialog shows a loading indicator in place of the controls; after that it never goes back. A <code>LinksPanel</code> at the bottom opens the privacy policy, licenses and the GitHub repo.</p>

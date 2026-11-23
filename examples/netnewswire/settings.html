@@ -74,6 +74,13 @@
     <h1>Settings Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · Accounts, appearance, troubleshooting and About — one SwiftUI screen with a value-based navigation stack.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/settings/01_settings.jpg"><img src="shots/settings/01_settings.jpg" alt="Settings: accounts, feeds, appearance" loading="lazy"></a><figcaption>Settings: accounts, feeds, appearance</figcaption></figure></li>
+      <li><figure><a href="shots/settings/02_scrolled.jpg"><img src="shots/settings/02_scrolled.jpg" alt="Troubleshooting and help" loading="lazy"></a><figcaption>Troubleshooting and help</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap"><code>SettingsView</code> is a single <code>List</code> split into sections — accounts, feeds (OPML import/export), appearance, troubleshooting, help, about — each row either an action (opens System Settings, opens a help URL in <code>SafariView</code>) or a <code>navigationRow</code> that pushes a <code>SettingsDestination</code> case onto a value-based <code>NavigationStack</code>. Tapping an existing account or "Add Account" both resolve to the same <code>AccountInspectorView</code>/account-type screens used from the sidebar's "Get Info", so an account only has one settings UI no matter how you reach it. "Add Account" offers four types — on My iPhone (local), iCloud, a web service (Feedly, Feedbin, NewsBlur, Bazqux, etc. — each OAuth or credentials-based) and self-hosted (FreshRSS). OAuth sign-in runs through <code>OAuthAuthorizationHandler</code>, a delegate-based wrapper around the account type's own authorization operation. Timeline settings is the one screen that's still UIKit (<code>TimelineSettingsViewController</code>, a <code>UICollectionViewController</code>) bridged into the SwiftUI stack with a <code>UIViewControllerRepresentable</code>. Importing an OPML file replaces the chosen account's feeds and folders; exporting writes the account's current tree to a file the system share sheet hands off.</p>

@@ -74,6 +74,15 @@
     <h1>For You Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · The home feed: a one-time topic-picking onboarding, then a staggered grid of news from your followed topics.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/for-you/01_onboarding.jpg"><img src="shots/for-you/01_onboarding.jpg" alt="First run: pick the topics you follow" loading="lazy"></a><figcaption>First run: pick the topics you follow</figcaption></figure></li>
+      <li><figure><a href="shots/for-you/02_topics_picked.jpg"><img src="shots/for-you/02_topics_picked.jpg" alt="Done turns on once a topic is followed" loading="lazy"></a><figcaption>Done turns on once a topic is followed</figcaption></figure></li>
+      <li><figure><a href="shots/for-you/03_feed.jpg"><img src="shots/for-you/03_feed.jpg" alt="News from the followed topics" loading="lazy"></a><figcaption>News from the followed topics</figcaption></figure></li>
+      <li><figure><a href="shots/for-you/04_scrolled.jpg"><img src="shots/for-you/04_scrolled.jpg" alt="The staggered feed, scrolled" loading="lazy"></a><figcaption>The staggered feed, scrolled</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap">The first time the app runs (<code>shouldHideOnboarding</code> is false in the saved <code>UserData</code>), the feed's top item is a topic-picking grid: a 3-row horizontal <code>LazyHorizontalGrid</code> of every followable topic, each a toggle button. <b>Done</b> only enables once at least one topic is followed (<code>isDismissable</code>); tapping it calls <code>setShouldHideOnboarding(true)</code> and the onboarding item disappears for good. Below it, a <code>LazyVerticalStaggeredGrid</code> lists news from the topics you follow, each card toggle-able as bookmarked. A top loading wheel slides in while syncing or while either the onboarding or the feed is still loading, and a deep-linked article (<code>linkedNewsResourceId</code> on the nav key, or a notification's <code>DEEP_LINK_NEWS_RESOURCE_ID_KEY</code>) opens straight into a Chrome custom tab and is marked viewed. On API 33+, the screen asks once for the notification permission if it hasn't been denied before.</p>

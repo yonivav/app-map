@@ -1,8 +1,13 @@
 ---
 title: Topic Module
-sub: "One topic's detail: its header with a follow button, and the news written about it."
+sub: 'One topic''s detail: its header with a follow button, and the news written about it.'
 card_title: Topic
 card: A topic's header, follow button and news
+screenshots:
+- file: shots/topic/01_header.jpg
+  caption: A topic's header and its news
+- file: shots/topic/02_news.jpg
+  caption: The topic's news, scrolled
 ---
 
 ## What it does {#what}

@@ -1,8 +1,13 @@
 ---
 title: App Shell Module
-sub: "MainActivity, the splash-to-theme handoff, and the Navigator that gives each bottom-nav tab its own back stack."
+sub: MainActivity, the splash-to-theme handoff, and the Navigator that gives each bottom-nav tab its own back stack.
 card_title: App Shell
 card: Bottom nav, each tab with its own back stack
+screenshots:
+- file: shots/app-shell/01_feed.jpg
+  caption: The bottom bar's three tabs, each with its own back stack
+- file: shots/app-shell/02_dark.jpg
+  caption: Dark theme, picked in Settings
 ---
 
 ## What it does {#what}

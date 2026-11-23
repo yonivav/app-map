@@ -1,8 +1,11 @@
 ---
 title: Bookmarks Module
-sub: "The saved tab: every bookmarked article in the same staggered grid as For You, with an undo snackbar."
+sub: 'The saved tab: every bookmarked article in the same staggered grid as For You, with an undo snackbar.'
 card_title: Bookmarks
 card: Saved articles, with undo
+screenshots:
+- file: shots/bookmarks/01_saved.jpg
+  caption: A saved article
 ---
 
 ## What it does {#what}

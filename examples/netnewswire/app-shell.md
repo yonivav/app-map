@@ -3,6 +3,9 @@ title: App Shell Module
 sub: The three-column split view (feeds · timeline · article), launch, and deep links from widgets, notifications and the `feed:`/`netnewswire:` URL schemes.
 card_title: App Shell
 card: Launch, the 3-column split view, deep links
+screenshots:
+- file: shots/app-shell/01_feeds.jpg
+  caption: On iPhone the three columns are one navigation stack, opening on the feeds
 ---
 
 ## What it does {#what}

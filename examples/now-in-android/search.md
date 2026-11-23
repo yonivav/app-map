@@ -1,8 +1,13 @@
 ---
 title: Search Module
-sub: "Search topics and news as you type, with recent-search chips; opened from the top app bar's search icon."
+sub: Search topics and news as you type, with recent-search chips; opened from the top app bar's search icon.
 card_title: Search
 card: Instant search, with recent queries
+screenshots:
+- file: shots/search/01_results.jpg
+  caption: Typing a query
+- file: shots/search/02_empty.jpg
+  caption: Search opens with the keyboard up
 ---
 
 ## What it does {#what}

@@ -74,6 +74,15 @@
     <h1>Main Feed Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · The sidebar of accounts, smart feeds, feeds and folders; adding a feed or folder, and inspecting one.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/main-feed/01_feeds.jpg"><img src="shots/main-feed/01_feeds.jpg" alt="Smart feeds, then each account&#x27;s feeds and folders" loading="lazy"></a><figcaption>Smart feeds, then each account's feeds and folders</figcaption></figure></li>
+      <li><figure><a href="shots/main-feed/02_add_menu.jpg"><img src="shots/main-feed/02_add_menu.jpg" alt="The + button: add a feed or a folder" loading="lazy"></a><figcaption>The + button: add a feed or a folder</figcaption></figure></li>
+      <li><figure><a href="shots/main-feed/03_add_feed.jpg"><img src="shots/main-feed/03_add_feed.jpg" alt="Add Feed" loading="lazy"></a><figcaption>Add Feed</figcaption></figure></li>
+      <li><figure><a href="shots/main-feed/04_feed_info.jpg"><img src="shots/main-feed/04_feed_info.jpg" alt="A feed&#x27;s inspector" loading="lazy"></a><figcaption>A feed's inspector</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap"><code>MainFeedCollectionViewController</code> renders the sidebar as a <code>UICollectionViewDiffableDataSource</code> over a <code>TreeController</code>: one section per account, each holding its smart feeds (Today, All Unread, Starred) and the account's feeds and folders, indented by nesting. Folders carry a disclosure triangle (<code>MainFeedCollectionViewFolderCell</code>); a feed or container row shows an unread count once it has one (<code>UILabel+UnreadCount</code>). Pull-to-refresh and the toolbar refresh button both drive <code>RefreshProgressView</code>, a small inline spinner-and-count view. Tapping a row calls <code>coordinator.selectSidebarItem()</code>, which is how every other screen finds out what's selected. "Add Feed" and "Add Folder" are SwiftUI sheets (<code>AddFeedView</code>, <code>AddFolderView</code>) hosted from UIKit with <code>UIHostingController</code>; adding a feed accepts a URL typed in, pasted, or carried over from a <code>feed:</code> deep link, defaulting the account/folder to whichever one the Settings "Default add location" points at. "Get Info" on a feed or account opens a form-sheet inspector — <code>FeedInspectorViewController</code> (a <code>UITableViewController</code>, built from a storyboard) for a feed, or the SwiftUI <code>AccountInspectorView</code>/<code>AccountNotificationInspectorView</code> for an account.</p>
