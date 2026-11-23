@@ -114,7 +114,7 @@ The skill's own tools also work on their own:
 | `app-map build <map>` | Markdown → the clickable site: pages, code popups, search |
 | `app-map changes <map>` / `sync <map>` | what changed in the code since the map was synced, per module; mark it current |
 | `app-map where <map> <Class or file>` | code → map: every diagram that draws it |
-| `app-map facts <map> <Class>…` | what each class builds and uses, by role: the raw material for its diagrams |
+| `app-map facts <map> <Class>…` | what each class builds and uses, by role: the raw material for its diagrams (Dart, with the Dart SDK; role/`extends`/`implements` only for Swift, Kotlin, Java, Objective-C, or Dart without an SDK) |
 | `app-map verify <map>` | renders every page in headless Chrome; flags Mermaid pitfalls, leftover placeholders and names that won't click |
 | `app-map shots <app> <scenario> <out>` | runs a Flutter screenshot scenario on its own iOS simulator |
 | `app-map crop <shots> <map>` | crops each page/widget from its best shot (nothing covering it) |

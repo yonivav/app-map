@@ -56,9 +56,13 @@ scripts/app-map facts <map> HomeScreen WondersLogic SettingsLogic
 scripts/app-map facts <map> --dir lib/ui/screens/home       # every class in a folder
 ```
 
-`facts` lists what each class **builds** and **uses** (by role, design tokens set apart). Use
-it as the checklist for each diagram, then read every file end to end — it can't see framework
-widgets that carry meaning, or UI built from data (follow a component registry by hand).
+`facts` lists what each class **builds** and **uses** (by role, design tokens set apart) — that
+depth needs Dart's own analyzer, so it's Dart-only (and only with the Dart SDK installed; without
+it, Dart falls back to the same reduced output as native languages). For Swift, Kotlin, Java and
+Objective-C, `facts` gives the role, file, line and `extends`/`implements`/`with`/category only —
+no builds/uses breakdown. Use it as a checklist for parents and conformances either way, then read
+every file end to end for what it builds and calls — it can't see framework widgets that carry
+meaning, or UI built from data (follow a component registry by hand).
 **Diagram what the code does, never what names suggest.**
 
 | Section | Contains |
