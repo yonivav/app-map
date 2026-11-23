@@ -18,7 +18,10 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from facts import TYPE_KINDS  # noqa: E402
 from index_code import load_declarations, names_in, where_drawn  # noqa: E402
+
+DRAWABLE_KINDS = TYPE_KINDS + ('enum', 'composable function')
 
 
 def git(root, *args):
@@ -66,7 +69,7 @@ def changes(map_dir, root):
     in_changed = {}
     for name, found in by_name.items():
         for decl in found:
-            if decl['file'] in changed and decl['kind'] in ('class', 'mixin', 'enum', 'extension type') \
+            if decl['file'] in changed and decl['kind'] in DRAWABLE_KINDS \
                     and not name.endswith('State'):
                 in_changed.setdefault(decl['file'], []).append(name)
     drawn_anywhere = set(where_drawn(module_pages(map_dir)))

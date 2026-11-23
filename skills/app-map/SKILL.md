@@ -7,9 +7,10 @@ description: >
   widgets show a crop from the running app; from code back to the map, any class or file finds
   the diagrams that draw it. Use when the user asks for an app map, architecture map, UML of the
   whole app, a visual tour of a codebase or onboarding docs, and to update an existing map after
-  code changes ("update the app map", "is the map current"). Flutter/Dart today.
+  code changes ("update the app map", "is the map current"). Flutter/Dart, native iOS (Swift) and
+  native Android (Kotlin/Java).
 license: MIT
-compatibility: Flutter/Dart repos. Needs Python 3.9+ and git; Dart SDK recommended; Chrome for verify; macOS + Xcode for screenshots.
+compatibility: Flutter/Dart, native iOS (Swift) or native Android (Kotlin/Java) repos. Needs Python 3.9+ and git; Dart SDK recommended for Flutter; Chrome for verify; macOS + Xcode for Flutter screenshots (native screenshots aren't supported yet).
 ---
 
 # App map
@@ -64,7 +65,7 @@ widgets that carry meaning, or UI built from data (follow a component registry b
 |---|---|
 | What it does | 3–6 plain sentences: what the user gets, the rules with their real numbers |
 | Logic · class diagram | page → view-model → model, the services it calls, the data they hold |
-| Screen · widget composition | the widgets the page builds and the models they read |
+| Screen · widget composition | the widgets/views the page builds and the models they read |
 | … · state machine | only for a real phase/state enum with transitions |
 | … · sequence | the module's main user flow, 8–15 messages, titled as a user would say it |
 | Key files | one line per important file or folder: path · what it holds |
@@ -92,11 +93,13 @@ stale ones; keep deliberate descriptions (a widget's role, like `logo`). `build`
 `external` in app-map.json; anything else is a typo. Then check every number in the text
 against its constant in the code.
 
-### 4. Screenshots (Flutter, optional)
+### 4. Screenshots (Flutter only, optional)
 
 [reference/screenshots-flutter.md](reference/screenshots-flutter.md): run the app on a simulator,
 take each module's screenshots into `<map>/shots/<module>/`, list them in the module's
-frontmatter, and crop every page and widget for the popups with `app-map crop`.
+frontmatter, and crop every page and widget for the popups with `app-map crop`. Native iOS and
+Android apps don't have this yet — skip this step; everything else (facts, diagrams, build,
+verify, changes) works the same as for Flutter.
 
 ## Update
 

@@ -24,17 +24,26 @@ WIDGET_BASES = {
     'AlertDialog', 'ElevatedButton', 'TextButton', 'IconButton', 'InkWell', 'GestureDetector',
     'CustomPaint', 'PageView', 'TabBar', 'BottomNavigationBar', 'Card', 'ListTile',
     'PreferredSizeWidget', 'StatefulHookWidget', 'GetView', 'GetWidget',
+    # UIKit and SwiftUI.
+    'UIViewController', 'UIView', 'UITableViewCell', 'UICollectionViewCell', 'UIControl',
+    'UITableViewController', 'UICollectionViewController', 'View',
+    # Android views and SwiftUI/Compose screens.
+    'Activity', 'AppCompatActivity', 'FragmentActivity', 'ComponentActivity', 'Fragment',
+    'DialogFragment', 'ViewGroup', 'RecyclerView', 'ViewHolder',
 }
 # Flutter State and similar: where a StatefulWidget's build() lives, folded into the widget.
 STATE_BASES = {'State', 'ConsumerState', 'GetItState'}
 ROLE_SUFFIXES = [
-    ('page', ('Page', 'Screen')),
+    ('page', ('Page', 'Screen', 'ViewController', 'Activity', 'Fragment')),
     ('view-model', ('VM', 'ViewModel', 'Controller', 'Bloc', 'Cubit', 'Notifier', 'Presenter',
                     'Logic', 'Store')),
     ('service', ('Service', 'Manager', 'Repository', 'Repo', 'Api', 'Client', 'Handler', 'Source',
-                 'Provider', 'Scheduler')),
+                 'Provider', 'Scheduler', 'Interactor', 'UseCase')),
     ('model', ('Model', 'State', 'Data', 'Entity', 'Dto', 'Item', 'Config')),
 ]
+# A widget-ish base that doesn't name every framework subclass (a custom `BaseViewController`).
+WIDGET_SUFFIXES = ('Widget', 'Page', 'ViewController', 'Activity', 'Fragment', 'View', 'Cell',
+                   'ViewHolder')
 ROLE_ORDER = ['page', 'view-model', 'model', 'service', 'widget', 'enum', 'data', 'other', 'style']
 # Design tokens and asset tables: real dependencies, but noise in a diagram.
 STYLE = re.compile(r'(TextStyle|Colors?|Theme|ThemeData|Assets?|Sizes?|Spacing|Paddings?|Radius'
@@ -52,13 +61,20 @@ def chain(name, by_name, seen=None):
     return seen
 
 
+TYPE_KINDS = ('class', 'mixin', 'extension type', 'struct', 'protocol', 'extension', 'interface',
+              'object', 'data class', 'record')
+
+
 def role(name, by_name):
     decl = by_name[name][0]
     if STYLE.search(name) or re.match(r'^[A-Z]\w*(TextStyle|Style)$', name):
         return 'style'
     if decl['kind'] == 'enum':
         return 'enum'
-    if decl['kind'] not in ('class', 'mixin', 'extension type'):
+    # A `@Composable fun Foo(...)` is a Compose screen/widget, not a plain function.
+    if decl['kind'] == 'composable function':
+        return 'widget'
+    if decl['kind'] not in TYPE_KINDS:
         return 'other'
     parents = chain(name, by_name)
     if parents & STATE_BASES:
@@ -66,7 +82,7 @@ def role(name, by_name):
     for label, suffixes in ROLE_SUFFIXES[:1]:
         if name.endswith(suffixes):
             return label
-    if parents & WIDGET_BASES or any(parent.endswith(('Widget', 'Page')) for parent in parents):
+    if parents & WIDGET_BASES or any(parent.endswith(WIDGET_SUFFIXES) for parent in parents):
         return 'widget'
     for label, suffixes in ROLE_SUFFIXES[1:]:
         if name.endswith(suffixes):
@@ -135,7 +151,7 @@ def main():
         folder = os.path.relpath(os.path.realpath(os.path.join(root, names[1])), root)
         names = sorted({decl['name'] for found in by_name.values() for decl in found
                         if decl['file'].startswith(folder + os.sep)
-                        and decl['kind'] in ('class', 'mixin', 'enum', 'extension type')
+                        and decl['kind'] in TYPE_KINDS + ('enum', 'composable function')
                         and role(decl['name'], by_name) != 'state'})
     for name in names:
         print(describe(name, by_name) if name in by_name else f'{name}: not found')

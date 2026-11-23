@@ -8,9 +8,9 @@
 """
 import os
 
-from . import dart
+from . import dart, java, kotlin, swift
 
-LANGUAGES = [dart.LANGUAGE]
+LANGUAGES = [dart.LANGUAGE, swift.LANGUAGE, kotlin.LANGUAGE, java.LANGUAGE]
 
 
 def language_for(filename):
