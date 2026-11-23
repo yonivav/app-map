@@ -28,6 +28,7 @@ jobs:
           test "$(grep -c 'app-map:start' /tmp/auto/AGENTS.md)" = 1
           test "$(grep -c 'app-map:start' /tmp/auto/CLAUDE.md)" = 1
           grep -q '^  MAP_DIR: docs/map$' /tmp/auto/.github/workflows/app-map-update.yml
+          ./install.sh --repo /tmp/auto --auto --map docs/map --agent gemini && grep -q "^  AGENT: gemini$" /tmp/auto/.github/workflows/app-map-update.yml
           pip install -q pyyaml && python3 -c "import yaml,sys; [yaml.safe_load(open(f)) for f in sys.argv[1:]]" /tmp/auto/.github/workflows/*.yml
 
   example:

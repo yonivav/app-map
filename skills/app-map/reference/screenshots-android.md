@@ -34,22 +34,29 @@ shots.step("bookmarks") {
 Navigate with the app's own test tools: Compose test (`onNodeWithText`, `onNodeWithTag`,
 `performClick`, `performTextInput`), Espresso (`pressBack`, `closeSoftKeyboard`).
 
-- A Hilt app needs `@HiltAndroidTest`, `HiltAndroidRule` (order 0) and `hiltRule.inject()`,
-  like its other instrumented tests; its test modules then supply the data.
+- Prefer `--real-app` (below): the scenario then runs under the app's own Application, with
+  its real dependency injection, data and image loading. A project's test runner often swaps in
+  a test Application with fake data (empty search results) and without app-level setup (an image
+  loader that decodes SVG icons). Without it, a Hilt app needs `@HiltAndroidTest`,
+  `HiltAndroidRule` (order 0) and `hiltRule.inject()`, like its other instrumented tests.
+- Wait for the first data load before the first snap (e.g. `compose.waitUntil { … }` until a
+  loading indicator is gone), so screenshots don't catch a spinner.
 - Images loaded from the network may not arrive in time: wait for them (`Thread.sleep`) before
   the snap, and drop a crop that still shows a placeholder.
 
 ## 2. Run it
 
 ```bash
-<skill>/scripts/app-map shots android <app module dir> <Scenario.kt> <out dir> [--variant DemoDebug]
+<skill>/scripts/app-map shots android <app module dir> <Scenario.kt> <out dir> [--variant DemoDebug] [--real-app]
 ```
 
 It copies `AppMapShots.kt` and the scenario into the module's `src/androidTest/kotlin/appmap/`
 (listed in `.git/info/exclude`, never committed), starts the emulator (creating it on first
 use), builds and installs the app and its test APK, runs the scenario with `am instrument`
 (not Gradle's task, which uninstalls the app and its screenshots) and copies the screenshots
-and `drive.log` to `<out dir>`. `instrument.log` has the test's own output.
+and `drive.log` to `<out dir>`. `instrument.log` has the test's own output. `--real-app` adds
+`AppMapRunner` (a plain `AndroidJUnitRunner`) and, for that build only, points the module's test
+runner at it with a Gradle init script; the project's build files aren't touched.
 
 ## 3. Use the pictures
 

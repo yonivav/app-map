@@ -82,9 +82,20 @@ def app_pid(udid, bundle):
     return pids[0] if pids else None
 
 
+def process_pid(udid, hint):
+    """The newest process of this simulator whose executable path contains `hint`."""
+    pids = run('pgrep', '-n', '-f', f'Devices/{udid}/.*{re.escape(hint)}').stdout.split()
+    return pids[0] if pids else None
+
+
 def dump_views(pid):
-    result = run('xcrun', 'lldb', '--batch', '-p', pid,
-                 '-o', 'expr -l swift -O -- ' + DUMP, timeout=180)
+    # A process in the background can't run the expression: give up on it, keep the screenshot.
+    try:
+        result = run('xcrun', 'lldb', '--batch', '-p', pid,
+                     '-o', 'expr -l swift -O -- ' + DUMP, timeout=60)
+    except subprocess.TimeoutExpired:
+        subprocess.run(['kill', '-CONT', pid])
+        return []
     return [line for line in result.stdout.splitlines() if line.startswith(('W ', 'V '))]
 
 
@@ -136,7 +147,8 @@ def main():
                 continue
             taken.add(name)
             run('xcrun', 'simctl', 'io', udid, 'screenshot', os.path.join(out, name + '.png'))
-            pid = app_pid(udid, args.bundle)
+            hint = open(os.path.join(requests, name)).read().strip()
+            pid = process_pid(udid, hint) if hint else app_pid(udid, args.bundle)
             views = dump_views(pid) if pid else []
             for line in views:
                 parts = line.split()

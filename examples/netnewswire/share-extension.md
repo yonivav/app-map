@@ -3,6 +3,9 @@ title: Share Extension Module
 sub: Adding a feed from Safari or another app's share sheet — a separate process that hands off to the main app.
 card_title: Share Extension
 card: Add a feed from the iOS share sheet
+screenshots:
+- file: shots/share-extension/01_add_feed.jpg
+  caption: 'Share a page from Safari: the extension''s Add Feed form'
 ---
 
 ## What it does {#what}

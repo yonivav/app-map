@@ -1,23 +1,26 @@
 #!/usr/bin/env bash
 # Runs an App map screenshot scenario on an Android emulator of its own.
 #
-#   run_shots.sh <app module dir> <Scenario.kt> <out dir> [--variant Debug] [--minutes 20]
+#   run_shots.sh <app module dir> <Scenario.kt> <out dir> [--variant Debug] [--minutes 20] [--real-app]
 #
 # <app module dir> is the Gradle module of the app (e.g. app/). The scenario is an
 # instrumented test in package `appmap` (see example_scenario.kt); it and AppMapShots.kt are
 # copied into the module's androidTest (listed in .git/info/exclude, never committed). The run
 # uses the emulator "app-map_Pixel" (created on first use), installs the app and its test APK,
 # runs the scenario with `am instrument`, and copies the screenshots and drive.log to <out dir>.
+# --real-app runs it under the app's own Application instead of the project's test runner's
+# (which often swaps in fake data or drops app-level setup such as an image loader).
 set -euo pipefail
 
 here="$(cd "$(dirname "$0")" && pwd)"
 module="$(cd "${1:?app module dir}" && pwd)"; scenario="$(cd "$(dirname "${2:?scenario}")" && pwd)/$(basename "$2")"
 out="${3:?out dir}"; shift 3
-variant=Debug minutes=20
+variant=Debug minutes=20 real_app=no
 while [ $# -gt 0 ]; do
   case "$1" in
     --variant) variant="$2"; shift ;;
     --minutes) minutes="$2"; shift ;;
+    --real-app) real_app=yes ;;
     *) echo "unknown option: $1" >&2; exit 2 ;;
   esac
   shift
@@ -76,17 +79,24 @@ until [ "$("$adb" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = 
 
 # 3. Build, install, run.
 echo "building $gradle_path ($variant)…"
-(cd "$root" && ./gradlew -q "$gradle_path:assemble$variant" "$gradle_path:assemble${variant}AndroidTest")
+(cd "$root" && ./gradlew -q "$gradle_path:assemble$variant")
 outputs="$module/build/outputs/apk"
 suffix="$(python3 -c 'import re,sys; print(re.sub(r"(?<!^)([A-Z])", r"-\1", sys.argv[1]).lower())' "$variant")"
 app_apk="$(find "$outputs" -name "*-$suffix.apk" -not -path '*androidTest*' | head -1)"
+aapt="$(ls "$sdk"/build-tools/*/aapt | sort -V | tail -1)"
+app_id="$("$aapt" dump badging "$app_apk" | sed -n "s/^package: name='\([^']*\)'.*/\1/p")"
+init=()
+if [ "$real_app" = yes ]; then
+  cp "$here/AppMapRunner.kt" "$dest/AppMapRunner.kt"
+  init=(-I "$here/app-map.init.gradle")
+fi
+(cd "$root" && ./gradlew -q ${init[@]+"${init[@]}"} "$gradle_path:assemble${variant}AndroidTest")
 test_apk="$(find "$outputs" -name "*-$suffix-androidTest.apk" | head -1)"
 "$adb" install -r -t "$app_apk" >/dev/null
 "$adb" install -r -t "$test_apk" >/dev/null
-aapt="$(ls "$sdk"/build-tools/*/aapt | sort -V | tail -1)"
-app_id="$("$aapt" dump badging "$app_apk" | sed -n "s/^package: name='\([^']*\)'.*/\1/p")"
 test_id="$("$aapt" dump badging "$test_apk" | sed -n "s/^package: name='\([^']*\)'.*/\1/p")"
-runner="$("$adb" shell pm list instrumentation | tr -d '\r' | grep "^instrumentation:$test_id/" | sed 's/^instrumentation:\([^ ]*\) .*/\1/' | head -1)"
+if [ "$real_app" = yes ]; then runner="$test_id/appmap.AppMapRunner"
+else runner="$("$adb" shell pm list instrumentation | tr -d '\r' | grep "^instrumentation:$test_id/" | grep -v appmap.AppMapRunner | sed 's/^instrumentation:\([^ ]*\) .*/\1/' | head -1)"; fi
 "$adb" shell pm clear "$app_id" >/dev/null
 echo "running the scenario on $serial ($app_id)…"
 "$adb" shell am instrument -w -e class appmap.AppMapScenario "$runner" >"$out.instrument.log" 2>&1 &

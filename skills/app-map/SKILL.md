@@ -131,7 +131,8 @@ build, offer it):
   every agent then updates the map in the same change as the code.
 - Copy [assets/app-map-check.yml](assets/app-map-check.yml) (builds and verifies the map on
   every PR, lists what changed) and [assets/app-map-update.yml](assets/app-map-update.yml) (an
-  AI agent updates the map on every PR and commits it; needs an `ANTHROPIC_API_KEY` secret)
+  AI agent updates the map on every PR and commits it: `AGENT` picks Claude Code, Codex, Gemini
+  CLI, Cursor or Copilot, each with its key as a repository secret, listed in the file)
   into `.github/workflows/`, with `MAP_DIR` set.
 
 `install.sh --auto --map <folder>` in the app-map repo does both.

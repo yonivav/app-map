@@ -17,7 +17,14 @@ xcodebuild -project App.xcodeproj -scheme App -sdk iphonesimulator -configuratio
 
 - Follow the app's own README for generated files or secrets it needs first.
 - If installing fails on an app extension ("Failed to create app extension placeholder"),
-  remove `PlugIns/` from the built `.app`: the extensions can't run unsigned anyway.
+  remove the extensions you don't map from `PlugIns/`. For one you map (a share extension), sign
+  it and then the app ad hoc, with the app group they share, so it can start:
+  ```bash
+  codesign -f -s - --entitlements groups.entitlements "App.app/PlugIns/Share.appex"
+  codesign -f -s - --entitlements groups.entitlements App.app
+  ```
+  `groups.entitlements` lists the group from the target's `.entitlements` file under
+  `com.apple.security.application-groups`.
 
 ## 2. Write the scenario
 
@@ -40,6 +47,8 @@ shots.step("timeline") {
 | `describe("name")` | saves the screen's labels to `requests/<name>.tree`: read it to write the next taps |
 | `tap("Label")`, `tapContaining("text")`, `tapCell(0)` | waits for the element, taps, settles |
 | `answerAlert("Allow")` | answers a system prompt (notifications, paste) if one shows |
+| `open("https://…")`, `other("com.apple.mobilesafari")` | opens a URL the system way; drives another app (to reach a share sheet) |
+| `snap("name", process: "Share Extension")` | for an app extension: it runs in its own process, named by part of its path |
 | `tapOutside()`, `back()`, `swipeUp()`, `swipeDown()`, `wait(2)` | |
 | `report()` | the last line of the test |
 

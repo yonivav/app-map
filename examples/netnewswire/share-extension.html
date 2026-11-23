@@ -74,6 +74,12 @@
     <h1>Share Extension Module</h1>
     <p class="sub"><a href="index.html">← App map</a> · Adding a feed from Safari or another app's share sheet — a separate process that hands off to the main app.</p>
   </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/share-extension/01_add_feed.jpg"><img src="shots/share-extension/01_add_feed.jpg" alt="Share a page from Safari: the extension&#x27;s Add Feed form" loading="lazy"></a><figcaption>Share a page from Safari: the extension's Add Feed form</figcaption></figure></li>
+    </ul>
+  </section>
   <section aria-labelledby="h-what">
     <h2 id="h-what">What it does</h2>
     <p class="cap">The share extension is its own process (<code>NSExtensionPrincipalClass</code> in its <code>Info.plist</code>), so it can't call into <code>AccountManager</code> directly — it only shares an App Group container with the main app. <code>ShareViewController</code> is a bare <code>UINavigationController</code> hosting one screen, <code>ShareAddFeedViewController</code>, a grouped table with three sections: the feed's name (editable), a folder picker across every account's containers, and the URL being added. <code>resolveURL()</code> finds the shared link by trying, in order, Safari's JavaScript preprocessing result, a plain URL attachment, then plain text that parses as a URL — whichever the host app actually handed it. Tapping "Add Feed" doesn't add anything itself: it writes an <code>ExtensionFeedAddRequest</code> (name, URL, destination container ID) to a shared file via <code>ExtensionFeedAddRequestFile.save()</code> and completes the extension. The main app's <code>AppDelegate</code> starts <code>ExtensionFeedAddRequestFile.shared</code> watching that same file on launch and resume, and is what actually creates the feed — the same hand-off a Siri "Add Feed" shortcut (<code>AddFeedAppIntent</code>) uses to reach the main app without it being in the foreground.</p>

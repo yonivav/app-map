@@ -5,9 +5,9 @@ card_title: Search
 card: Instant search, with recent queries
 screenshots:
 - file: shots/search/01_results.jpg
-  caption: Typing a query
+  caption: 'Results as you type: matching topics, then articles'
 - file: shots/search/02_empty.jpg
-  caption: Search opens with the keyboard up
+  caption: Search opens with the keyboard up and recent searches
 ---
 
 ## What it does {#what}

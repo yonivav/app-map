@@ -46,11 +46,23 @@ From then on the map keeps itself current: **you write the code, the map follows
 | When | What happens | Set up by `--auto` |
 |---|---|---|
 | **While you code with an agent** | Every change the agent makes to a mapped module includes the map update: it runs `app-map changes`, edits only the affected lines of that module's page, rebuilds and verifies. | A short rule in `AGENTS.md` and `CLAUDE.md` (read by Codex, Cursor, Copilot, Gemini CLI and Claude Code) |
-| **On every pull request** | An AI agent compares the PR's code with the map, updates the pages it affects and commits the map to the PR's branch — also for code written by hand. Reviewers see the map change next to the code change. | [`.github/workflows/app-map-update.yml`](skills/app-map/assets/app-map-update.yml) — add an `ANTHROPIC_API_KEY` repository secret: `gh secret set ANTHROPIC_API_KEY` |
+| **On every pull request** | An AI agent compares the PR's code with the map, updates the pages it affects and commits the map to the PR's branch — also for code written by hand. Reviewers see the map change next to the code change. | [`.github/workflows/app-map-update.yml`](skills/app-map/assets/app-map-update.yml) — with the agent of your choice (below) |
 | **On every pull request** | The map is rebuilt and checked: the PR fails if a diagram stops rendering or names code that no longer exists, and the PR summary lists what changed since the map was synced. | [`.github/workflows/app-map-check.yml`](skills/app-map/assets/app-map-check.yml) |
 
-`--map <folder>` puts the map somewhere other than `docs/app-map`. Running `--auto` again
-updates the rule in place, never twice.
+**The pull-request agent is yours to pick** with `--agent` (default `claude`); add its key once
+as a repository secret:
+
+| `--agent` | Runs | Secret |
+|---|---|---|
+| `claude` | [Claude Code action](https://github.com/anthropics/claude-code-action) | `gh secret set ANTHROPIC_API_KEY` |
+| `codex` | [OpenAI Codex action](https://github.com/openai/codex-action) | `gh secret set OPENAI_API_KEY` |
+| `gemini` | [Gemini CLI action](https://github.com/google-github-actions/run-gemini-cli) | `gh secret set GEMINI_API_KEY` |
+| `cursor` | [Cursor CLI](https://cursor.com/docs/cli/github-actions), headless | `gh secret set CURSOR_API_KEY` |
+| `copilot` | [GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli-in-actions), headless | `gh secret set COPILOT_GITHUB_TOKEN` (a token of a user with Copilot) |
+
+Switch later by editing `AGENT:` in `.github/workflows/app-map-update.yml`. `--map <folder>`
+puts the map somewhere other than `docs/app-map`. Running `--auto` again updates the rule in
+place, never twice.
 
 Still yours to ask for: **new screenshots** after a screen's look changes (they need a simulator,
 so they don't run in CI): *"retake the app map screenshots for the settings module"*.

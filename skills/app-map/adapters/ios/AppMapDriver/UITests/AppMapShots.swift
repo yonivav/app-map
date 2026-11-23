@@ -26,12 +26,14 @@ final class AppMapShots {
         }
     }
 
-    /// A screenshot, and where every view and view controller of the app sits on it.
-    func snap(_ name: String) {
+    /// A screenshot, and where every view and view controller of the app sits on it. `process`
+    /// reads another process instead, by part of its executable's path: an app extension (a
+    /// share sheet, a widget's configuration) runs in a process of its own.
+    func snap(_ name: String, process: String? = nil) {
         Thread.sleep(forTimeInterval: 1.0)
         let request = requests.appendingPathComponent(name)
         let done = requests.appendingPathComponent(name + ".done")
-        try? Data().write(to: request)
+        try? Data((process ?? "").utf8).write(to: request)
         let deadline = Date().addingTimeInterval(120)
         while !FileManager.default.fileExists(atPath: done.path), Date() < deadline {
             Thread.sleep(forTimeInterval: 0.3)
@@ -76,14 +78,26 @@ final class AppMapShots {
 
     /// Saves what's on screen (labels, identifiers, types) to requests/<name>.tree, for writing
     /// the next taps of a scenario.
-    func describe(_ name: String) {
-        try? Data(app.debugDescription.utf8).write(to: requests.appendingPathComponent(name + ".tree"))
+    func describe(_ name: String, of other: XCUIApplication? = nil) {
+        let tree = (other ?? app).debugDescription
+        try? Data(tree.utf8).write(to: requests.appendingPathComponent(name + ".tree"))
     }
 
     /// Dismisses a popover or menu by tapping the top edge of the screen.
     func tapOutside() {
         app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.07)).tap()
         settle()
+    }
+
+    /// Opens a URL the way the system does (a web page in Safari, a deep link in its app).
+    func open(_ url: String) {
+        XCUIDevice.shared.system.open(URL(string: url)!)
+        settle()
+    }
+
+    /// Another app on the device, e.g. Safari to reach the app's share extension.
+    func other(_ bundleIdentifier: String) -> XCUIApplication {
+        XCUIApplication(bundleIdentifier: bundleIdentifier)
     }
 
     func swipeUp() { app.swipeUp(); settle() }

@@ -5,10 +5,11 @@
 #   ./install.sh --user              for you, in every repo
 #   ./install.sh --repo <path>       into another repo
 #   ./install.sh --link              symlink instead of copy (a `git pull` here updates it)
-#   ./install.sh --auto [--map docs/app-map]
+#   ./install.sh --auto [--map docs/app-map] [--agent claude|codex|gemini|cursor|copilot]
 #                                    also keep the map current by itself: a rule in AGENTS.md /
 #                                    CLAUDE.md (your agent updates the map with every code change)
-#                                    and two GitHub workflows (check the map; update it on each PR)
+#                                    and two GitHub workflows (check the map; --agent updates it
+#                                    on each PR, with its key as a repository secret)
 #
 # One copy goes to .agents/skills/app-map — the shared Agent Skills folder read by OpenAI Codex,
 # Gemini CLI, GitHub Copilot (CLI, VS Code, JetBrains, cloud agent) and Cursor. Links make it
@@ -19,7 +20,7 @@ set -euo pipefail
 
 here="$(cd "$(dirname "$0")" && pwd)"
 source_dir="$here/skills/app-map"
-scope=project target="" mode=copy auto=no map=docs/app-map
+scope=project target="" mode=copy auto=no map=docs/app-map agent=claude
 while [ $# -gt 0 ]; do
   case "$1" in
     --user) scope=user ;;
@@ -27,7 +28,8 @@ while [ $# -gt 0 ]; do
     --link) mode=link ;;
     --auto) auto=yes ;;
     --map) map="$2"; shift ;;
-    -h|--help) sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    --agent) agent="$2"; shift ;;
+    -h|--help) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     *) echo "unknown option: $1 (see --help)" >&2; exit 2 ;;
   esac
   shift
@@ -73,6 +75,11 @@ fi
 # Automatic: the agent updates the map with each code change, and CI keeps it honest.
 if [ "$auto" = yes ]; then
   [ "$scope" = project ] || { echo "--auto is per repo: run it without --user" >&2; exit 2; }
+  case "$agent" in
+    claude) secret=ANTHROPIC_API_KEY ;; codex) secret=OPENAI_API_KEY ;; gemini) secret=GEMINI_API_KEY ;;
+    cursor) secret=CURSOR_API_KEY ;; copilot) secret=COPILOT_GITHUB_TOKEN ;;
+    *) echo "--agent: one of claude, codex, gemini, cursor, copilot" >&2; exit 2 ;;
+  esac
   rule="$(sed "s#MAP_DIR#$map#g" "$source_dir/assets/agents-rule.md")"
   # AGENTS.md (Codex, Cursor, Copilot, Gemini CLI…), CLAUDE.md (Claude Code), GEMINI.md if present.
   for file in AGENTS.md CLAUDE.md GEMINI.md; do
@@ -91,10 +98,11 @@ PY
   done
   mkdir -p "$base/.github/workflows"
   for workflow in app-map-check app-map-update; do
-    sed "s#^  MAP_DIR: .*#  MAP_DIR: $map#" "$source_dir/assets/$workflow.yml" >"$base/.github/workflows/$workflow.yml"
+    sed -e "s#^  MAP_DIR: .*#  MAP_DIR: $map#" -e "s#^  AGENT: .*#  AGENT: $agent#" \
+      "$source_dir/assets/$workflow.yml" >"$base/.github/workflows/$workflow.yml"
   done
   echo "  automatic: the rule is in AGENTS.md and CLAUDE.md; .github/workflows/app-map-check.yml and"
-  echo "  app-map-update.yml are added (the update needs an ANTHROPIC_API_KEY repository secret)"
+  echo "  app-map-update.yml ($agent) are added. Add its key once: gh secret set $secret"
 fi
 
 echo "app-map installed ($scope, $mode): $skill"

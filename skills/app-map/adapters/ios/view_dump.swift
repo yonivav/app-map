@@ -3,9 +3,12 @@
 // reach it (or a view inside it) — fewer means something covers it.
 import UIKit
 var out = ""
-for scene in UIApplication.shared.connectedScenes {
-  guard let windowScene = scene as? UIWindowScene else { continue }
-  for window in windowScene.windows where !window.isHidden {
+var windows: [UIWindow] = []
+for scene in UIApplication.shared.connectedScenes { if let windowScene = scene as? UIWindowScene { windows += windowScene.windows } }
+// An app extension runs in a hosted scene the list above doesn't have: ask UIWindow itself.
+if windows.isEmpty { windows = (UIWindow.perform(NSSelectorFromString("allWindowsIncludingInternalWindows:onlyVisibleWindows:"), with: nil, with: NSNumber(value: true))?.takeUnretainedValue() as? [UIWindow]) ?? [] }
+do {
+  for window in windows where !window.isHidden {
     out += "W \(window.bounds.width) \(window.bounds.height)\n"
     var stack: [UIView] = [window]
     while let view = stack.popLast() {
