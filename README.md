@@ -1,6 +1,6 @@
 # App Map — an AI agent skill for mobile apps
 
-[![Check](https://github.com/yonivav/app-map/actions/workflows/check.yml/badge.svg)](https://github.com/yonivav/app-map/actions/workflows/check.yml) · [Site](https://yonivav.github.io/app-map/) · [Live example](https://yonivav.github.io/app-map/examples/wonderous/)
+[![Check](https://github.com/yonivav/app-map/actions/workflows/check.yml/badge.svg)](https://github.com/yonivav/app-map/actions/workflows/check.yml) · [Site](https://yonivav.github.io/app-map/) · [Live examples](https://yonivav.github.io/app-map/examples/wonderous/)
 
 **Give your AI coding agent one skill, and it maps your mobile app.** Install App Map into
 Claude Code, Cursor, Codex, Gemini CLI or GitHub Copilot, then ask: *"build an app map of this
@@ -15,8 +15,10 @@ on-screen crops in popups) are Flutter-only so far; native screenshots are in pr
 
 ![Demo: click a module, a widget's popup shows how it looks and its exact code; "Appears in" links to every diagram that draws a class; an arrow opens the method it calls; search finds any class or file](docs/demo.gif)
 
-> **[▶ Open the live example: Wonderous](https://yonivav.github.io/app-map/examples/wonderous/)**
-> — the Flutter team's showcase app by gskinner (~31k lines, MIT), mapped by this skill.
+> **[▶ Wonderous](https://yonivav.github.io/app-map/examples/wonderous/)** — the Flutter team's
+> showcase app by gskinner (~31k lines, MIT) · **[NetNewsWire](https://yonivav.github.io/app-map/examples/netnewswire/)**
+> — Brent Simmons' iOS RSS reader (~25k lines, MIT) · **[Now in Android](https://yonivav.github.io/app-map/examples/now-in-android/)**
+> — Google's Compose showcase app (~29k lines, Apache-2.0), all mapped by this skill.
 
 ![The Wonderous App Map: one card per module, with a screenshot of each](docs/overview.jpg)
 
@@ -40,6 +42,28 @@ An App map is different:
   terminal.
 - **Stays current.** The map remembers the commit it describes; `app-map changes` lists, per
   module, what changed since. A GitHub Action builds and checks the map on every PR.
+
+## When to use it
+
+- **Onboarding** — point a new engineer, or an AI agent working on the codebase for the first
+  time, at the map before the code. It's faster to correct a wrong diagram than to re-derive the
+  architecture from scratch.
+- **Before a refactor, a platform port or a native rewrite** (a Flutter screen going native, or
+  the reverse) — see what calls what before you change it, across Dart, Swift, Kotlin and Java
+  alike.
+- **Keeping docs from going stale** — wire the GitHub Action once
+  ([`assets/app-map-check.yml`](skills/app-map/assets/app-map-check.yml)) and `app-map changes`
+  tells you exactly what a PR touched, on every PR, instead of hoping someone remembers to update
+  a wiki page.
+- **Code review** — link a PR to the module it touches instead of re-explaining the architecture
+  in the description; `app-map where` turns a changed file straight into "which diagrams does
+  this affect."
+- **A codebase that mixes platforms** — a Flutter core with a native iOS/Android shim, or a team
+  that ported Dart screens to Swift and Kotlin, gets one map that reads all of them the same way.
+
+Not a fit for: a single file you're about to edit (just read it — a map is for the shape of a
+*module*, not a line), or a repo that changes faster than anyone reviews PRs for it (the map
+reflects the commit it was last synced to; it won't track a branch nobody's merging).
 
 ## Use it — with any AI coding agent
 
@@ -119,8 +143,16 @@ The skill's own tools also work on their own:
 
 ## Credits
 
-The example maps [Wonderous](https://github.com/gskinnerTeam/flutter-wonderous-app) by
-gskinner (MIT). Its source excerpts and screenshots in `examples/wonderous/` are © gskinner.com
-under the MIT license; see `examples/wonderous/LICENSE-wonderous`.
+The examples map three open-source apps, none affiliated with or endorsing this project:
+
+- [Wonderous](https://github.com/gskinnerTeam/flutter-wonderous-app) by gskinner (MIT). Source
+  excerpts and screenshots in `examples/wonderous/` are © gskinner.com under the MIT license; see
+  `examples/wonderous/LICENSE-wonderous`.
+- [NetNewsWire](https://github.com/Ranchero-Software/NetNewsWire) by Brent Simmons and
+  contributors (MIT). Source excerpts in `examples/netnewswire/` are © Brent Simmons under the
+  MIT license; see `examples/netnewswire/LICENSE-netnewswire`.
+- [Now in Android](https://github.com/android/nowinandroid) by Google (Apache-2.0). Source
+  excerpts in `examples/now-in-android/` are © The Android Open Source Project under the
+  Apache-2.0 license; see `examples/now-in-android/LICENSE-now-in-android`.
 
 MIT © 2026 Yoni Vizel

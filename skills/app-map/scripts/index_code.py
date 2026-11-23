@@ -200,6 +200,28 @@ def write_page(root, page, by_name, source_url=None, where=None):
           + (f' · not found: {", ".join(missing)}' if missing else ''))
 
 
+MERGE_KINDS = {'extension', 'category', 'implementation'}
+
+
+def merge_reopened(by_name):
+    """A Swift `extension`, Objective-C `category` or `@implementation` reopens a type under its
+    own name rather than declaring a new one — so unlike a real duplicate name, it should never
+    outrank the real declaration, and its members belong with it."""
+    for name, found in by_name.items():
+        primaries = [decl for decl in found if decl['kind'] not in MERGE_KINDS]
+        reopenings = [decl for decl in found if decl['kind'] in MERGE_KINDS]
+        if not primaries or not reopenings:
+            continue
+        primary = primaries[0]
+        for reopening in reopenings:
+            for member, span in reopening['members'].items():
+                primary['members'].setdefault(member, span)
+            for parent in reopening['supers']:
+                if parent not in primary['supers']:
+                    primary['supers'].append(parent)
+        by_name[name] = [primary] + [decl for decl in found if decl is not primary]
+
+
 def load_declarations(root):
     """{name: [declaration, …]} for every declaration in the repo, best match first."""
     cache = Cache(root)
@@ -229,6 +251,7 @@ def load_declarations(root):
     # Prefer app code over a same-named declaration in a sample or tool folder.
     for found in by_name.values():
         found.sort(key=lambda decl: (decl['file'].count('example'), len(decl['file'])))
+    merge_reopened(by_name)
     return by_name, parsed, len(cache.seen)
 
 

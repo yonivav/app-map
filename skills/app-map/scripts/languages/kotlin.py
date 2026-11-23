@@ -1,5 +1,7 @@
 """Kotlin: classes, interfaces, objects, enums, data classes, with their members. Top-level
 functions and properties too; a `@Composable` function is a widget, not a plain function."""
+import re
+
 from .base import Language, add_member, declaration, end_line, first, line, text
 
 LEADING = {'line_comment', 'multiline_comment'}
@@ -8,6 +10,14 @@ MEMBER_KINDS = {
     'property_declaration', 'function_declaration', 'secondary_constructor', 'enum_entry',
     'class_declaration', 'object_declaration',
 }
+# A top-level `@Annotation(…)\n@Annotation\nprivate fun foo() {…}` that the grammar sometimes
+# misparses as an expression (an annotated declaration can look ambiguous to it depending on what
+# follows in the file) — pulled out by text instead, like Dart's `extension type` workaround.
+ANNOTATION = r'@[\w.]+(?:\([^()]*(?:\([^()]*\)[^()]*)*\))?\s*'
+FUN_FALLBACK = re.compile(
+    r'^(?:' + ANNOTATION + r')*(?:private\s+|internal\s+|public\s+|protected\s+)*'
+    r'fun\s+(?:<[^>]*>\s*)?(?:[\w.]+\.)?(\w+)\s*\(')
+COMPOSABLE = re.compile(r'@Composable\b')
 
 
 def _modifiers_text(source, node):
@@ -110,6 +120,11 @@ def extract(rel, source, root):
             name = first(node, 'type_identifier')
             if name is not None:
                 decl = declaration(rel, text(source, name), 'typedef', begin, end_line(node))
+        elif node.type not in ('import_list', 'package_header'):
+            match = FUN_FALLBACK.match(text(source, node))
+            if match:
+                kind = 'composable function' if COMPOSABLE.search(match.group(0)) else 'function'
+                decl = declaration(rel, match.group(1), kind, begin, end_line(node))
         if decl:
             decls.append(decl)
         start = None

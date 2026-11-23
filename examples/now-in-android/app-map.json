@@ -1,0 +1,12 @@
+{
+  "repo": "now-in-android-src",
+  "sourceUrl": "https://github.com/android/nowinandroid/blob/2982e63cb691ad49cd009aab43dc206fee6699c2",
+  "external": [
+    "User",
+    "NavDisplay"
+  ],
+  "synced": {
+    "commit": "2982e63cb691ad49cd009aab43dc206fee6699c2",
+    "date": "2026-11-23"
+  }
+}

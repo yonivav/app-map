@@ -24,20 +24,36 @@ jobs:
           /tmp/sample/.agents/skills/app-map/scripts/app-map | head -3
 
   example:
-    name: Example (build + verify Wonderous on a clean machine)
+    name: Example (build + verify ${{ matrix.map }} on a clean machine)
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - map: wonderous
+            src: wonderous-src
+            repo: https://github.com/gskinnerTeam/flutter-wonderous-app
+            dart: true
+          - map: netnewswire
+            src: netnewswire-src
+            repo: https://github.com/Ranchero-Software/NetNewsWire
+            dart: false
+          - map: now-in-android
+            src: now-in-android-src
+            repo: https://github.com/android/nowinandroid
+            dart: false
     steps:
       - uses: actions/checkout@v4
       - name: The app the example maps, at the commit it was synced to
         run: |
-          commit=$(python3 -c "import json; print(json.load(open('examples/wonderous/app-map.json'))['synced']['commit'])")
-          git clone -q https://github.com/gskinnerTeam/flutter-wonderous-app examples/wonderous/wonderous-src
-          git -C examples/wonderous/wonderous-src checkout -q "$commit"
+          commit=$(python3 -c "import json; print(json.load(open('examples/${{ matrix.map }}/app-map.json'))['synced']['commit'])")
+          git clone -q ${{ matrix.repo }} examples/${{ matrix.map }}/${{ matrix.src }}
+          git -C examples/${{ matrix.map }}/${{ matrix.src }} checkout -q "$commit"
       - uses: dart-lang/setup-dart@v1
+        if: matrix.dart
       - uses: browser-actions/setup-chrome@v1
       - name: Build the map
-        run: skills/app-map/scripts/app-map build examples/wonderous
+        run: skills/app-map/scripts/app-map build examples/${{ matrix.map }}
       - name: Verify every page (renders in headless Chrome, every name exists)
-        run: skills/app-map/scripts/app-map verify examples/wonderous
+        run: skills/app-map/scripts/app-map verify examples/${{ matrix.map }}
       - name: The committed pages are what the sources build
-        run: git diff --exit-code -- examples/wonderous ':!examples/wonderous/wonderous-src'
+        run: git diff --exit-code -- examples/${{ matrix.map }} ':!examples/${{ matrix.map }}/${{ matrix.src }}'
