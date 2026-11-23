@@ -62,7 +62,7 @@ def chain(name, by_name, seen=None):
 
 
 TYPE_KINDS = ('class', 'mixin', 'extension type', 'struct', 'protocol', 'extension', 'interface',
-              'object', 'data class', 'record')
+              'object', 'data class', 'record', 'implementation', 'category')
 
 
 def role(name, by_name):

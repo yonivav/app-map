@@ -7,10 +7,10 @@ description: >
   widgets show a crop from the running app; from code back to the map, any class or file finds
   the diagrams that draw it. Use when the user asks for an app map, architecture map, UML of the
   whole app, a visual tour of a codebase or onboarding docs, and to update an existing map after
-  code changes ("update the app map", "is the map current"). Flutter/Dart, native iOS (Swift) and
-  native Android (Kotlin/Java).
+  code changes ("update the app map", "is the map current"). Flutter/Dart, native iOS
+  (Swift/Objective-C) and native Android (Kotlin/Java).
 license: MIT
-compatibility: Flutter/Dart, native iOS (Swift) or native Android (Kotlin/Java) repos. Needs Python 3.9+ and git; Dart SDK recommended for Flutter; Chrome for verify; macOS + Xcode for Flutter screenshots (native screenshots aren't supported yet).
+compatibility: Flutter/Dart, native iOS (Swift/Objective-C) or native Android (Kotlin/Java) repos. Needs Python 3.9+ and git; Dart SDK recommended for Flutter; Chrome for verify; macOS + Xcode for Flutter screenshots (native screenshots aren't supported yet).
 ---
 
 # App map

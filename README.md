@@ -9,9 +9,9 @@ screen composition, state machines and the main-flow sequence. Click any class, 
 to see its **real source code**; pages and widgets also show **how they look in the running app**.
 Ask again after code changes and it updates only what changed.
 
-**For mobile apps:** Flutter (Dart), native iOS (Swift) and native Android (Kotlin, Java) — class
-maps, screen composition and state machines for all three. Objective-C and screenshots (the
-on-screen crops in popups) for native apps are still in progress; Flutter has both.
+**For mobile apps:** Flutter (Dart), native iOS (Swift, Objective-C) and native Android (Kotlin,
+Java) — class maps, screen composition and state machines for all of them. Screenshots (the
+on-screen crops in popups) are Flutter-only so far; native screenshots are in progress.
 
 ![Demo: click a module, a widget's popup shows how it looks and its exact code; "Appears in" links to every diagram that draws a class; an arrow opens the method it calls; search finds any class or file](docs/demo.gif)
 
@@ -98,10 +98,10 @@ The skill's own tools also work on their own:
 ## How it works
 
 - **Parsing.** Dart is read with the official `analyzer` when a Dart SDK is installed, and with
-  [tree-sitter](https://tree-sitter.github.io/) otherwise; Swift, Kotlin and Java are read with
-  tree-sitter directly — classes, structs, protocols/interfaces, enums, SwiftUI `View`s and
-  `@Composable` functions, all with their members. Declarations are cached per file, so a rerun
-  only parses what changed.
+  [tree-sitter](https://tree-sitter.github.io/) otherwise; Swift, Kotlin, Java and Objective-C are
+  read with tree-sitter directly — classes, structs, protocols/interfaces/categories, enums,
+  SwiftUI `View`s and `@Composable` functions, all with their members. Declarations are cached per
+  file, so a rerun only parses what changed.
 - **Diagrams.** The diagrams are Mermaid, rendered in the page with the page's own theme (light
   and dark). Each source sits in a `<script type="text/plain">`, so `<<stereotypes>>` survive.
 - **Screenshots.** The Flutter adapter is an `integration_test` helper. At each shot it records
@@ -112,9 +112,9 @@ The skill's own tools also work on their own:
 ## Status
 
 - **Phase 1 (done):** Flutter/Dart, with screenshots on the iOS simulator.
-- **Phase 2 (done):** native Android (Kotlin/Java) and iOS (Swift) class maps, screen composition
-  and state machines. Objective-C and native screenshots (crops via `uiautomator` on Android,
-  XCUITest on iOS) are next.
+- **Phase 2 (done):** native Android (Kotlin/Java) and iOS (Swift/Objective-C) class maps, screen
+  composition and state machines. Native screenshots (crops via `uiautomator` on Android, XCUITest
+  on iOS) are next.
 - **Phase 3:** web (React).
 
 ## Credits

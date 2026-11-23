@@ -5,3 +5,5 @@ skills/app-map/scripts/dart_declarations/.dart_tool/
 skills/app-map/scripts/dart_declarations/pubspec.lock
 .DS_Store
 examples/wonderous/wonderous-src
+examples/netnewswire/netnewswire-src
+examples/now-in-android/now-in-android-src
