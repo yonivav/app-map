@@ -73,6 +73,7 @@ The overview's "Modules" cards (from each module's `card_*` and first screenshot
   "noCrop": ["ScrollBar"],            // classes whose best screenshot still shows them wrong
   "exclude": ["Mac"],                 // repo folders to leave out, e.g. another platform's target
   "noCrop": ["ScrollBar"],            // classes whose best screenshot still shows them wrong
-  "synced": {"commit": "…", "date": "…"}                 // written by `app-map sync`
+  "synced": {"commit": "…", "date": "…", "uncommitted": {…}}   // written by `app-map sync`:
+                                      // the commit, and code it followed that wasn't committed yet
 }
 ```

@@ -20,6 +20,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from facts import TYPE_KINDS  # noqa: E402
 from index_code import load_declarations, names_in, where_drawn  # noqa: E402
+from languages import language_for  # noqa: E402
 
 DRAWABLE_KINDS = TYPE_KINDS + ('enum', 'composable function')
 
@@ -64,6 +65,12 @@ def changes(map_dir, root):
         sys.exit('No synced commit yet: run `app-map sync <map> <repo>` once the map is current.')
     changed = set(git(root, 'diff', '--name-only', commit, '--').split()) | \
         set(git(root, 'ls-files', '--others', '--exclude-standard').split())
+    # Code the map already followed at sync time, still the same now.
+    pending = (config.get('synced') or {}).get('uncommitted') or {}
+    if pending:
+        still = [path for path in sorted(changed) if path in pending and os.path.exists(os.path.join(root, path))]
+        hashes = dict(zip(still, git(root, 'hash-object', '--', *still).split())) if still else {}
+        changed = {path for path in changed if hashes.get(path) != pending.get(path)}
     log = git(root, 'log', '--oneline', f'{commit}..HEAD').strip().splitlines()
     by_name, _, _ = load_declarations(root)
     file_of = {name: found[0]['file'] for name, found in by_name.items()}
@@ -103,10 +110,24 @@ def changes(map_dir, root):
     return listed
 
 
+def uncommitted_sources(root):
+    """Source files that differ from HEAD (edited or new), each with its content hash."""
+    paths = set(git(root, 'diff', '--name-only', 'HEAD', '--').split()) | \
+        set(git(root, 'ls-files', '--others', '--exclude-standard').split())
+    paths = sorted(path for path in paths if language_for(path) and os.path.exists(os.path.join(root, path)))
+    hashes = git(root, 'hash-object', '--', *paths).split() if paths else []
+    return dict(zip(paths, hashes))
+
+
 def sync(map_dir, root):
     config = load_config(map_dir)
     commit = git(root, 'rev-parse', 'HEAD').strip()
     config['synced'] = {'commit': commit, 'date': datetime.date.today().isoformat()}
+    # The map often follows code that isn't committed yet: remember that code, so once it's
+    # committed as it is, `changes` doesn't list it again.
+    pending = uncommitted_sources(root)
+    if pending:
+        config['synced']['uncommitted'] = pending
     with open(config_path(map_dir), 'w') as handle:
         json.dump(config, handle, indent=2)
         handle.write('\n')

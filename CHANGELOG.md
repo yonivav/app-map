@@ -4,6 +4,8 @@
 
 - Leaner `SKILL.md` (the automation details load only when needed).
 - `app-map changes --exit-code`: exits 1 when the map is behind the code.
+- `app-map sync` remembers code that wasn't committed yet, so updating the map in the same change
+  as the code no longer makes `changes` list that module again after the commit.
 - `noCrop` in `app-map.json`: a crop that shows something wrong stays out on every run.
 - New link-preview and LinkedIn images showing all three platforms.
 - Kotlin `companion object` members are indexed: `Foo.create()` opens its code.
