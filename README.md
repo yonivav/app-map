@@ -112,10 +112,11 @@ The map's Python environment sets itself up on first use (`~/.cache/app-map/venv
 
 ### How long it takes, what it costs
 
-Measured with Claude Code (Claude Opus 5.5), each a fresh agent given only the prompt a user
+App Map is free and open source. What costs money is the AI usage, paid to your AI provider
+through your own agent's plan or API key. Measured with Claude Code (Claude Opus 5.5), each a fresh agent given only the prompt a user
 would type, on open-source apps it had never seen:
 
-| Task | App | Time | Cost |
+| Task | App | Time | AI usage cost |
 |---|---|---|---|
 | *"Build an app map of this repo"* | [Sunflower](https://github.com/android/sunflower) (Kotlin, ~4.8k lines) | 3.6 min | $1.26 |
 | *"Build an app map of this repo"*, with screenshots | [Now in Android](https://github.com/android/nowinandroid) (Kotlin, ~29k lines) | 12.8 min | $3.26 |
