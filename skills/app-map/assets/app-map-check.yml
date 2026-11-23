@@ -4,7 +4,6 @@
 name: App map
 on:
   pull_request:
-    paths: ['**/*.dart', 'docs/app-map/**']
 env:
   MAP_DIR: docs/app-map
   APP_MAP_REF: main
@@ -16,7 +15,7 @@ jobs:
         with: { fetch-depth: 0 }
       - uses: actions/checkout@v4
         with: { repository: yonivav/app-map, ref: '${{ env.APP_MAP_REF }}', path: .app-map }
-      # Dart's own parser reads every syntax the app uses (tree-sitter is the fallback).
+      # Dart's own parser for Flutter apps (tree-sitter is the fallback); harmless otherwise.
       - uses: dart-lang/setup-dart@v1
       - uses: browser-actions/setup-chrome@v1
       - name: Build and verify the map

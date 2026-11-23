@@ -65,6 +65,8 @@
   .install { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; display: grid; gap: 10px; }
   .install h2 { margin: 0; font-size: 18px; }
   .install p { margin: 0; color: var(--muted); font-size: 15px; }
+  .install b { color: var(--ink); font-weight: 600; }
+  .install code { font-family: var(--font-mono); font-size: 14px; color: var(--ink); }
   pre { margin: 0; padding: 14px 16px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
     overflow-x: auto; font-family: var(--font-mono); font-size: 14px; line-height: 1.6; }
   footer { color: var(--muted); font-size: 14px; }
@@ -92,22 +94,26 @@
     <li><h2>Grounded in the code</h2><p>Diagrams start from what each class really builds and calls, and every name is checked against the source.</p></li>
     <li><h2>Both directions</h2><p>Any box, member or arrow opens its code. Any class or file finds every diagram that draws it.</p></li>
     <li><h2>Shows the real UI</h2><p>A simulator run crops each page and widget, so a popup shows how it looks next to how it's written.</p></li>
-    <li><h2>Stays current</h2><p>Markdown in your repo, rebuilt in milliseconds. <code>app-map changes</code> and a CI check keep it in step with the code.</p></li>
+    <li><h2>Stays current by itself</h2><p>Markdown in your repo. Your agent and a pull-request bot update it with every code change; a CI check keeps it honest.</p></li>
   </ul>
 
   <section class="install" aria-labelledby="install">
     <h2 id="install">Install</h2>
     <p>Once, for any agent that reads Agent Skills (Claude Code, Cursor, Codex, Gemini CLI, Copilot):</p>
     <pre>git clone https://github.com/yonivav/app-map ~/.app-map
-cd your-app && ~/.app-map/install.sh</pre>
+cd your-app && ~/.app-map/install.sh --auto</pre>
+    <p><b>You write the code, the map follows:</b> with <code>--auto</code> your agent updates the map
+      with every change it makes, and on every pull request an AI agent updates the map and commits
+      it while a check makes sure it still matches the code.</p>
     <p>Then just ask your agent:</p>
     <ul class="asks">
       <li><i>"Build an app map of this repo"</i> — one page per module, checked against the code</li>
-      <li><i>"Update the app map"</i> — only what changed since it was synced</li>
+      <li><i>"Update the app map"</i> — only what changed since it was synced (automatic with <code>--auto</code>)</li>
       <li><i>"Where is WondersLogic on the map?"</i> — every diagram that draws it</li>
       <li><i>"Take screenshots for the app map"</i> — real crops of every page and widget</li>
     </ul>
-    <p><a href="https://github.com/yonivav/app-map#ask-your-agent">More prompts and the full guide →</a></p>
+    <p><a href="https://github.com/yonivav/app-map#make-it-automatic">How it stays current</a> ·
+      <a href="https://github.com/yonivav/app-map#ask-your-agent">More prompts →</a></p>
   </section>
 
   <footer>The example maps <a href="https://github.com/gskinnerTeam/flutter-wonderous-app">Wonderous</a> by gskinner (MIT). App Map is MIT · Yoni Vizel.</footer>

@@ -22,6 +22,13 @@ jobs:
           test -f /tmp/sample/.cursor/skills/app-map/SKILL.md
           test -f /tmp/sample/.cursor/rules/app-map.mdc
           /tmp/sample/.agents/skills/app-map/scripts/app-map | head -3
+      - name: Automatic mode (twice, so the rule isn't duplicated)
+        run: |
+          git init -q /tmp/auto && ./install.sh --repo /tmp/auto --auto --map docs/map && ./install.sh --repo /tmp/auto --auto --map docs/map
+          test "$(grep -c 'app-map:start' /tmp/auto/AGENTS.md)" = 1
+          test "$(grep -c 'app-map:start' /tmp/auto/CLAUDE.md)" = 1
+          grep -q '^  MAP_DIR: docs/map$' /tmp/auto/.github/workflows/app-map-update.yml
+          pip install -q pyyaml && python3 -c "import yaml,sys; [yaml.safe_load(open(f)) for f in sys.argv[1:]]" /tmp/auto/.github/workflows/*.yml
 
   example:
     name: Example (build + verify ${{ matrix.map }} on a clean machine)

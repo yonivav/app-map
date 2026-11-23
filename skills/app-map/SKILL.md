@@ -122,9 +122,19 @@ in the module's key files that no page draws (**consider**). For each listed mod
 - Screens that look different → rerun the screenshot scenario for them and `app-map crop`.
 
 Then `build`, `verify`, `sync`. Commit the Markdown and the built site with the code change.
-To keep maps current automatically, copy `assets/app-map-check.yml` into
-`.github/workflows/`: it builds and verifies the map on every PR and writes `app-map changes`
-into the PR's summary.
+### Automatic updates
+
+When the user wants the map kept current without asking (or at the hand-over of a first
+build, offer it):
+- Append [assets/agents-rule.md](assets/agents-rule.md), with `MAP_DIR` replaced by the map's
+  folder, to `AGENTS.md` and `CLAUDE.md` at the repo root (and `GEMINI.md` if there is one):
+  every agent then updates the map in the same change as the code.
+- Copy [assets/app-map-check.yml](assets/app-map-check.yml) (builds and verifies the map on
+  every PR, lists what changed) and [assets/app-map-update.yml](assets/app-map-update.yml) (an
+  AI agent updates the map on every PR and commits it; needs an `ANTHROPIC_API_KEY` secret)
+  into `.github/workflows/`, with `MAP_DIR` set.
+
+`install.sh --auto --map <folder>` in the app-map repo does both.
 
 ## Code → map
 

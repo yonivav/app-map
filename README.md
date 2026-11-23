@@ -12,6 +12,19 @@ Ask again after code changes and it updates only what changed.
 **For mobile apps:** Flutter (Dart), native iOS (Swift, Objective-C) and native Android (Kotlin,
 Java) — class maps, screen composition, state machines and screenshots for all of them.
 
+## Quick start
+
+```bash
+git clone https://github.com/yonivav/app-map ~/.app-map
+cd your-app && ~/.app-map/install.sh --auto
+```
+
+Then ask your agent: *"Build an app map of this repo"*. It proposes the modules, writes one page
+each, indexes the code and checks every page. Open `docs/app-map/index.html`.
+
+From then on the map keeps itself current: **you write the code, the map follows** (see
+[Make it automatic](#make-it-automatic)). Leave out `--auto` to update the map only when you ask.
+
 ![Demo: click a module, a widget's popup shows how it looks and its exact code; "Appears in" links to every diagram that draws a class; an arrow opens the method it calls; search finds any class or file](docs/demo.gif)
 
 **Live examples**, each mapped by this skill from a real open-source app:
@@ -26,57 +39,31 @@ Java) — class maps, screen composition, state machines and screenshots for all
 
 ![Clicking a widget opens its crop from the running app and its exact source, linked to GitHub](docs/popup.jpg)
 
-## Why
+## Make it automatic
 
-Architecture docs go stale the day they're written, and UML tools draw boxes nobody can check.
-An App map is different:
+`install.sh --auto` sets up three layers, so nobody has to remember the map:
 
-- **Grounded in the code.** Each diagram is drawn from the classes the code actually builds and
-  calls (`app-map facts`). Each name is checked against the source (`app-map verify`).
-- **Clickable down to the line.** Class names, members, relation labels and sequence calls open
-  the exact code in a popup, with an "open in VS Code" link.
-- **Shows the real UI.** A simulator run logs where every page and widget sits on screen. Each
-  popup then shows a crop of that widget from the running app.
-- **Markdown in your repo.** Each module is a Markdown file GitHub renders as it is (Mermaid
-  included); `app-map build` makes the clickable site from it. Map changes are reviewable diffs.
-- **Both directions.** From a box to its code, and from code to the map: every popup says where
-  else the class appears, the overview finds any class or file, `app-map where` does it in the
-  terminal.
-- **Stays current.** The map remembers the commit it describes; `app-map changes` lists, per
-  module, what changed since. A GitHub Action builds and checks the map on every PR.
+| When | What happens | Set up by `--auto` |
+|---|---|---|
+| **While you code with an agent** | Every change the agent makes to a mapped module includes the map update: it runs `app-map changes`, edits only the affected lines of that module's page, rebuilds and verifies. | A short rule in `AGENTS.md` and `CLAUDE.md` (read by Codex, Cursor, Copilot, Gemini CLI and Claude Code) |
+| **On every pull request** | An AI agent compares the PR's code with the map, updates the pages it affects and commits the map to the PR's branch — also for code written by hand. Reviewers see the map change next to the code change. | [`.github/workflows/app-map-update.yml`](skills/app-map/assets/app-map-update.yml) — add an `ANTHROPIC_API_KEY` repository secret: `gh secret set ANTHROPIC_API_KEY` |
+| **On every pull request** | The map is rebuilt and checked: the PR fails if a diagram stops rendering or names code that no longer exists, and the PR summary lists what changed since the map was synced. | [`.github/workflows/app-map-check.yml`](skills/app-map/assets/app-map-check.yml) |
 
-## When to use it
+`--map <folder>` puts the map somewhere other than `docs/app-map`. Running `--auto` again
+updates the rule in place, never twice.
 
-- **Onboarding** — point a new engineer, or an AI agent working on the codebase for the first
-  time, at the map before the code. It's faster to correct a wrong diagram than to re-derive the
-  architecture from scratch.
-- **Before a refactor, a platform port or a native rewrite** (a Flutter screen going native, or
-  the reverse) — see what calls what before you change it, across Dart, Swift, Kotlin and Java
-  alike.
-- **Keeping docs from going stale** — wire the GitHub Action once
-  ([`assets/app-map-check.yml`](skills/app-map/assets/app-map-check.yml)) and `app-map changes`
-  tells you exactly what a PR touched, on every PR, instead of hoping someone remembers to update
-  a wiki page.
-- **Code review** — link a PR to the module it touches instead of re-explaining the architecture
-  in the description; `app-map where` turns a changed file straight into "which diagrams does
-  this affect."
-- **A codebase that mixes platforms** — a Flutter core with a native iOS/Android shim, or a team
-  that ported Dart screens to Swift and Kotlin, gets one map that reads all of them the same way.
+Still yours to ask for: **new screenshots** after a screen's look changes (they need a simulator,
+so they don't run in CI): *"retake the app map screenshots for the settings module"*.
 
-Not a fit for: a single file you're about to edit (just read it — a map is for the shape of a
-*module*, not a line), or a repo that changes faster than anyone reviews PRs for it (the map
-reflects the commit it was last synced to; it won't track a branch nobody's merging).
-
-## Use it — with any AI coding agent
+## Install, in detail
 
 App Map is an [Agent Skill](https://agentskills.io): a `SKILL.md` with scripts, in the open
-format that most coding agents now read. Install it once, then ask your agent:
-*"Build an app map of this repo"*. It finds the modules, reads them, writes the pages, indexes
-the code and checks every page. You open `docs/app-map/index.html`.
+format that most coding agents now read.
 
 ```bash
 git clone https://github.com/yonivav/app-map ~/.app-map
 cd your-app && ~/.app-map/install.sh          # into this repo (commit it to share with your team)
+~/.app-map/install.sh --auto                  # …and keep the map current by itself (above)
 ~/.app-map/install.sh --user                  # or once, for every repo on your machine
 ```
 
@@ -120,6 +107,46 @@ The skill's own tools also work on their own:
 | `app-map verify <map>` | renders every page in headless Chrome; flags Mermaid pitfalls, leftover placeholders and names that won't click |
 | `app-map shots [ios\|android] …` | runs a screenshot scenario on a simulator or emulator of its own (Flutter, iOS or Android) |
 | `app-map crop <shots> <map>` | crops each page/widget from its best shot (nothing covering it) |
+
+## Why
+
+Architecture docs go stale the day they're written, and UML tools draw boxes nobody can check.
+An App map is different:
+
+- **Grounded in the code.** Each diagram is drawn from the classes the code actually builds and
+  calls (`app-map facts`). Each name is checked against the source (`app-map verify`).
+- **Clickable down to the line.** Class names, members, relation labels and sequence calls open
+  the exact code in a popup, with an "open in VS Code" link.
+- **Shows the real UI.** A simulator run logs where every page and widget sits on screen. Each
+  popup then shows a crop of that widget from the running app.
+- **Markdown in your repo.** Each module is a Markdown file GitHub renders as it is (Mermaid
+  included); `app-map build` makes the clickable site from it. Map changes are reviewable diffs.
+- **Both directions.** From a box to its code, and from code to the map: every popup says where
+  else the class appears, the overview finds any class or file, `app-map where` does it in the
+  terminal.
+- **Stays current.** The map remembers the commit it describes; `app-map changes` lists, per
+  module, what changed since. With `--auto`, your agent and a PR bot update it as the code
+  changes.
+
+## When to use it
+
+- **Onboarding** — point a new engineer, or an AI agent working on the codebase for the first
+  time, at the map before the code. It's faster to correct a wrong diagram than to re-derive the
+  architecture from scratch.
+- **Before a refactor, a platform port or a native rewrite** (a Flutter screen going native, or
+  the reverse) — see what calls what before you change it, across Dart, Swift, Kotlin and Java
+  alike.
+- **Keeping docs from going stale** — with `--auto`, the map is updated with every change and
+  every PR, instead of hoping someone remembers to update a wiki page.
+- **Code review** — link a PR to the module it touches instead of re-explaining the architecture
+  in the description; `app-map where` turns a changed file straight into "which diagrams does
+  this affect."
+- **A codebase that mixes platforms** — a Flutter core with a native iOS/Android shim, or a team
+  that ported Dart screens to Swift and Kotlin, gets one map that reads all of them the same way.
+
+Not a fit for: a single file you're about to edit (just read it — a map is for the shape of a
+*module*, not a line), or a repo that changes faster than anyone reviews PRs for it (the map
+reflects the commit it was last synced to; it won't track a branch nobody's merging).
 
 ## How it works
 

@@ -1,0 +1,54 @@
+# Updates the App map on every PR: an AI agent reads what the PR changed in the code, edits
+# only the affected module pages, rebuilds, verifies and commits the map to the PR's branch.
+# The developer writes code; the map follows. Copy to .github/workflows/app-map-update.yml
+# (or run `install.sh --auto`), set MAP_DIR, and add an ANTHROPIC_API_KEY repository secret.
+# Screenshots aren't retaken here (that needs a simulator): ask your agent locally when a
+# screen looks different.
+name: App map update
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: write
+  pull-requests: write
+env:
+  MAP_DIR: docs/app-map
+  APP_MAP_REF: main
+jobs:
+  update:
+    # Not for forks (no secrets there), and not for the commit this job pushes itself.
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ github.head_ref }}', fetch-depth: 0 }
+      - uses: actions/checkout@v4
+        with: { repository: yonivav/app-map, ref: '${{ env.APP_MAP_REF }}', path: .app-map }
+      - uses: dart-lang/setup-dart@v1   # Dart's own parser for Flutter apps; harmless otherwise
+      - uses: browser-actions/setup-chrome@v1
+      - name: Is the map behind the code?
+        id: changes
+        run: |
+          report="$(.app-map/skills/app-map/scripts/app-map changes "$MAP_DIR" || true)"
+          echo "$report" >> "$GITHUB_STEP_SUMMARY"
+          if echo "$report" | grep -qE '^  (review|not in the code|new or changed)'; then echo "behind=true" >> "$GITHUB_OUTPUT"; fi
+      - name: Update the map
+        if: steps.changes.outputs.behind == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: --allowedTools "Bash,Read,Edit,Write,Glob,Grep"
+          prompt: |
+            Update the App map in ${{ env.MAP_DIR }} for this PR's code changes. Follow the
+            "Update" section of .app-map/skills/app-map/SKILL.md, using
+            .app-map/skills/app-map/scripts/app-map for every command: run `changes`, edit only
+            the module .md files it lists and only the lines the code change affects, then
+            `build`, `verify` and `sync`. Don't touch any file outside ${{ env.MAP_DIR }}.
+      - name: Commit the map
+        if: steps.changes.outputs.behind == 'true'
+        run: |
+          git add "$MAP_DIR"
+          git diff --cached --quiet && exit 0
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "App map: follow the code changes in this PR"
+          git push
