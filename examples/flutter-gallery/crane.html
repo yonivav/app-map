@@ -1,0 +1,333 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crane Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one reading column of diagram plates, each with a short caption and a legend strip. */
+  :root {
+    --bg: #f6f4fb;
+    --surface: #ffffff;
+    --ink: #1c1a29;
+    --muted: #5d5a70;
+    --line: #dcd6ec;
+    --accent: #36169d;
+    --accent-soft: #ede8f6;
+    --upd: #7a4d00;
+    --upd-soft: #ffe2a8;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+      --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+      --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+    --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+    --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+  }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font-body);
+    font-size: 15px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 32px 64px;
+  }
+  /* Wide: diagrams use the screen; paragraphs stay at a readable measure (.cap, 70ch). */
+  main { max-width: 1880px; margin: 0 auto; display: grid; gap: 28px; }
+  header .sub, .find input { max-width: 70ch; }
+  header { display: grid; gap: 6px; }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 4vw, 40px); margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); margin: 0; }
+  .sub code, .cap code { font-family: var(--font-mono); font-size: 0.9em; color: var(--accent); }
+  section { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; min-width: 0; }
+  h2 { margin: 0; font-size: 18px; font-weight: 600; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  h2 span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+  .cap { margin: 0; color: var(--muted); max-width: 70ch; }
+  .diagram { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-height: 120px; }
+  .diagram .out { display: flex; justify-content: center; width: max-content; min-width: 100%; }
+  .diagram .out svg { max-width: none; height: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+  .legend li { display: flex; gap: 6px; align-items: center; }
+  .legend b { font-family: var(--font-mono); color: var(--ink); font-weight: 500; }
+  .tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--line); }
+  .tag.upd { background: var(--upd-soft); color: var(--upd); border-color: var(--upd); }
+  .updates { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+  .updates code { font-family: var(--font-mono); font-size: 0.9em; color: var(--ink); }
+  .err { color: var(--muted); font-family: var(--font-mono); font-size: 12px; white-space: pre-wrap; }
+  .shots { margin: 0; padding: 0 0 6px; list-style: none; display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; }
+  .shots li { flex: 0 0 180px; scroll-snap-align: start; display: grid; gap: 6px; align-content: start; }
+  .shots img { width: 180px; aspect-ratio: 375 / 812; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); display: block; }
+  .shots figcaption { color: var(--muted); font-size: 13px; }
+  .shots figure { margin: 0; display: grid; gap: 6px; }
+  .sub a { color: var(--accent); }
+</style>
+
+<main>
+  <header>
+    <h1>Crane Study</h1>
+    <p class="sub"><a href="index.html">← App map</a> · A travel study with three tabs — Fly, Sleep, Eat — each a search form over a sheet of destination cards.</p>
+  </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/crane/01_fly.jpg"><img src="shots/crane/01_fly.jpg" alt="Fly: flight search over destination cards" loading="lazy"></a><figcaption>Fly: flight search over destination cards</figcaption></figure></li>
+      <li><figure><a href="shots/crane/02_sleep.jpg"><img src="shots/crane/02_sleep.jpg" alt="Sleep" loading="lazy"></a><figcaption>Sleep</figcaption></figure></li>
+      <li><figure><a href="shots/crane/03_eat.jpg"><img src="shots/crane/03_eat.jpg" alt="Eat" loading="lazy"></a><figcaption>Eat</figcaption></figure></li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-what">
+    <h2 id="h-what">What it does</h2>
+    <p class="cap">Crane is a single-route <code>MaterialApp</code> at <code>/crane</code> whose screen is a backdrop with three tabs in the app bar: <b>FLY</b>, <b>SLEEP</b> and <b>EAT</b>. Each tab has a search form in the back layer — Fly asks for travelers, origin, destination and dates; Sleep for travelers, dates and location; Eat for diners, date, time and location — shown in an <code>IndexedStack</code>, so only the selected form is focusable. In front of it sit three sheets of destination cards (14 flights, 12 places to stay, 11 restaurants) side by side: switching tabs animates the tab controller over 300 ms and slides all three sheets sideways together, with a 5 % gap between them, and the middle Sleep sheet sits 60 pt higher than the other two. Each card shows a photo, the destination and a subtitle such as the number of stops and flight time, the number of available properties, or the number of restaurants. The forms are display-only: no search is run. On desktop the cards form a 4-column grid; the selected tab survives state restoration.</p>
+  </section>
+  <section aria-labelledby="h-classes">
+    <h2 id="h-classes">Logic <span>class diagram</span></h2>
+    <p class="cap">The destination lists are static data, read once per sheet; the tab controller drives everything that moves.</p>
+    <div class="diagram"><div class="out" data-src="src-classes"></div></div>
+    <ul class="legend">
+      <li><b>◆──</b> contains</li>
+      <li><b>◇──</b> list of</li>
+      <li><b>──▷|</b> extends</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-widgets">
+    <h2 id="h-widgets">Screen <span>widget composition</span></h2>
+    <p class="cap">The front sheets are plain card lists; the back forms are rows of icon text fields.</p>
+    <div class="diagram"><div class="out" data-src="src-widgets"></div></div>
+    <ul class="legend">
+      <li><b>◆──</b> contains</li>
+      <li><b>──▷</b> reads model</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-sequence">
+    <h2 id="h-sequence">Switch from Fly to Sleep <span>sequence</span></h2>
+    <p class="cap">One tab controller moves the indicator, the form and the three sheets in step.</p>
+    <div class="diagram"><div class="out" data-src="src-sequence"></div></div>
+  </section>
+  <section aria-labelledby="h-files">
+    <h2 id="h-files">Key files</h2>
+    <ul class="updates">
+      <li><code>lib/studies/crane/app.dart</code> · Crane app and its three forms</li>
+      <li><code>lib/studies/crane/backdrop.dart</code> · app bar, tabs, sliding sheets</li>
+      <li><code>lib/studies/crane/backlayer.dart</code> · form switcher</li>
+      <li><code>lib/studies/crane/fly_form.dart</code> · flight search fields</li>
+      <li><code>lib/studies/crane/header_form.dart</code> · icon text fields</li>
+      <li><code>lib/studies/crane/item_cards.dart</code> · destination card</li>
+      <li><code>lib/studies/crane/model/</code> · destinations and their data</li>
+    </ul>
+  </section>
+</main>
+
+<script type="text/plain" id="src-classes">
+classDiagram
+  direction LR
+  class CraneApp {
+    <<app>>
+    defaultRoute
+  }
+  class CraneAppBar {
+    <<widget>>
+    tabController · tabHandler
+  }
+  class BackLayer {
+    <<widget>>
+    backLayerItems · tabController
+  }
+  class BackLayerItem {
+    <<widget>>
+    index
+  }
+  class FlyForm { <<form>> }
+  class SleepForm { <<form>> }
+  class EatForm { <<form>> }
+  class HeaderForm {
+    <<widget>>
+    fields
+  }
+  class HeaderFormField {
+    <<data>>
+    index · iconData · title
+    textController
+  }
+  class Destination {
+    <<data>>
+    id · destination · imageAspectRatio
+    subtitle()
+  }
+  class FlyDestination {
+    <<data>>
+    stops · duration
+  }
+  class SleepDestination {
+    <<data>>
+    total
+  }
+  class EatDestination {
+    <<data>>
+    total
+  }
+  CraneApp *-- CraneAppBar
+  CraneApp *-- BackLayer
+  BackLayer o-- BackLayerItem : one shown, IndexedStack
+  BackLayerItem <|-- FlyForm
+  BackLayerItem <|-- SleepForm
+  BackLayerItem <|-- EatForm
+  FlyForm *-- HeaderForm
+  HeaderForm o-- HeaderFormField : fields
+  Destination <|-- FlyDestination
+  Destination <|-- SleepDestination
+  Destination <|-- EatDestination
+</script>
+
+<script type="text/plain" id="src-widgets">
+classDiagram
+  direction TB
+  class CraneAppBar { <<widget>> }
+  class BorderTabIndicator { <<decoration>> }
+  class FlyForm { <<form>> }
+  class HeaderForm { <<widget>> }
+  class _HeaderTextField {
+    <<widget>>
+    field
+  }
+  class DestinationCard {
+    <<widget>>
+    destination
+  }
+  class _DestinationImage {
+    <<widget>>
+    destination
+  }
+  class HighlightFocus { <<focus ring>> }
+  CraneAppBar --> BorderTabIndicator : selected tab
+  FlyForm *-- HeaderForm
+  HeaderForm *-- _HeaderTextField : 4
+  DestinationCard *-- HighlightFocus
+  DestinationCard *-- _DestinationImage
+</script>
+
+<script type="text/plain" id="src-sequence">
+sequenceDiagram
+  actor User
+  participant Bar as CraneAppBar
+  participant Tabs as TabController
+  participant Back as BackLayer
+  participant Card as DestinationCard
+  User->>Bar: tap SLEEP
+  Bar->>Tabs: animateTo(1), 300 ms
+  Tabs-->>Bar: BorderTabIndicator moves
+  Tabs-->>Back: listener, setState
+  Back->>Back: IndexedStack shows SleepForm
+  Tabs-->>Card: sheets slide left together
+  Card-->>User: 12 places to stay
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="code/crane.js"></script>
+<script>
+  (function () {
+    const css = () => getComputedStyle(document.documentElement);
+    const token = (name) => css().getPropertyValue(name).trim();
+    let run = 0;
+
+    // Mermaid sometimes puts an arrow's label on top of a box: move each such label up or
+    // down, a label's height at a time, to the nearest spot clear of every box.
+    function freeLabels(svg) {
+      const boxes = Array.from(svg.querySelectorAll('g.node')).map((node) => node.getBoundingClientRect());
+      const hits = (rect) => boxes.some((box) =>
+        rect.left < box.right && rect.right > box.left && rect.top < box.bottom && rect.bottom > box.top);
+      for (const label of svg.querySelectorAll('g.edgeLabel')) {
+        const rect = label.getBoundingClientRect();
+        if (!rect.width || !hits(rect)) continue;
+        const scale = (label.getScreenCTM() || { a: 1 }).a || 1;
+        for (const step of [-1, 1, -2, 2, -3, 3]) {
+          const dy = step * (rect.height + 4);
+          const moved = { left: rect.left, right: rect.right, top: rect.top + dy, bottom: rect.bottom + dy };
+          if (!hits(moved)) {
+            label.setAttribute('transform', (label.getAttribute('transform') || '') + ' translate(0,' + (dy / scale) + ')');
+            break;
+          }
+        }
+      }
+    }
+
+    async function renderAll() {
+      const pass = ++run;
+      const updatedStyle =
+        'fill:' + token('--upd-soft') + ',stroke:' + token('--upd') + ',color:' + token('--upd') + ',stroke-width:2px';
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: 'base',
+        fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+        themeVariables: {
+          edgeLabelBackground: token('--surface'),
+          background: token('--bg'),
+          primaryColor: token('--accent-soft'),
+          primaryTextColor: token('--ink'),
+          primaryBorderColor: token('--accent'),
+          secondaryColor: token('--surface'),
+          tertiaryColor: token('--surface'),
+          lineColor: token('--muted'),
+          textColor: token('--ink'),
+          noteBkgColor: token('--upd-soft'),
+          noteTextColor: token('--upd'),
+          noteBorderColor: token('--upd'),
+          actorBkg: token('--accent-soft'),
+          actorBorder: token('--accent'),
+          actorTextColor: token('--ink'),
+          signalColor: token('--ink'),
+          signalTextColor: token('--ink'),
+          labelBoxBkgColor: token('--surface'),
+          labelTextColor: token('--ink'),
+          loopTextColor: token('--ink'),
+          fontSize: '14px'
+        }
+      });
+      const outs = document.querySelectorAll('.diagram .out');
+      for (let index = 0; index < outs.length; index++) {
+        const out = outs[index];
+        const source = document.getElementById(out.dataset.src).textContent
+          .replace(/UPDATED/g, updatedStyle);
+        try {
+          const result = await mermaid.render('uml-' + pass + '-' + index, source);
+          if (pass !== run) return;
+          out.innerHTML = result.svg;
+          // Keep the diagram's own size: a wide one scrolls sideways instead of shrinking.
+          const svg = out.querySelector('svg');
+          const box = svg && svg.viewBox && svg.viewBox.baseVal;
+          // Arrow labels go on top: Mermaid draws them before the boxes, so a box that
+          // overlaps a label would hide it.
+          if (svg) svg.querySelectorAll('g.edgeLabels').forEach((labels) => labels.parentNode.appendChild(labels));
+          if (box && box.width) {
+            // Shrink a wide diagram to fit, but never below 85% of its size (text stays
+            // readable): past that it scrolls sideways instead, starting at its middle.
+            const room = out.parentElement.clientWidth - 24;
+            const width = box.width <= room ? box.width : Math.max(room, box.width * 0.85);
+            svg.style.width = Math.round(width) + 'px';
+            svg.style.maxWidth = 'none';
+            svg.removeAttribute('width');
+            const frame = out.parentElement;
+            frame.scrollLeft = (frame.scrollWidth - frame.clientWidth) / 2;
+          }
+          if (svg) freeLabels(svg);
+        } catch (error) {
+          out.innerHTML = '<p class="err">Diagram failed to render: ' + String(error && error.message || error) + '</p>';
+        }
+      }
+    }
+
+    renderAll();
+    try {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderAll);
+      new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    } catch (error) { /* theme changes then keep the first render */ }
+  })();
+</script>
+<script src="code-popup.js"></script>
