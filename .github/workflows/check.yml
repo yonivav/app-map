@@ -49,6 +49,10 @@ jobs:
             src: now-in-android-src
             repo: https://github.com/android/nowinandroid
             dart: false
+          - map: wikipedia-ios
+            src: wikipedia-ios-src
+            repo: https://github.com/wikimedia/wikipedia-ios
+            dart: false
     steps:
       - uses: actions/checkout@v4
       - name: The app the example maps, at the commit it was synced to

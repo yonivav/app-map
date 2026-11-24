@@ -1,0 +1,337 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Home Module</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one reading column of diagram plates, each with a short caption and a legend strip. */
+  :root {
+    --bg: #f6f4fb;
+    --surface: #ffffff;
+    --ink: #1c1a29;
+    --muted: #5d5a70;
+    --line: #dcd6ec;
+    --accent: #36169d;
+    --accent-soft: #ede8f6;
+    --upd: #7a4d00;
+    --upd-soft: #ffe2a8;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+      --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+      --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+    --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+    --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+  }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font-body);
+    font-size: 15px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 32px 64px;
+  }
+  /* Wide: diagrams use the screen; paragraphs stay at a readable measure (.cap, 70ch). */
+  main { max-width: 1880px; margin: 0 auto; display: grid; gap: 28px; }
+  header .sub, .find input { max-width: 70ch; }
+  header { display: grid; gap: 6px; }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 4vw, 40px); margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); margin: 0; }
+  .sub code, .cap code { font-family: var(--font-mono); font-size: 0.9em; color: var(--accent); }
+  section { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; min-width: 0; }
+  h2 { margin: 0; font-size: 18px; font-weight: 600; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  h2 span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+  .cap { margin: 0; color: var(--muted); max-width: 70ch; }
+  .diagram { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-height: 120px; }
+  .diagram .out { display: flex; justify-content: center; width: max-content; min-width: 100%; }
+  .diagram .out svg { max-width: none; height: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+  .legend li { display: flex; gap: 6px; align-items: center; }
+  .legend b { font-family: var(--font-mono); color: var(--ink); font-weight: 500; }
+  .tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--line); }
+  .tag.upd { background: var(--upd-soft); color: var(--upd); border-color: var(--upd); }
+  .updates { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+  .updates code { font-family: var(--font-mono); font-size: 0.9em; color: var(--ink); }
+  .err { color: var(--muted); font-family: var(--font-mono); font-size: 12px; white-space: pre-wrap; }
+  .shots { margin: 0; padding: 0 0 6px; list-style: none; display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; }
+  .shots li { flex: 0 0 180px; scroll-snap-align: start; display: grid; gap: 6px; align-content: start; }
+  .shots img { width: 180px; aspect-ratio: 375 / 812; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); display: block; }
+  .shots figcaption { color: var(--muted); font-size: 13px; }
+  .shots figure { margin: 0; display: grid; gap: 6px; }
+  .sub a { color: var(--accent); }
+</style>
+
+<main>
+  <header>
+    <h1>Home Module</h1>
+    <p class="sub"><a href="index.html">← App map</a> · The Home tab's two feeds — a personal For You feed and the Community feed of featured, top read, news and on-this-day cards — in one SwiftUI screen.</p>
+  </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/home/01_community.jpg"><img src="shots/home/01_community.jpg" alt="Community: today&#x27;s featured article, in the classic Explore feed" loading="lazy"></a><figcaption>Community: today's featured article, in the classic Explore feed</figcaption></figure></li>
+      <li><figure><a href="shots/home/02_community_scrolled.jpg"><img src="shots/home/02_community_scrolled.jpg" alt="Top read, with today&#x27;s game above" loading="lazy"></a><figcaption>Top read, with today's game above</figcaption></figure></li>
+      <li><figure><a href="shots/home/03_for_you.jpg"><img src="shots/home/03_for_you.jpg" alt="For You: a card based on your interests" loading="lazy"></a><figcaption>For You: a card based on your interests</figcaption></figure></li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-what">
+    <h2 id="h-what">What it does</h2>
+    <p class="cap"><code>HomeCoordinator</code> builds the Home tab: a UIKit <code>HomeViewController</code> hosting the SwiftUI <code>WMFHomeView</code>, with a <b>For You / Community</b> segmented control and a language menu in the navigation bar. <b>For You</b> is fetched from <code>WMFHomeDataController</code> for the selected wiki and has three modules — based on your interests, because you read, and continue reading — each of which can be hidden, as can single cards. <b>Community</b> is, unless the phase-2 developer flag is on, the classic Explore feed embedded as a child view controller: <code>ExploreViewController</code> shows a Core Data–backed list of <code>WMFContentGroup</code> cards produced by <code>WMFExploreFeedContentController</code> from content sources — related pages, continue reading and suggested edits once, plus per preferred language a daily game, nearby places, the featured article / top read / in the news / picture of the day feed, a random article, announcements and on this day. Pull to refresh asks every source to update for today; scrolling to the end loads the previous day. The feeds reload when the day changes, and tapping a card pushes the article on the Home tab's navigation stack. Card actions (save, share, hide) are logged through the coordinator's closures.</p>
+  </section>
+  <section aria-labelledby="h-classes">
+    <h2 id="h-classes">Logic <span>class diagram</span></h2>
+    <p class="cap">A UIKit shell around a SwiftUI view model, with the legacy Core Data feed plugged in as the Community segment.</p>
+    <div class="diagram"><div class="out" data-src="src-classes"></div></div>
+    <ul class="legend">
+      <li><b>──▷</b> holds</li>
+      <li><b>◇──</b> list of</li>
+      <li><b>┄┄▷</b> uses</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-widgets">
+    <h2 id="h-widgets">Screen <span>view composition</span></h2>
+    <p class="cap">SwiftUI on top, UIKit cards underneath when Community shows the classic feed.</p>
+    <div class="diagram"><div class="out" data-src="src-widgets"></div></div>
+    <ul class="legend">
+      <li><b>◆──</b> contains</li>
+      <li><b>──▷</b> reads model</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-sequence">
+    <h2 id="h-sequence">Pull to refresh the Community feed <span>sequence</span></h2>
+    <p class="cap">Every source writes content groups into Core Data; the fetched-results controller animates the new cards in.</p>
+    <div class="diagram"><div class="out" data-src="src-sequence"></div></div>
+  </section>
+  <section aria-labelledby="h-files">
+    <h2 id="h-files">Key files</h2>
+    <ul class="updates">
+      <li><code>Wikipedia/Code/HomeCoordinator.swift</code> · builds the Home tab and logs card actions</li>
+      <li><code>Wikipedia/Code/HomeViewController.swift</code> · hosts the SwiftUI home, embeds Explore</li>
+      <li><code>WMFComponents/Sources/WMFComponents/Components/Home/</code> · home, For You and Community views</li>
+      <li><code>Wikipedia/Code/ExploreViewController.swift</code> · classic Explore feed</li>
+      <li><code>Wikipedia/Code/ExploreCardViewController.swift</code> · one feed card</li>
+      <li><code>WMF Framework/WMFExploreFeedContentController.m</code> · content sources and updates</li>
+      <li><code>WMFData/Sources/WMFData/Data Controllers/Home/</code> · For You and Community data</li>
+    </ul>
+  </section>
+</main>
+
+<script type="text/plain" id="src-classes">
+classDiagram
+  direction LR
+  class HomeCoordinator {
+    <<coordinator>>
+    homeViewController
+    start()
+    makeHomeViewController()
+  }
+  class HomeViewController {
+    <<page>>
+    viewModel
+    embeddedExploreViewController()
+    embedHostingController()
+  }
+  class WMFHomeViewModel {
+    <<view-model>>
+    selectedTab · selectedLanguage
+    forYouViewModel · communityPages
+    loadCurrentTabFeedIfNeeded()
+    loadForYouFeedIfNeeded()
+    loadCommunityFeedIfNeeded()
+    refreshFeedsIfDayChanged()
+    hideForYouModule() · hideCard()
+  }
+  class WMFHomeDataController {
+    <<data controller>>
+    fetchForYou()
+    fetchCommunity()
+    hiddenCardKeys()
+  }
+  class ExploreViewController {
+    <<page>>
+    fetchedResultsController
+    refresh()
+  }
+  class WMFExploreFeedContentController {
+    <<service>>
+    contentSources
+  }
+  class WMFContentGroup { <<Core Data entity>> }
+  class WMFFeedContentSource { <<content source>> }
+  class WMFOnThisDayContentSource { <<content source>> }
+  class WMFContinueReadingContentSource { <<content source>> }
+  class WMFRelatedPagesContentSource { <<content source>> }
+  class WMFNearbyContentSource { <<content source>> }
+  HomeCoordinator ..> HomeViewController : makeHomeViewController()
+  HomeViewController --> WMFHomeViewModel : viewModel
+  WMFHomeViewModel --> WMFHomeDataController : dataController
+  HomeViewController --> ExploreViewController : Community segment
+  ExploreViewController ..> WMFExploreFeedContentController : update the feed sources
+  WMFExploreFeedContentController o-- WMFFeedContentSource
+  WMFExploreFeedContentController o-- WMFOnThisDayContentSource
+  WMFExploreFeedContentController o-- WMFContinueReadingContentSource
+  WMFExploreFeedContentController o-- WMFRelatedPagesContentSource
+  WMFExploreFeedContentController o-- WMFNearbyContentSource
+  WMFFeedContentSource ..> WMFContentGroup : creates
+  ExploreViewController ..> WMFContentGroup : fetched results
+</script>
+
+<script type="text/plain" id="src-widgets">
+classDiagram
+  direction TB
+  class HomeViewController { <<page>> }
+  class WMFHomeHostingController { <<hosting>> }
+  class WMFHomeView { <<SwiftUI>> }
+  class WMFForYouView { <<SwiftUI>> }
+  class WMFForYouViewModel {
+    <<view-model>>
+    pages · moduleVisibility
+  }
+  class WMFHomeEmbeddedCommunityView { <<SwiftUI>> }
+  class WMFCommunityFeedView { <<phase 2>> }
+  class ExploreViewController { <<page>> }
+  class ExploreCardViewController {
+    <<card>>
+    contentGroup
+  }
+  HomeViewController *-- WMFHomeHostingController
+  WMFHomeHostingController *-- WMFHomeView
+  WMFHomeView *-- WMFForYouView : For You
+  WMFForYouView --> WMFForYouViewModel
+  WMFHomeView *-- WMFHomeEmbeddedCommunityView : Community
+  WMFHomeView *-- WMFCommunityFeedView : Community, phase 2
+  WMFHomeEmbeddedCommunityView *-- ExploreViewController
+  ExploreViewController *-- ExploreCardViewController : one per content group
+</script>
+
+<script type="text/plain" id="src-sequence">
+sequenceDiagram
+  actor User
+  participant Explore as ExploreViewController
+  participant Feed as WMFExploreFeedContentController
+  participant Source as WMFFeedContentSource
+  participant Store as MWKDataStore
+  participant Card as ExploreCardViewController
+  User->>Explore: pull down
+  Explore->>Explore: refresh()
+  Explore->>Feed: update every source for today
+  Feed->>Source: load content for the date
+  Source->>Store: creates or updates WMFContentGroup rows
+  Store-->>Explore: fetched results change
+  Explore->>Card: contentGroup
+  Card-->>User: featured article, top read, news and more
+  User->>Card: tap an article
+  Card->>Explore: pushes the article
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="code/home.js"></script>
+<script>
+  (function () {
+    const css = () => getComputedStyle(document.documentElement);
+    const token = (name) => css().getPropertyValue(name).trim();
+    let run = 0;
+
+    // Mermaid sometimes puts an arrow's label on top of a box: move each such label up or
+    // down, a label's height at a time, to the nearest spot clear of every box.
+    function freeLabels(svg) {
+      const boxes = Array.from(svg.querySelectorAll('g.node')).map((node) => node.getBoundingClientRect());
+      const hits = (rect) => boxes.some((box) =>
+        rect.left < box.right && rect.right > box.left && rect.top < box.bottom && rect.bottom > box.top);
+      for (const label of svg.querySelectorAll('g.edgeLabel')) {
+        const rect = label.getBoundingClientRect();
+        if (!rect.width || !hits(rect)) continue;
+        const scale = (label.getScreenCTM() || { a: 1 }).a || 1;
+        for (const step of [-1, 1, -2, 2, -3, 3]) {
+          const dy = step * (rect.height + 4);
+          const moved = { left: rect.left, right: rect.right, top: rect.top + dy, bottom: rect.bottom + dy };
+          if (!hits(moved)) {
+            label.setAttribute('transform', (label.getAttribute('transform') || '') + ' translate(0,' + (dy / scale) + ')');
+            break;
+          }
+        }
+      }
+    }
+
+    async function renderAll() {
+      const pass = ++run;
+      const updatedStyle =
+        'fill:' + token('--upd-soft') + ',stroke:' + token('--upd') + ',color:' + token('--upd') + ',stroke-width:2px';
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: 'base',
+        fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+        themeVariables: {
+          edgeLabelBackground: token('--surface'),
+          background: token('--bg'),
+          primaryColor: token('--accent-soft'),
+          primaryTextColor: token('--ink'),
+          primaryBorderColor: token('--accent'),
+          secondaryColor: token('--surface'),
+          tertiaryColor: token('--surface'),
+          lineColor: token('--muted'),
+          textColor: token('--ink'),
+          noteBkgColor: token('--upd-soft'),
+          noteTextColor: token('--upd'),
+          noteBorderColor: token('--upd'),
+          actorBkg: token('--accent-soft'),
+          actorBorder: token('--accent'),
+          actorTextColor: token('--ink'),
+          signalColor: token('--ink'),
+          signalTextColor: token('--ink'),
+          labelBoxBkgColor: token('--surface'),
+          labelTextColor: token('--ink'),
+          loopTextColor: token('--ink'),
+          fontSize: '14px'
+        }
+      });
+      const outs = document.querySelectorAll('.diagram .out');
+      for (let index = 0; index < outs.length; index++) {
+        const out = outs[index];
+        const source = document.getElementById(out.dataset.src).textContent
+          .replace(/UPDATED/g, updatedStyle);
+        try {
+          const result = await mermaid.render('uml-' + pass + '-' + index, source);
+          if (pass !== run) return;
+          out.innerHTML = result.svg;
+          // Keep the diagram's own size: a wide one scrolls sideways instead of shrinking.
+          const svg = out.querySelector('svg');
+          const box = svg && svg.viewBox && svg.viewBox.baseVal;
+          // Arrow labels go on top: Mermaid draws them before the boxes, so a box that
+          // overlaps a label would hide it.
+          if (svg) svg.querySelectorAll('g.edgeLabels').forEach((labels) => labels.parentNode.appendChild(labels));
+          if (box && box.width) {
+            // Shrink a wide diagram to fit, but never below 85% of its size (text stays
+            // readable): past that it scrolls sideways instead, starting at its middle.
+            const room = out.parentElement.clientWidth - 24;
+            const width = box.width <= room ? box.width : Math.max(room, box.width * 0.85);
+            svg.style.width = Math.round(width) + 'px';
+            svg.style.maxWidth = 'none';
+            svg.removeAttribute('width');
+            const frame = out.parentElement;
+            frame.scrollLeft = (frame.scrollWidth - frame.clientWidth) / 2;
+          }
+          if (svg) freeLabels(svg);
+        } catch (error) {
+          out.innerHTML = '<p class="err">Diagram failed to render: ' + String(error && error.message || error) + '</p>';
+        }
+      }
+    }
+
+    renderAll();
+    try {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderAll);
+      new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    } catch (error) { /* theme changes then keep the first render */ }
+  })();
+</script>
+<script src="code-popup.js"></script>

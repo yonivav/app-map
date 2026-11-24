@@ -1,0 +1,330 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Saved Module</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one reading column of diagram plates, each with a short caption and a legend strip. */
+  :root {
+    --bg: #f6f4fb;
+    --surface: #ffffff;
+    --ink: #1c1a29;
+    --muted: #5d5a70;
+    --line: #dcd6ec;
+    --accent: #36169d;
+    --accent-soft: #ede8f6;
+    --upd: #7a4d00;
+    --upd-soft: #ffe2a8;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+      --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+      --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+    --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+    --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+  }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font-body);
+    font-size: 15px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 32px 64px;
+  }
+  /* Wide: diagrams use the screen; paragraphs stay at a readable measure (.cap, 70ch). */
+  main { max-width: 1880px; margin: 0 auto; display: grid; gap: 28px; }
+  header .sub, .find input { max-width: 70ch; }
+  header { display: grid; gap: 6px; }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 4vw, 40px); margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); margin: 0; }
+  .sub code, .cap code { font-family: var(--font-mono); font-size: 0.9em; color: var(--accent); }
+  section { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; min-width: 0; }
+  h2 { margin: 0; font-size: 18px; font-weight: 600; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  h2 span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+  .cap { margin: 0; color: var(--muted); max-width: 70ch; }
+  .diagram { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-height: 120px; }
+  .diagram .out { display: flex; justify-content: center; width: max-content; min-width: 100%; }
+  .diagram .out svg { max-width: none; height: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+  .legend li { display: flex; gap: 6px; align-items: center; }
+  .legend b { font-family: var(--font-mono); color: var(--ink); font-weight: 500; }
+  .tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--line); }
+  .tag.upd { background: var(--upd-soft); color: var(--upd); border-color: var(--upd); }
+  .updates { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+  .updates code { font-family: var(--font-mono); font-size: 0.9em; color: var(--ink); }
+  .err { color: var(--muted); font-family: var(--font-mono); font-size: 12px; white-space: pre-wrap; }
+  .shots { margin: 0; padding: 0 0 6px; list-style: none; display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; }
+  .shots li { flex: 0 0 180px; scroll-snap-align: start; display: grid; gap: 6px; align-content: start; }
+  .shots img { width: 180px; aspect-ratio: 375 / 812; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); display: block; }
+  .shots figcaption { color: var(--muted); font-size: 13px; }
+  .shots figure { margin: 0; display: grid; gap: 6px; }
+  .sub a { color: var(--accent); }
+</style>
+
+<main>
+  <header>
+    <h1>Saved Module</h1>
+    <p class="sub"><a href="index.html">← App map</a> · The Saved tab — every saved article for offline reading, and reading lists that sync with your Wikipedia account.</p>
+  </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/saved/01_all.jpg"><img src="shots/saved/01_all.jpg" alt="All articles: the article saved from its toolbar" loading="lazy"></a><figcaption>All articles: the article saved from its toolbar</figcaption></figure></li>
+      <li><figure><a href="shots/saved/02_lists.jpg"><img src="shots/saved/02_lists.jpg" alt="Reading lists, empty until you make one" loading="lazy"></a><figcaption>Reading lists, empty until you make one</figcaption></figure></li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-what">
+    <h2 id="h-what">What it does</h2>
+    <p class="cap"><code>SavedCoordinator</code> builds the Saved tab as one SwiftUI screen, <code>WMFSavedHostingController</code>, with two segments: <b>All articles</b> and <b>Reading lists</b>. Saving an article anywhere (the article toolbar, a feed card, a map popover) toggles it in <code>MWKSavedPageList</code>; <code>SavedArticlesFetcher</code> then downloads each saved article with its images for offline reading, at most 12 downloads a minute, and backs off when the server answers busy. All articles lists them newest first or by title, with search, a download-progress banner, an edit mode to select several (remove, add to a list) and per-article alerts (not yet downloaded, list limit reached). Reading lists shows your lists — <b>Saved</b> is the default one — and opens a list's detail screen; <b>+</b> creates a list. When you are logged in, <code>WMFReadingListsController</code> syncs lists and their entries with the reading-lists API both ways, and pulling down runs a full sync. Each segment's sort order is remembered.</p>
+  </section>
+  <section aria-labelledby="h-classes">
+    <h2 id="h-classes">Logic <span>class diagram</span></h2>
+    <p class="cap">The SwiftUI side never touches Core Data: it reads plain models from data controllers that the app-side coordinators feed.</p>
+    <div class="diagram"><div class="out" data-src="src-classes"></div></div>
+    <ul class="legend">
+      <li><b>──▷</b> holds</li>
+      <li><b>┄┄▷</b> uses</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-widgets">
+    <h2 id="h-widgets">Screen <span>view composition</span></h2>
+    <div class="diagram"><div class="out" data-src="src-widgets"></div></div>
+    <ul class="legend">
+      <li><b>◆──</b> contains</li>
+      <li><b>┄┄▷</b> opens</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-sequence">
+    <h2 id="h-sequence">Save an article, read it offline <span>sequence</span></h2>
+    <p class="cap">Saving is instant and local; the download and the account sync happen afterwards in the background.</p>
+    <div class="diagram"><div class="out" data-src="src-sequence"></div></div>
+  </section>
+  <section aria-labelledby="h-files">
+    <h2 id="h-files">Key files</h2>
+    <ul class="updates">
+      <li><code>Wikipedia/Code/SavedCoordinator.swift</code> · builds the Saved tab</li>
+      <li><code>Wikipedia/Code/SavedAllArticlesCoordinator.swift</code> · all-articles actions</li>
+      <li><code>Wikipedia/Code/ReadingListsCoordinator.swift</code> · reading-list actions</li>
+      <li><code>Wikipedia/Code/LegacyReadingListsDataSource.swift</code> · Core Data to SwiftUI models</li>
+      <li><code>Wikipedia/Code/ReadingListsController.swift</code> · reading-list sync and limits</li>
+      <li><code>Wikipedia/Code/SavedArticlesFetcher.swift</code> · offline downloads</li>
+      <li><code>WMFComponents/Sources/WMFComponents/Components/Saved/</code> · Saved views and view models</li>
+    </ul>
+  </section>
+</main>
+
+<script type="text/plain" id="src-classes">
+classDiagram
+  direction LR
+  class SavedCoordinator {
+    <<coordinator>>
+    start()
+    makeSavedViewController()
+  }
+  class WMFSavedViewModel {
+    <<view-model>>
+    segment · sortOrder · isEditing
+    selectSegment()
+    setSortOrder()
+    toggleEditing()
+  }
+  class SavedAllArticlesCoordinator {
+    <<coordinator>>
+    viewModel
+    showArticle()
+    deleteSavedArticles()
+  }
+  class WMFSavedAllArticlesViewModel {
+    <<view-model>>
+    articles · filteredArticles · state
+    loadArticles()
+    toggleSelection()
+  }
+  class ReadingListsCoordinator {
+    <<coordinator>>
+    presentCreateReadingList()
+    showDetail()
+  }
+  class WMFReadingListsViewModel {
+    <<view-model>>
+    readingLists · state
+    loadReadingLists()
+    refresh()
+  }
+  class WMFLegacyReadingListsDataController { <<data controller>> }
+  class LegacyReadingListsDataSource {
+    <<adapter>>
+    unsaveConfirmation
+  }
+  class WMFReadingListsController {
+    <<sync service>>
+    maxEntriesPerList · maxListsPerUser
+    fullSync()
+    createReadingList()
+    userSave() · unsave()
+  }
+  class SavedArticlesFetcher {
+    <<downloader>>
+    maximumDownloadsPerMinute
+    start() · stop()
+  }
+  SavedCoordinator ..> WMFSavedViewModel : creates
+  SavedCoordinator --> SavedAllArticlesCoordinator
+  SavedCoordinator --> ReadingListsCoordinator
+  WMFSavedViewModel --> WMFSavedAllArticlesViewModel : allArticlesViewModel
+  WMFSavedViewModel --> WMFReadingListsViewModel : readingListsViewModel
+  SavedAllArticlesCoordinator ..> WMFSavedAllArticlesViewModel : viewModel
+  WMFSavedAllArticlesViewModel --> WMFLegacyReadingListsDataController : dataController
+  WMFLegacyReadingListsDataController --> LegacyReadingListsDataSource : delegate
+  SavedAllArticlesCoordinator ..> WMFReadingListsController : fullSync() · unsave()
+  ReadingListsCoordinator ..> WMFReadingListsController : createReadingList()
+</script>
+
+<script type="text/plain" id="src-widgets">
+classDiagram
+  direction TB
+  class WMFSavedHostingController { <<hosting>> }
+  class WMFSavedView { <<SwiftUI>> }
+  class WMFSavedProgressView { <<banner>> }
+  class WMFSavedAllArticlesView { <<SwiftUI>> }
+  class WMFReadingListsView { <<SwiftUI>> }
+  class WMFReadingListRow { <<row>> }
+  class ReadingListDetailViewController { <<page>> }
+  WMFSavedHostingController *-- WMFSavedView
+  WMFSavedView *-- WMFSavedProgressView
+  WMFSavedView *-- WMFSavedAllArticlesView : All articles
+  WMFSavedView *-- WMFReadingListsView : Reading lists
+  WMFReadingListsView *-- WMFReadingListRow
+  WMFReadingListRow ..> ReadingListDetailViewController : opens
+</script>
+
+<script type="text/plain" id="src-sequence">
+sequenceDiagram
+  actor User
+  participant Article as ArticleViewController
+  participant Pages as MWKSavedPageList
+  participant Fetcher as SavedArticlesFetcher
+  participant Sync as WMFReadingListsController
+  participant All as WMFSavedAllArticlesViewModel
+  User->>Article: tap Save
+  Article->>Pages: toggles the saved page
+  Pages->>Sync: userSave(), adds it to the default list
+  Sync->>Sync: syncs with your account when logged in
+  Sync-->>Fetcher: a saved article without a download
+  Fetcher->>Fetcher: downloads HTML and images, 12 a minute
+  User->>All: open Saved
+  All->>All: loadArticles()
+  All-->>User: newest first, ready offline
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="code/saved.js"></script>
+<script>
+  (function () {
+    const css = () => getComputedStyle(document.documentElement);
+    const token = (name) => css().getPropertyValue(name).trim();
+    let run = 0;
+
+    // Mermaid sometimes puts an arrow's label on top of a box: move each such label up or
+    // down, a label's height at a time, to the nearest spot clear of every box.
+    function freeLabels(svg) {
+      const boxes = Array.from(svg.querySelectorAll('g.node')).map((node) => node.getBoundingClientRect());
+      const hits = (rect) => boxes.some((box) =>
+        rect.left < box.right && rect.right > box.left && rect.top < box.bottom && rect.bottom > box.top);
+      for (const label of svg.querySelectorAll('g.edgeLabel')) {
+        const rect = label.getBoundingClientRect();
+        if (!rect.width || !hits(rect)) continue;
+        const scale = (label.getScreenCTM() || { a: 1 }).a || 1;
+        for (const step of [-1, 1, -2, 2, -3, 3]) {
+          const dy = step * (rect.height + 4);
+          const moved = { left: rect.left, right: rect.right, top: rect.top + dy, bottom: rect.bottom + dy };
+          if (!hits(moved)) {
+            label.setAttribute('transform', (label.getAttribute('transform') || '') + ' translate(0,' + (dy / scale) + ')');
+            break;
+          }
+        }
+      }
+    }
+
+    async function renderAll() {
+      const pass = ++run;
+      const updatedStyle =
+        'fill:' + token('--upd-soft') + ',stroke:' + token('--upd') + ',color:' + token('--upd') + ',stroke-width:2px';
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: 'base',
+        fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+        themeVariables: {
+          edgeLabelBackground: token('--surface'),
+          background: token('--bg'),
+          primaryColor: token('--accent-soft'),
+          primaryTextColor: token('--ink'),
+          primaryBorderColor: token('--accent'),
+          secondaryColor: token('--surface'),
+          tertiaryColor: token('--surface'),
+          lineColor: token('--muted'),
+          textColor: token('--ink'),
+          noteBkgColor: token('--upd-soft'),
+          noteTextColor: token('--upd'),
+          noteBorderColor: token('--upd'),
+          actorBkg: token('--accent-soft'),
+          actorBorder: token('--accent'),
+          actorTextColor: token('--ink'),
+          signalColor: token('--ink'),
+          signalTextColor: token('--ink'),
+          labelBoxBkgColor: token('--surface'),
+          labelTextColor: token('--ink'),
+          loopTextColor: token('--ink'),
+          fontSize: '14px'
+        }
+      });
+      const outs = document.querySelectorAll('.diagram .out');
+      for (let index = 0; index < outs.length; index++) {
+        const out = outs[index];
+        const source = document.getElementById(out.dataset.src).textContent
+          .replace(/UPDATED/g, updatedStyle);
+        try {
+          const result = await mermaid.render('uml-' + pass + '-' + index, source);
+          if (pass !== run) return;
+          out.innerHTML = result.svg;
+          // Keep the diagram's own size: a wide one scrolls sideways instead of shrinking.
+          const svg = out.querySelector('svg');
+          const box = svg && svg.viewBox && svg.viewBox.baseVal;
+          // Arrow labels go on top: Mermaid draws them before the boxes, so a box that
+          // overlaps a label would hide it.
+          if (svg) svg.querySelectorAll('g.edgeLabels').forEach((labels) => labels.parentNode.appendChild(labels));
+          if (box && box.width) {
+            // Shrink a wide diagram to fit, but never below 85% of its size (text stays
+            // readable): past that it scrolls sideways instead, starting at its middle.
+            const room = out.parentElement.clientWidth - 24;
+            const width = box.width <= room ? box.width : Math.max(room, box.width * 0.85);
+            svg.style.width = Math.round(width) + 'px';
+            svg.style.maxWidth = 'none';
+            svg.removeAttribute('width');
+            const frame = out.parentElement;
+            frame.scrollLeft = (frame.scrollWidth - frame.clientWidth) / 2;
+          }
+          if (svg) freeLabels(svg);
+        } catch (error) {
+          out.innerHTML = '<p class="err">Diagram failed to render: ' + String(error && error.message || error) + '</p>';
+        }
+      }
+    }
+
+    renderAll();
+    try {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderAll);
+      new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    } catch (error) { /* theme changes then keep the first render */ }
+  })();
+</script>
+<script src="code-popup.js"></script>

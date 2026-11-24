@@ -43,6 +43,7 @@ it, and a picture of how that screen looks in the app. For **Flutter, iOS and An
 | Wonderous — the Flutter team's showcase app by gskinner (~31k lines, MIT) | Flutter | [▶ Wonderous](https://yonivav.github.io/app-map/examples/wonderous/) |
 | NetNewsWire — Brent Simmons' RSS reader (~25k lines, MIT) | iOS · Swift, Objective-C | [▶ NetNewsWire](https://yonivav.github.io/app-map/examples/netnewswire/) |
 | Now in Android — Google's Compose showcase app (~29k lines, Apache-2.0) | Android · Kotlin | [▶ Now in Android](https://yonivav.github.io/app-map/examples/now-in-android/) |
+| Wikipedia for iOS — the Wikimedia Foundation's official app (~209k lines, MIT) | iOS · Swift, Objective-C | [▶ Wikipedia iOS](https://yonivav.github.io/app-map/examples/wikipedia-ios/) |
 
 ![The Wonderous App Map: one card per module, with a screenshot of each](docs/overview.jpg)
 
@@ -221,7 +222,7 @@ reflects the commit it was last synced to; it won't track a branch nobody's merg
 
 ## Credits
 
-The examples map three open-source apps, none affiliated with or endorsing this project:
+The examples map these open-source apps, none affiliated with or endorsing this project:
 
 - [Wonderous](https://github.com/gskinnerTeam/flutter-wonderous-app) by gskinner (MIT). Source
   excerpts and screenshots in `examples/wonderous/` are © gskinner.com under the MIT license; see
@@ -232,5 +233,9 @@ The examples map three open-source apps, none affiliated with or endorsing this 
 - [Now in Android](https://github.com/android/nowinandroid) by Google (Apache-2.0). Source
   excerpts and screenshots in `examples/now-in-android/` are © The Android Open Source Project under the
   Apache-2.0 license; see `examples/now-in-android/LICENSE-now-in-android`.
+- [Wikipedia for iOS](https://github.com/wikimedia/wikipedia-ios) by the Wikimedia Foundation and contributors
+  (MIT). Source excerpts and screenshots in `examples/wikipedia-ios/` are © Wikimedia Foundation et al. under
+  the MIT license; see `examples/wikipedia-ios/LICENSE-wikipedia-ios`. Article text and images in the
+  screenshots come from Wikipedia under CC BY-SA 4.0 and their own licenses.
 
 MIT © 2026 Yoni Vizel

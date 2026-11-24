@@ -1,0 +1,13 @@
+{
+  "repo": "wikipedia-ios-src",
+  "sourceUrl": "https://github.com/wikimedia/wikipedia-ios/blob/f002b78bca2e580e7bbed7dfb6fd54a0967bcc08",
+  "noCrop": [
+    "SearchLanguagesBarViewController",
+    "SearchResultsViewController",
+    "WMFSearchResultsView"
+  ],
+  "synced": {
+    "commit": "f002b78bca2e580e7bbed7dfb6fd54a0967bcc08",
+    "date": "2026-11-25"
+  }
+}

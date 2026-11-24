@@ -1,0 +1,313 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Launch Module</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one reading column of diagram plates, each with a short caption and a legend strip. */
+  :root {
+    --bg: #f6f4fb;
+    --surface: #ffffff;
+    --ink: #1c1a29;
+    --muted: #5d5a70;
+    --line: #dcd6ec;
+    --accent: #36169d;
+    --accent-soft: #ede8f6;
+    --upd: #7a4d00;
+    --upd-soft: #ffe2a8;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+      --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+      --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+    --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+    --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+  }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font-body);
+    font-size: 15px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 32px 64px;
+  }
+  /* Wide: diagrams use the screen; paragraphs stay at a readable measure (.cap, 70ch). */
+  main { max-width: 1880px; margin: 0 auto; display: grid; gap: 28px; }
+  header .sub, .find input { max-width: 70ch; }
+  header { display: grid; gap: 6px; }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 4vw, 40px); margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); margin: 0; }
+  .sub code, .cap code { font-family: var(--font-mono); font-size: 0.9em; color: var(--accent); }
+  section { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; min-width: 0; }
+  h2 { margin: 0; font-size: 18px; font-weight: 600; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  h2 span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+  .cap { margin: 0; color: var(--muted); max-width: 70ch; }
+  .diagram { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-height: 120px; }
+  .diagram .out { display: flex; justify-content: center; width: max-content; min-width: 100%; }
+  .diagram .out svg { max-width: none; height: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+  .legend li { display: flex; gap: 6px; align-items: center; }
+  .legend b { font-family: var(--font-mono); color: var(--ink); font-weight: 500; }
+  .tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--line); }
+  .tag.upd { background: var(--upd-soft); color: var(--upd); border-color: var(--upd); }
+  .updates { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+  .updates code { font-family: var(--font-mono); font-size: 0.9em; color: var(--ink); }
+  .err { color: var(--muted); font-family: var(--font-mono); font-size: 12px; white-space: pre-wrap; }
+  .shots { margin: 0; padding: 0 0 6px; list-style: none; display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; }
+  .shots li { flex: 0 0 180px; scroll-snap-align: start; display: grid; gap: 6px; align-content: start; }
+  .shots img { width: 180px; aspect-ratio: 375 / 812; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); display: block; }
+  .shots figcaption { color: var(--muted); font-size: 13px; }
+  .shots figure { margin: 0; display: grid; gap: 6px; }
+  .sub a { color: var(--accent); }
+</style>
+
+<main>
+  <header>
+    <h1>Launch Module</h1>
+    <p class="sub"><a href="index.html">← App map</a> · The splash while the database migrates, the seven-step first-run onboarding, and the five-tab shell every other screen lives in.</p>
+  </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/launch/01_intro.jpg"><img src="shots/launch/01_intro.jpg" alt="First launch: the onboarding intro" loading="lazy"></a><figcaption>First launch: the onboarding intro</figcaption></figure></li>
+      <li><figure><a href="shots/launch/02_languages.jpg"><img src="shots/launch/02_languages.jpg" alt="Languages found on the device, with an editor" loading="lazy"></a><figcaption>Languages found on the device, with an editor</figcaption></figure></li>
+      <li><figure><a href="shots/launch/03_interests.jpg"><img src="shots/launch/03_interests.jpg" alt="Interests: topics and articles to follow" loading="lazy"></a><figcaption>Interests: topics and articles to follow</figcaption></figure></li>
+      <li><figure><a href="shots/launch/04_feed_preference.jpg"><img src="shots/launch/04_feed_preference.jpg" alt="Which Home feed to see first" loading="lazy"></a><figcaption>Which Home feed to see first</figcaption></figure></li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-what">
+    <h2 id="h-what">What it does</h2>
+    <p class="cap"><code>SceneDelegate</code> creates the window and calls <code>launchApp(in:waitToResumeApp:)</code> on the single <code>WMFAppViewController</code>. It covers itself with <code>SplashScreenViewController</code> (the launch-screen wordmark), then waits for <code>MWKDataStore</code> to finish its Core Data setup and library updates; if a migration is needed and takes longer than 4 s, the splash cross-fades over 0.3 s into a loading animation. When the data is ready, <code>setupControllers()</code> starts the background workers and <code>resumeApp</code> decides what to show. On the very first launch (no <code>WMFDidShowOnboarding</code> flag, and not opened from a link that skips it) <code>AppOnboardingCoordinator</code> presents a SwiftUI flow of seven steps: intro, data &amp; privacy, languages (the device's languages, with an editor), a personalization intro, interests, feed preference (which Home segment to see first), and a loading step that builds the Home feed — it waits for the feed for at most 8 s and shows the animation for at least one 1 s loop. The last three steps show page dots and <b>Skip</b>, which keeps the default feed preference. Whatever path it takes, the app then builds five tabs — Home, Places, Saved, Activity, Search — each in its own navigation controller, and reopens on Home if it was in the background for 24 hours or more (unless the reader chose to open on Search).</p>
+  </section>
+  <section aria-labelledby="h-classes">
+    <h2 id="h-classes">Logic <span>class diagram</span></h2>
+    <p class="cap">The tab bar controller is also the app coordinator: it owns the data store, the splash, the onboarding and the tab roots.</p>
+    <div class="diagram"><div class="out" data-src="src-classes"></div></div>
+    <ul class="legend">
+      <li><b>──▷</b> holds</li>
+      <li><b>┄┄▷</b> uses · opens</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-states">
+    <h2 id="h-states">Onboarding <span>state machine</span></h2>
+    <p class="cap"><code>advance()</code> moves one step; <code>skip()</code> (shown on the personalization steps) and the end of loading both finish.</p>
+    <div class="diagram"><div class="out" data-src="src-states"></div></div>
+  </section>
+  <section aria-labelledby="h-sequence">
+    <h2 id="h-sequence">First launch <span>sequence</span></h2>
+    <p class="cap">The splash stays up until the store is ready; onboarding replaces it, and the tabs load behind it.</p>
+    <div class="diagram"><div class="out" data-src="src-sequence"></div></div>
+  </section>
+  <section aria-labelledby="h-files">
+    <h2 id="h-files">Key files</h2>
+    <ul class="updates">
+      <li><code>Wikipedia/Code/SceneDelegate.swift</code> · window, URLs, user activities</li>
+      <li><code>Wikipedia/Code/WMFAppViewController.swift</code> · tab bar, launch, resume, routing</li>
+      <li><code>Wikipedia/Code/SplashScreenViewController.swift</code> · splash and migration animation</li>
+      <li><code>Wikipedia/Code/AppOnboardingCoordinator.swift</code> · first-run onboarding</li>
+      <li><code>WMFComponents/Sources/WMFComponents/Components/App Onboarding/</code> · onboarding views and steps</li>
+      <li><code>Wikipedia/Code/MWKDataStore.m</code> · Core Data store setup and migration</li>
+    </ul>
+  </section>
+</main>
+
+<script type="text/plain" id="src-classes">
+classDiagram
+  direction LR
+  class SceneDelegate { <<scene>> }
+  class WMFAppViewController {
+    <<app shell>>
+    dataStore
+    launchApp()
+    migrateIfNecessary()
+    resumeApp()
+    loadMainUI()
+    configureTabController()
+    presentOnboardingIfNeeded()
+    shouldShowOnboarding()
+    shouldShowHomeOnLaunch()
+  }
+  class WMFAppTabType {
+    <<enum>>
+    main · places · saved · recent · search
+  }
+  class SplashScreenViewController {
+    <<page>>
+    maximumNonInteractiveTimeInterval
+    triggerMigratingAnimation()
+  }
+  class LoadingAnimationViewController { <<page>> }
+  class MWKDataStore { <<Core Data store>> }
+  class AppOnboardingCoordinator {
+    <<coordinator>>
+    start()
+    finish()
+  }
+  class WMFAppOnboardingViewModel {
+    <<view-model>>
+    steps · currentStepIndex
+    advance() · skip()
+    completeAfterLoadingFeed()
+  }
+  class HomeCoordinator { <<coordinator>> }
+  SceneDelegate ..> WMFAppViewController : launchApp()
+  WMFAppViewController --> MWKDataStore : dataStore
+  WMFAppViewController --> SplashScreenViewController : splashScreenViewController
+  SplashScreenViewController ..> LoadingAnimationViewController : after 4 s of migration
+  WMFAppViewController --> AppOnboardingCoordinator : appOnboardingCoordinator
+  AppOnboardingCoordinator --> WMFAppOnboardingViewModel
+  WMFAppViewController --> WMFAppTabType : selectedIndex
+  WMFAppViewController --> HomeCoordinator : homeCoordinator
+</script>
+
+<script type="text/plain" id="src-states">
+stateDiagram-v2
+  [*] --> intro
+  intro --> dataPrivacy : next
+  dataPrivacy --> languages : next
+  languages --> personalizationIntro : next
+  personalizationIntro --> interests : next
+  interests --> feedPreference : next, loads the feed choices
+  feedPreference --> loading : next
+  loading --> [*] : feed loaded, at most 8 s
+  personalizationIntro --> [*] : Skip
+  interests --> [*] : Skip
+  feedPreference --> [*] : Skip
+</script>
+
+<script type="text/plain" id="src-sequence">
+sequenceDiagram
+  actor User
+  participant Scene as SceneDelegate
+  participant App as WMFAppViewController
+  participant Splash as SplashScreenViewController
+  participant Store as MWKDataStore
+  participant Onboarding as AppOnboardingCoordinator
+  participant Steps as WMFAppOnboardingViewModel
+  Scene->>App: launchApp()
+  App->>App: showSplashView()
+  App->>Store: finish setup
+  App->>Store: run library updates and migrations
+  Store-->>App: done, setupControllers()
+  App->>App: resumeApp()
+  App->>Onboarding: start(), no onboarding flag yet
+  Onboarding->>Steps: intro, privacy, languages
+  User->>Steps: Next ×5
+  Steps->>Steps: completeAfterLoadingFeed()
+  Steps-->>Onboarding: onCompletion
+  Onboarding->>Onboarding: finish(), saves which feed to see first
+  Onboarding->>App: loadMainUI() while onboarding still covers it
+  Onboarding-->>App: dismissed, sets the onboarding flag
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="code/launch.js"></script>
+<script>
+  (function () {
+    const css = () => getComputedStyle(document.documentElement);
+    const token = (name) => css().getPropertyValue(name).trim();
+    let run = 0;
+
+    // Mermaid sometimes puts an arrow's label on top of a box: move each such label up or
+    // down, a label's height at a time, to the nearest spot clear of every box.
+    function freeLabels(svg) {
+      const boxes = Array.from(svg.querySelectorAll('g.node')).map((node) => node.getBoundingClientRect());
+      const hits = (rect) => boxes.some((box) =>
+        rect.left < box.right && rect.right > box.left && rect.top < box.bottom && rect.bottom > box.top);
+      for (const label of svg.querySelectorAll('g.edgeLabel')) {
+        const rect = label.getBoundingClientRect();
+        if (!rect.width || !hits(rect)) continue;
+        const scale = (label.getScreenCTM() || { a: 1 }).a || 1;
+        for (const step of [-1, 1, -2, 2, -3, 3]) {
+          const dy = step * (rect.height + 4);
+          const moved = { left: rect.left, right: rect.right, top: rect.top + dy, bottom: rect.bottom + dy };
+          if (!hits(moved)) {
+            label.setAttribute('transform', (label.getAttribute('transform') || '') + ' translate(0,' + (dy / scale) + ')');
+            break;
+          }
+        }
+      }
+    }
+
+    async function renderAll() {
+      const pass = ++run;
+      const updatedStyle =
+        'fill:' + token('--upd-soft') + ',stroke:' + token('--upd') + ',color:' + token('--upd') + ',stroke-width:2px';
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: 'base',
+        fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+        themeVariables: {
+          edgeLabelBackground: token('--surface'),
+          background: token('--bg'),
+          primaryColor: token('--accent-soft'),
+          primaryTextColor: token('--ink'),
+          primaryBorderColor: token('--accent'),
+          secondaryColor: token('--surface'),
+          tertiaryColor: token('--surface'),
+          lineColor: token('--muted'),
+          textColor: token('--ink'),
+          noteBkgColor: token('--upd-soft'),
+          noteTextColor: token('--upd'),
+          noteBorderColor: token('--upd'),
+          actorBkg: token('--accent-soft'),
+          actorBorder: token('--accent'),
+          actorTextColor: token('--ink'),
+          signalColor: token('--ink'),
+          signalTextColor: token('--ink'),
+          labelBoxBkgColor: token('--surface'),
+          labelTextColor: token('--ink'),
+          loopTextColor: token('--ink'),
+          fontSize: '14px'
+        }
+      });
+      const outs = document.querySelectorAll('.diagram .out');
+      for (let index = 0; index < outs.length; index++) {
+        const out = outs[index];
+        const source = document.getElementById(out.dataset.src).textContent
+          .replace(/UPDATED/g, updatedStyle);
+        try {
+          const result = await mermaid.render('uml-' + pass + '-' + index, source);
+          if (pass !== run) return;
+          out.innerHTML = result.svg;
+          // Keep the diagram's own size: a wide one scrolls sideways instead of shrinking.
+          const svg = out.querySelector('svg');
+          const box = svg && svg.viewBox && svg.viewBox.baseVal;
+          // Arrow labels go on top: Mermaid draws them before the boxes, so a box that
+          // overlaps a label would hide it.
+          if (svg) svg.querySelectorAll('g.edgeLabels').forEach((labels) => labels.parentNode.appendChild(labels));
+          if (box && box.width) {
+            // Shrink a wide diagram to fit, but never below 85% of its size (text stays
+            // readable): past that it scrolls sideways instead, starting at its middle.
+            const room = out.parentElement.clientWidth - 24;
+            const width = box.width <= room ? box.width : Math.max(room, box.width * 0.85);
+            svg.style.width = Math.round(width) + 'px';
+            svg.style.maxWidth = 'none';
+            svg.removeAttribute('width');
+            const frame = out.parentElement;
+            frame.scrollLeft = (frame.scrollWidth - frame.clientWidth) / 2;
+          }
+          if (svg) freeLabels(svg);
+        } catch (error) {
+          out.innerHTML = '<p class="err">Diagram failed to render: ' + String(error && error.message || error) + '</p>';
+        }
+      }
+    }
+
+    renderAll();
+    try {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderAll);
+      new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    } catch (error) { /* theme changes then keep the first render */ }
+  })();
+</script>
+<script src="code-popup.js"></script>
