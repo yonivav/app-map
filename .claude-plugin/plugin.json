@@ -1,6 +1,6 @@
 {
   "name": "app-map",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "An AI agent skill for mobile apps: your coding agent turns the app's repo into clickable UML where every class, member and arrow opens its real source, and widgets show how they look in the running app.",
   "license": "MIT",
   "keywords": [

@@ -1,7 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.5.0 — 2026-11-26
 
+- **Homebrew:** `brew install yonivav/app-map/app-map`, then `app-map install --auto` in your app.
+  `app-map install` takes the installer's options; every other command is the CLI.
+- **Six live examples:** Flutter Gallery, Wikipedia for iOS and Wikipedia for Android join
+  Wonderous, NetNewsWire and Now in Android, each with screenshots from a simulator or emulator.
+- A 39-second demo video on the site.
 - The pull-request bot commits only a map that passes its checks, whatever the agent's exit code;
   Gemini runs a Flash model by default (`GEMINI_MODEL` to change it).
 - Leaner `SKILL.md` (the automation details load only when needed).
