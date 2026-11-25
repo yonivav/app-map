@@ -10,7 +10,7 @@ it, and a picture of how that screen looks in the app. For **Flutter, iOS and An
 
 ## How to use it
 
-> **1. Install it once.** In a terminal, inside your app's folder:
+> **1. Install it once.** In Claude Code, one line: `/plugin marketplace add yonivav/app-map`. Any other agent, in a terminal inside your app's folder:
 >
 > ```bash
 > git clone https://github.com/yonivav/app-map ~/.app-map
@@ -36,7 +36,7 @@ it, and a picture of how that screen looks in the app. For **Flutter, iOS and An
 
 ![Demo: click a module, a widget's popup shows how it looks and its exact code; "Appears in" links to every diagram that draws a class; an arrow opens the method it calls; search finds any class or file](docs/demo.gif)
 
-**Live examples**, each mapped by this skill from a real open-source app:
+**Live examples**, each mapped by this skill from a real open-source app (if one saved you time, a ⭐ helps others find the project):
 
 | App | Platform | Open the map |
 |---|---|---|
@@ -216,7 +216,8 @@ reflects the commit it was last synced to; it won't track a branch nobody's merg
 - **Phase 1 (done):** Flutter/Dart, with screenshots on the iOS simulator.
 - **Phase 2 (done):** native Android (Kotlin/Java) and iOS (Swift/Objective-C): class maps, screen
   composition, state machines and screenshots.
-- **Phase 3:** web (React).
+- **Phase 3:** React Native (TypeScript/TSX), with screenshots from the simulator. Plain web is on hold: the screenshots of real running widgets are what sets this tool apart, and that is a mobile story.
+- Want to help? See the [good first issues](https://github.com/yonivav/app-map/labels/good%20first%20issue).
 
 ## Credits
 
