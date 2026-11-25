@@ -5,7 +5,9 @@ card_title: Places
 card: Map of nearby articles
 screenshots:
 - file: shots/places/01_map.jpg
-  caption: The MapLibre map before any nearby pages load
+  caption: 'Around the Eiffel Tower: nearby articles as markers'
+- file: shots/places/02_preview.jpg
+  caption: 'Tap a marker: the link preview with Read, Save and Share'
 ---
 
 ## What it does {#what}
