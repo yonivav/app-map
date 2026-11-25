@@ -44,7 +44,8 @@ ROLE_SUFFIXES = [
 # A widget-ish base that doesn't name every framework subclass (a custom `BaseViewController`).
 WIDGET_SUFFIXES = ('Widget', 'Page', 'ViewController', 'Activity', 'Fragment', 'View', 'Cell',
                    'ViewHolder')
-ROLE_ORDER = ['page', 'view-model', 'model', 'service', 'widget', 'enum', 'data', 'other', 'style']
+ROLE_ORDER = ['page', 'view-model', 'hook', 'store', 'model', 'service', 'widget', 'enum', 'data', 'other',
+              'style']
 # Design tokens and asset tables: real dependencies, but noise in a diagram.
 STYLE = re.compile(r'(TextStyle|Colors?|Theme|ThemeData|Assets?|Sizes?|Spacing|Paddings?|Radius'
                    r'|Radii|Insets|Fonts?|Icons|Strings|Styles?|Dimens|Durations?)$')
@@ -74,6 +75,15 @@ def role(name, by_name):
     # A `@Composable fun Foo(...)` is a Compose screen/widget, not a plain function.
     if decl['kind'] == 'composable function':
         return 'widget'
+    # React: function components, hooks, stores and contexts (TypeScript/JavaScript).
+    if decl['kind'] == 'component':
+        return 'page' if name.endswith(('Screen', 'Page')) else 'widget'
+    if decl['kind'] == 'hook':
+        return 'hook'
+    if decl['kind'] in ('store', 'context'):
+        return 'store'
+    if decl['kind'] in ('type', 'interface') and decl['file'].endswith(('.ts', '.tsx', '.js', '.jsx')):
+        return 'service' if name.endswith(ROLE_SUFFIXES[2][1]) else 'data'
     if decl['kind'] not in TYPE_KINDS:
         return 'other'
     parents = chain(name, by_name)
@@ -128,6 +138,8 @@ def describe(name, by_name):
              + (f' · with {", ".join(mixins)}' if mixins else '')
              + (f' · implements {", ".join(sorted(implemented))}' if implemented else '')]
     built_widgets = sorted(item for item in builds if role(item, by_name) in ('widget', 'page'))
+    # React: the hooks a component calls are what it uses, like a view-model.
+    uses |= {item for item in project(calls) if role(item, by_name) in ('hook', 'store')}
     if built_widgets:
         lines.append('  builds: ' + ', '.join(built_widgets))
     grouped = {}
@@ -151,7 +163,8 @@ def main():
         folder = os.path.relpath(os.path.realpath(os.path.join(root, names[1])), root)
         names = sorted({decl['name'] for found in by_name.values() for decl in found
                         if decl['file'].startswith(folder + os.sep)
-                        and decl['kind'] in TYPE_KINDS + ('enum', 'composable function')
+                        and decl['kind'] in TYPE_KINDS + ('enum', 'composable function', 'component', 'hook',
+                                                          'store', 'context')
                         and role(decl['name'], by_name) != 'state'})
     for name in names:
         print(describe(name, by_name) if name in by_name else f'{name}: not found')

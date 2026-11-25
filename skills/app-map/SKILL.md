@@ -2,13 +2,13 @@
 name: app-map
 description: >
   Builds and keeps current an "App map" of a mobile app repo (Flutter, native iOS, native
-  Android): Markdown UML pages per module, built into a clickable site where every class, member
+  Android, React Native): Markdown UML pages per module, built into a clickable site where every class, member
   and arrow opens its real source and widgets show a crop from the running app. Use when the user
   asks for an app map, architecture map, UML of the app, a visual tour of a codebase or
   onboarding docs, or to update the map after code changes ("update the app map", "is the map
   current").
 license: MIT
-compatibility: Flutter/Dart, native iOS (Swift/Objective-C) or native Android (Kotlin/Java) repos. Needs Python 3.9+ and git; Dart SDK recommended for Flutter; Chrome for verify; for screenshots, macOS + Xcode (Flutter, iOS) or the Android SDK (Android).
+compatibility: Flutter/Dart, native iOS (Swift/Objective-C), native Android (Kotlin/Java) or React Native (TypeScript/JavaScript) repos. Needs Python 3.9+ and git; Dart SDK recommended for Flutter; Chrome for verify; for screenshots, macOS + Xcode (Flutter, iOS) or the Android SDK (Android).
 ---
 
 # App map
@@ -39,6 +39,9 @@ tab or feature, cross-cutting areas a user notices (notifications, settings, sig
   by code size: a detail screen opened from one area belongs to that area's page.
 - Name each with the app's own word for it (tab label or route name), kebab-case.
 - A screen used by several modules lives on the page of the module that owns it.
+- React Native: the navigators (`createNativeStackNavigator`, `createBottomTabNavigator`…) and
+  their `<Stack.Screen>` entries, or Expo Router's `app/` folder (`(tabs)/` groups are the tabs),
+  are the route table.
 - Tell the user the list before writing pages.
 
 ### 2. Write each module

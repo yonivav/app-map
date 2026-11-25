@@ -41,6 +41,24 @@
   For a framework widget used as-is, name the real class and give it a stereotype that says
   what it is for: `class TextButton { <<Settings link>> }`.
 
+## React and React Native
+
+Function components, hooks, stores and contexts are the boxes; `facts` gives each one's kind,
+what it renders (`builds`, from its JSX) and the hooks and stores it uses.
+
+- Stereotypes: `<<screen>>` for a navigator screen, `<<component>>`, `<<hook>>`, `<<store>>`
+  (Redux slice, Zustand store, MobX class), `<<context>>` (a `createContext` and its Provider).
+- Members: a component's props that matter and its state (`count` from
+  `const [count, setCount] = useState`), and its handlers (`onPressFavorite()`); a hook's returned
+  values and functions; a store's fields and actions.
+- Logic: screen → hooks → stores and services, labelled with the call:
+  `ProfileScreen ..> useProfile : useProfile()`, `useProfile ..> ProfileStore : fetchProfile()`.
+- Screen composition is the JSX tree: `Screen *-- Card` for "renders", project components only
+  (leave out `View`, `Text`, `Pressable`, unless one carries meaning).
+- Styles (`const styles = StyleSheet.create`, Ignite's `$heading`) stay out of diagrams.
+- Name collisions are common (many `Header`s): name the one declared nearest the page's key files,
+  or rename the box with a stereotype that says which (`class Header { <<profile header>> }`).
+
 ## State machines
 
 `stateDiagram-v2` with the enum's values as states. Label each transition with its trigger and

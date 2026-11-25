@@ -22,7 +22,8 @@ MIN_SIDE = 12.0
 
 run_dir, out_dir = sys.argv[1], sys.argv[2]
 map_dir = sys.argv[3] if len(sys.argv) > 3 else None
-UI_STEREOTYPES = ('page', 'widget', 'modal', 'dialog', 'screen', 'view', 'cell', 'split view', 'sheet')
+UI_STEREOTYPES = ('page', 'widget', 'modal', 'dialog', 'screen', 'view', 'cell', 'split view', 'sheet',
+                  'component')
 line = re.compile(r'SHOT RECT (\S+) (\S+) (-?[\d.]+) (-?[\d.]+) ([\d.]+) ([\d.]+)(?: (\d))?')
 best = {}
 with open(os.path.join(run_dir, 'drive.log'), errors='replace') as log:
