@@ -45,6 +45,7 @@ it, and a picture of how that screen looks in the app. For **Flutter, iOS and An
 | Now in Android — Google's Compose showcase app (~29k lines, Apache-2.0) | Android · Kotlin | [▶ Now in Android](https://yonivav.github.io/app-map/examples/now-in-android/) |
 | Wikipedia for iOS — the Wikimedia Foundation's official app (~209k lines, MIT) | iOS · Swift, Objective-C | [▶ Wikipedia iOS](https://yonivav.github.io/app-map/examples/wikipedia-ios/) |
 | Flutter Gallery — the Flutter team's gallery of Material and Cupertino components and six app studies (~32k lines, BSD-3-Clause) | Flutter | [▶ Flutter Gallery](https://yonivav.github.io/app-map/examples/flutter-gallery/) |
+| Wikipedia for Android — the Wikimedia Foundation's official app (~124k lines, Apache-2.0) | Android · Kotlin | [▶ Wikipedia Android](https://yonivav.github.io/app-map/examples/wikipedia-android/) |
 
 ![The Wonderous App Map: one card per module, with a screenshot of each](docs/overview.jpg)
 
@@ -236,10 +237,14 @@ The examples map these open-source apps, none affiliated with or endorsing this 
   Apache-2.0 license; see `examples/now-in-android/LICENSE-now-in-android`.
 - [Wikipedia for iOS](https://github.com/wikimedia/wikipedia-ios) by the Wikimedia Foundation and contributors
   (MIT). Source excerpts and screenshots in `examples/wikipedia-ios/` are © Wikimedia Foundation et al. under
-  the MIT license; see `examples/wikipedia-ios/LICENSE-wikipedia-ios`.
+  the MIT license; see `examples/wikipedia-ios/LICENSE-wikipedia-ios`. Article text and images in the
+  screenshots come from Wikipedia under CC BY-SA 4.0 and their own licenses.
 - [Flutter Gallery](https://github.com/flutter/gallery) by the Flutter team (BSD-3-Clause). Source
   excerpts and screenshots in `examples/flutter-gallery/` are © The Flutter team under the BSD 3-Clause
-  license; see `examples/flutter-gallery/LICENSE-flutter-gallery`. Article text and images in the
-  screenshots come from Wikipedia under CC BY-SA 4.0 and their own licenses.
+  license; see `examples/flutter-gallery/LICENSE-flutter-gallery`.
+- [Wikipedia for Android](https://github.com/wikimedia/apps-android-wikipedia) by the Wikimedia Foundation and
+  contributors (Apache-2.0). Source excerpts and screenshots in `examples/wikipedia-android/` are © the
+  Wikimedia Foundation under the Apache-2.0 license; see `examples/wikipedia-android/LICENSE-wikipedia-android`.
+  Article text and images in the screenshots come from Wikipedia under CC BY-SA 4.0 and their own licenses.
 
 MIT © 2026 Yoni Vizel

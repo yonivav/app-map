@@ -1,0 +1,18 @@
+{
+  "repo": "wikipedia-android-src",
+  "sourceUrl": "https://github.com/wikimedia/apps-android-wikipedia/blob/a94b2dd658c6a6bdc7f131c5bf5fa97ba9ae6bfd",
+  "noCrop": [
+    "DayHeader",
+    "HomeTabBar",
+    "HomeToolbar",
+    "PageActionTabLayout",
+    "ReadingListPageRow",
+    "SavedTabBar",
+    "SearchResultPageItem",
+    "OnboardingScreen"
+  ],
+  "synced": {
+    "commit": "a94b2dd658c6a6bdc7f131c5bf5fa97ba9ae6bfd",
+    "date": "2026-11-26"
+  }
+}

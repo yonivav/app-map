@@ -57,6 +57,10 @@ jobs:
             src: flutter-gallery-src
             repo: https://github.com/flutter/gallery
             dart: true
+          - map: wikipedia-android
+            src: wikipedia-android-src
+            repo: https://github.com/wikimedia/apps-android-wikipedia
+            dart: false
     steps:
       - uses: actions/checkout@v4
       - name: The app the example maps, at the commit it was synced to

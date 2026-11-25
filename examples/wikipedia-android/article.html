@@ -1,0 +1,329 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Article Module</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one reading column of diagram plates, each with a short caption and a legend strip. */
+  :root {
+    --bg: #f6f4fb;
+    --surface: #ffffff;
+    --ink: #1c1a29;
+    --muted: #5d5a70;
+    --line: #dcd6ec;
+    --accent: #36169d;
+    --accent-soft: #ede8f6;
+    --upd: #7a4d00;
+    --upd-soft: #ffe2a8;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+      --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+      --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15131d; --surface: #1d1a28; --ink: #ece9f6; --muted: #a6a1bd;
+    --line: #34304a; --accent: #b9a6ff; --accent-soft: #2a2440;
+    --upd: #ffd88a; --upd-soft: #5a3b06; color-scheme: dark;
+  }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font-body);
+    font-size: 15px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 32px 64px;
+  }
+  /* Wide: diagrams use the screen; paragraphs stay at a readable measure (.cap, 70ch). */
+  main { max-width: 1880px; margin: 0 auto; display: grid; gap: 28px; }
+  header .sub, .find input { max-width: 70ch; }
+  header { display: grid; gap: 6px; }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 4vw, 40px); margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); margin: 0; }
+  .sub code, .cap code { font-family: var(--font-mono); font-size: 0.9em; color: var(--accent); }
+  section { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; min-width: 0; }
+  h2 { margin: 0; font-size: 18px; font-weight: 600; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  h2 span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+  .cap { margin: 0; color: var(--muted); max-width: 70ch; }
+  .diagram { overflow-x: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-height: 120px; }
+  .diagram .out { display: flex; justify-content: center; width: max-content; min-width: 100%; }
+  .diagram .out svg { max-width: none; height: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+  .legend li { display: flex; gap: 6px; align-items: center; }
+  .legend b { font-family: var(--font-mono); color: var(--ink); font-weight: 500; }
+  .tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--line); }
+  .tag.upd { background: var(--upd-soft); color: var(--upd); border-color: var(--upd); }
+  .updates { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+  .updates code { font-family: var(--font-mono); font-size: 0.9em; color: var(--ink); }
+  .err { color: var(--muted); font-family: var(--font-mono); font-size: 12px; white-space: pre-wrap; }
+  .shots { margin: 0; padding: 0 0 6px; list-style: none; display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; }
+  .shots li { flex: 0 0 180px; scroll-snap-align: start; display: grid; gap: 6px; align-content: start; }
+  .shots img { width: 180px; aspect-ratio: 375 / 812; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); display: block; }
+  .shots figcaption { color: var(--muted); font-size: 13px; }
+  .shots figure { margin: 0; display: grid; gap: 6px; }
+  .sub a { color: var(--accent); }
+</style>
+
+<main>
+  <header>
+    <h1>Article Module</h1>
+    <p class="sub"><a href="index.html">← App map</a> · The article reader — PageActivity and PageFragment around a WebView of Page Content Service HTML, with a JavaScript bridge, a back stack per tab and a bottom action bar.</p>
+  </header>
+  <section aria-labelledby="h-shots">
+    <h2 id="h-shots">Screenshots <span>scroll sideways · tap to enlarge</span></h2>
+    <ul class="shots">
+      <li><figure><a href="shots/article/01_article.jpg"><img src="shots/article/01_article.jpg" alt="The article in its WebView, with the bottom action bar" loading="lazy"></a><figcaption>The article in its WebView, with the bottom action bar</figcaption></figure></li>
+      <li><figure><a href="shots/article/02_scrolled.jpg"><img src="shots/article/02_scrolled.jpg" alt="Save: the article goes into a reading list" loading="lazy"></a><figcaption>Save: the article goes into a reading list</figcaption></figure></li>
+      <li><figure><a href="shots/article/03_year_in_review.jpg"><img src="shots/article/03_year_in_review.jpg" alt="A campaign modal can open over an article" loading="lazy"></a><figcaption>A campaign modal can open over an article</figcaption></figure></li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-what">
+    <h2 id="h-what">What it does</h2>
+    <p class="cap">Every article opens in <code>PageActivity</code>, which hosts <code>PageFragment</code> and keeps browser-like tabs (the toolbar shows their count). <code>PageFragment.loadPage()</code> pushes the title onto the current tab's back stack and hands it to <code>PageFragmentLoadState</code>, which fetches the page summary from the REST API (and its categories), points the <code>WebView</code> at the page's mobile-HTML through <code>CommunicationBridge.resetHtml()</code>, and upserts a <code>HistoryEntry</code> into Room. The page's JavaScript (the Page Content Service) talks back through the bridge as named messages — <code>setup</code>, <code>final_setup</code>, <code>link</code>, <code>reference</code>, <code>image</code>, <code>media</code>, <code>pronunciation</code>, <code>footer_item</code> and more; a link to another article goes through <code>LinkHandler</code> into <code>handleInternalLink()</code>, which opens talk and category pages in their own screens, scrolls to an anchor on the same page, and otherwise loads the new title onto the back stack. Back walks that stack before leaving the activity. A bottom <code>PageActionTabLayout</code> holds the most used actions (save, language, find in article, theme, contents, share by default) and the overflow has the rest — watchlist, talk page, edit history, new tab, categories, edit, view on map. Time spent reading is measured with an active timer that pauses in the background and is stored for the history entry (it feeds the Activity tab's reading time).</p>
+  </section>
+  <section aria-labelledby="h-classes">
+    <h2 id="h-classes">Logic <span>class diagram</span></h2>
+    <p class="cap">The fragment owns the bridge and the load state; the load state owns the network and history writes.</p>
+    <div class="diagram"><div class="out" data-src="src-classes"></div></div>
+    <ul class="legend">
+      <li><b>──▷</b> holds</li>
+      <li><b>◆──</b> contains</li>
+      <li><b>┄┄▷</b> uses</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-widgets">
+    <h2 id="h-widgets">Screen <span>view composition</span></h2>
+    <div class="diagram"><div class="out" data-src="src-widgets"></div></div>
+    <ul class="legend">
+      <li><b>◆──</b> contains</li>
+    </ul>
+  </section>
+  <section aria-labelledby="h-sequence">
+    <h2 id="h-sequence">Open an article and follow a link <span>sequence</span></h2>
+    <p class="cap">The summary comes over HTTP; the HTML is loaded by the WebView itself, and every tap comes back as a bridge message.</p>
+    <div class="diagram"><div class="out" data-src="src-sequence"></div></div>
+  </section>
+  <section aria-labelledby="h-files">
+    <h2 id="h-files">Key files</h2>
+    <ul class="updates">
+      <li><code>app/src/main/java/org/wikipedia/page/PageActivity.kt</code> · article activity, tabs, toolbar</li>
+      <li><code>app/src/main/java/org/wikipedia/page/PageFragment.kt</code> · WebView, bridge listeners, links, timers</li>
+      <li><code>app/src/main/java/org/wikipedia/page/PageFragmentLoadState.kt</code> · loading and the back stack</li>
+      <li><code>app/src/main/java/org/wikipedia/bridge/</code> · JavaScript bridge and actions</li>
+      <li><code>app/src/main/java/org/wikipedia/page/action/</code> · bottom action bar items</li>
+      <li><code>app/src/main/java/org/wikipedia/page/tabs/</code> · article tabs</li>
+      <li><code>app/src/main/java/org/wikipedia/page/references/</code> · reference bottom sheets</li>
+    </ul>
+  </section>
+</main>
+
+<script type="text/plain" id="src-classes">
+classDiagram
+  direction LR
+  class PageActivity {
+    <<activity>>
+    loadPage()
+  }
+  class PageFragment {
+    <<page>>
+    bridge · linkHandler
+    loadPage()
+    handleInternalLink()
+    onBackPressed()
+    addTimeSpentReading()
+  }
+  class PageFragmentLoadState {
+    <<loader>>
+    load()
+    goBack() · goForward()
+    pageLoad()
+  }
+  class PageViewModel {
+    <<model>>
+    page · title · curEntry
+    readingListPage · isWatched
+  }
+  class CommunicationBridge {
+    <<JavaScript bridge>>
+    resetHtml()
+    addListener()
+    execute()
+    evaluate()
+  }
+  class LinkHandler {
+    <<handler>>
+    onInternalLinkClicked()
+    onPageLinkClicked()
+  }
+  class Tab {
+    <<data>>
+    backStack · backStackPosition
+  }
+  class HistoryEntry {
+    <<entity>>
+    title · source · timestamp
+  }
+  class PageActionItem {
+    <<enum>>
+    SAVE · LANGUAGE · FIND_IN_ARTICLE · THEME
+    CONTENTS · SHARE · EDIT_ARTICLE · VIEW_ON_MAP
+  }
+  PageActivity *-- PageFragment
+  PageFragment --> PageFragmentLoadState
+  PageFragment --> PageViewModel : model
+  PageFragment --> CommunicationBridge : bridge
+  PageFragment --> LinkHandler : linkHandler
+  CommunicationBridge ..> LinkHandler : link messages
+  PageFragmentLoadState --> Tab : current tab
+  PageFragmentLoadState ..> CommunicationBridge : resetHtml()
+  PageFragmentLoadState ..> HistoryEntry : upsert into Room
+  PageFragment ..> PageActionItem : bottom bar and overflow
+</script>
+
+<script type="text/plain" id="src-widgets">
+classDiagram
+  direction TB
+  class PageActivity { <<activity>> }
+  class PageFragment { <<page>> }
+  class ObservableWebView { <<web view>> }
+  class PageActionTabLayout { <<bottom bar>> }
+  class ToCHandler { <<contents drawer>> }
+  class ReferenceDialog { <<bottom sheet>> }
+  class LinkPreviewDialog { <<bottom sheet>> }
+  PageActivity *-- PageFragment
+  PageFragment *-- ObservableWebView
+  PageActivity *-- PageActionTabLayout
+  PageFragment *-- ToCHandler
+  PageFragment *-- ReferenceDialog : tap a reference
+  PageActivity *-- LinkPreviewDialog : long-press or preview a link
+</script>
+
+<script type="text/plain" id="src-sequence">
+sequenceDiagram
+  actor User
+  participant Page as PageFragment
+  participant Load as PageFragmentLoadState
+  participant Bridge as CommunicationBridge
+  participant Lnk as LinkHandler
+  User->>Page: open an article
+  Page->>Page: loadPage(), pushes it on the back stack
+  Page->>Load: load()
+  Load->>Load: pageLoad(), REST summary and categories
+  Load->>Bridge: resetHtml()
+  Load->>Load: upserts the HistoryEntry
+  Bridge-->>Page: setup, final_setup
+  User->>Bridge: tap a blue link
+  Bridge-->>Lnk: link message
+  Lnk->>Lnk: onInternalLinkClicked()
+  Lnk->>Page: hands over the title
+  Page->>Page: handleInternalLink(), loads the next article
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="code/article.js"></script>
+<script>
+  (function () {
+    const css = () => getComputedStyle(document.documentElement);
+    const token = (name) => css().getPropertyValue(name).trim();
+    let run = 0;
+
+    // Mermaid sometimes puts an arrow's label on top of a box: move each such label up or
+    // down, a label's height at a time, to the nearest spot clear of every box.
+    function freeLabels(svg) {
+      const boxes = Array.from(svg.querySelectorAll('g.node')).map((node) => node.getBoundingClientRect());
+      const hits = (rect) => boxes.some((box) =>
+        rect.left < box.right && rect.right > box.left && rect.top < box.bottom && rect.bottom > box.top);
+      for (const label of svg.querySelectorAll('g.edgeLabel')) {
+        const rect = label.getBoundingClientRect();
+        if (!rect.width || !hits(rect)) continue;
+        const scale = (label.getScreenCTM() || { a: 1 }).a || 1;
+        for (const step of [-1, 1, -2, 2, -3, 3]) {
+          const dy = step * (rect.height + 4);
+          const moved = { left: rect.left, right: rect.right, top: rect.top + dy, bottom: rect.bottom + dy };
+          if (!hits(moved)) {
+            label.setAttribute('transform', (label.getAttribute('transform') || '') + ' translate(0,' + (dy / scale) + ')');
+            break;
+          }
+        }
+      }
+    }
+
+    async function renderAll() {
+      const pass = ++run;
+      const updatedStyle =
+        'fill:' + token('--upd-soft') + ',stroke:' + token('--upd') + ',color:' + token('--upd') + ',stroke-width:2px';
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: 'base',
+        fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+        themeVariables: {
+          edgeLabelBackground: token('--surface'),
+          background: token('--bg'),
+          primaryColor: token('--accent-soft'),
+          primaryTextColor: token('--ink'),
+          primaryBorderColor: token('--accent'),
+          secondaryColor: token('--surface'),
+          tertiaryColor: token('--surface'),
+          lineColor: token('--muted'),
+          textColor: token('--ink'),
+          noteBkgColor: token('--upd-soft'),
+          noteTextColor: token('--upd'),
+          noteBorderColor: token('--upd'),
+          actorBkg: token('--accent-soft'),
+          actorBorder: token('--accent'),
+          actorTextColor: token('--ink'),
+          signalColor: token('--ink'),
+          signalTextColor: token('--ink'),
+          labelBoxBkgColor: token('--surface'),
+          labelTextColor: token('--ink'),
+          loopTextColor: token('--ink'),
+          fontSize: '14px'
+        }
+      });
+      const outs = document.querySelectorAll('.diagram .out');
+      for (let index = 0; index < outs.length; index++) {
+        const out = outs[index];
+        const source = document.getElementById(out.dataset.src).textContent
+          .replace(/UPDATED/g, updatedStyle);
+        try {
+          const result = await mermaid.render('uml-' + pass + '-' + index, source);
+          if (pass !== run) return;
+          out.innerHTML = result.svg;
+          // Keep the diagram's own size: a wide one scrolls sideways instead of shrinking.
+          const svg = out.querySelector('svg');
+          const box = svg && svg.viewBox && svg.viewBox.baseVal;
+          // Arrow labels go on top: Mermaid draws them before the boxes, so a box that
+          // overlaps a label would hide it.
+          if (svg) svg.querySelectorAll('g.edgeLabels').forEach((labels) => labels.parentNode.appendChild(labels));
+          if (box && box.width) {
+            // Shrink a wide diagram to fit, but never below 85% of its size (text stays
+            // readable): past that it scrolls sideways instead, starting at its middle.
+            const room = out.parentElement.clientWidth - 24;
+            const width = box.width <= room ? box.width : Math.max(room, box.width * 0.85);
+            svg.style.width = Math.round(width) + 'px';
+            svg.style.maxWidth = 'none';
+            svg.removeAttribute('width');
+            const frame = out.parentElement;
+            frame.scrollLeft = (frame.scrollWidth - frame.clientWidth) / 2;
+          }
+          if (svg) freeLabels(svg);
+        } catch (error) {
+          out.innerHTML = '<p class="err">Diagram failed to render: ' + String(error && error.message || error) + '</p>';
+        }
+      }
+    }
+
+    renderAll();
+    try {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderAll);
+      new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    } catch (error) { /* theme changes then keep the first render */ }
+  })();
+</script>
+<script src="code-popup.js"></script>
