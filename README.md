@@ -13,9 +13,11 @@ it, and a picture of how that screen looks in the app. For **Flutter, iOS and An
 > **1. Install it once.** In Claude Code, one line: `/plugin marketplace add yonivav/app-map`. Any other agent, in a terminal inside your app's folder:
 >
 > ```bash
-> git clone https://github.com/yonivav/app-map ~/.app-map
-> ~/.app-map/install.sh --auto
+> brew install yonivav/app-map/app-map
+> app-map install --auto
 > ```
+>
+> Without Homebrew: `git clone https://github.com/yonivav/app-map ~/.app-map && ~/.app-map/install.sh --auto`.
 >
 > **2. Ask your AI assistant:** *"Build an app map of this repo"*
 >
@@ -85,6 +87,10 @@ App Map is an [Agent Skill](https://agentskills.io): a `SKILL.md` with scripts, 
 format that most coding agents now read.
 
 ```bash
+brew install yonivav/app-map/app-map          # `app-map install` = install.sh below; other commands = the CLI
+cd your-app && app-map install --auto
+
+# or without Homebrew:
 git clone https://github.com/yonivav/app-map ~/.app-map
 cd your-app && ~/.app-map/install.sh          # into this repo (commit it to share with your team)
 ~/.app-map/install.sh --auto                  # …and keep the map current by itself (above)
