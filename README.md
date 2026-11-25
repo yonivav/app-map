@@ -38,7 +38,7 @@ it, and a picture of how that screen looks in the app. For **Flutter, iOS and An
 
 ![Demo: click a module, a widget's popup shows how it looks and its exact code; "Appears in" links to every diagram that draws a class; an arrow opens the method it calls; search finds any class or file](docs/demo.gif)
 
-▶ [Watch the 39-second video](https://yonivav.github.io/app-map/docs/demo.mp4)
+▶ [See it work: click a box, land on the real code (39 s)](https://yonivav.github.io/app-map/docs/demo.mp4)
 
 **Live examples**, each mapped by this skill from a real open-source app (if one saved you time, a ⭐ helps others find the project):
 
