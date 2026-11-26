@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- **React Native** (TypeScript/JavaScript, bare or Expo). The indexer reads function and class
+  components, hooks, stores (Redux, Zustand, MobX) and contexts, with their props, state and
+  handlers; `facts` shows what each component renders (from its JSX) and the hooks it calls.
+  Module hints follow React Navigation's navigators or Expo Router's `app/` folder.
+- **React Native screenshots** on Android and iOS: a dev-only helper inside the app measures each
+  component the map draws from React's own tree and hands the rects to the native driver through
+  a host relay; inactive tabs and screens under the top of a stack count as hidden.
+  `app-map shots react-native android|ios <app> <map> <scenario> <out>`.
+- A component's native file wins over its `.web` variant when names collide.
+
 ## 0.5.0 — 2026-11-26
 
 - **Homebrew:** `brew install yonivav/app-map/app-map`, then `app-map install --auto` in your app.
