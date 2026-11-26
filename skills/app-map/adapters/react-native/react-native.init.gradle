@@ -1,0 +1,17 @@
+// Used by the React Native adapter, for this one build only: the libraries the Android driver
+// (AppMapShots.kt, the scenario) needs, which a React Native app doesn't have. The project's
+// build files aren't touched.
+gradle.lifecycle.beforeProject { project ->
+    project.pluginManager.withPlugin('com.android.application') {
+        project.dependencies {
+            androidTestImplementation 'androidx.test:runner:1.6.2'
+            androidTestImplementation 'androidx.test:rules:1.6.1'
+            androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+            androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.3.0'
+            androidTestImplementation 'junit:junit:4.13.2'
+            // AppMapShots reads Compose's inspector data too; a React Native app has no Compose.
+            androidTestImplementation 'androidx.compose.ui:ui:1.7.8'
+            androidTestImplementation 'androidx.compose.ui:ui-tooling-data:1.7.8'
+        }
+    }
+}

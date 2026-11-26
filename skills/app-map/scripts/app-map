@@ -11,6 +11,7 @@
 #   app-map shots <app> <scenario> <out>     run a Flutter screenshot scenario
 #   app-map shots ios --bundle <id> --map <map> [--app <.app>] <Scenario.swift> <out>
 #   app-map shots android <app module> <Scenario.kt> <out> [--variant Debug]
+#   app-map shots react-native android <app dir> <map> <Scenario.kt> <out>
 #   app-map crop <shots dir> <map>           one picture per page/widget, then rebuild
 #   app-map compare <expected> <actual>      structural diff of two maps
 #
@@ -77,6 +78,7 @@ case "$cmd" in
     case "${1:-}" in
       ios) shift; "$py" "$here/../adapters/ios/run_shots.py" "$@" ;;
       android) shift; "$here/../adapters/android/run_shots.sh" "$@" ;;
+      react-native) shift; "$here/../adapters/react-native/run_shots.sh" "$@" ;;
       flutter) shift; "$here/../adapters/flutter/run_shots.sh" "$@" ;;
       *) "$here/../adapters/flutter/run_shots.sh" "$@" ;;
     esac ;;

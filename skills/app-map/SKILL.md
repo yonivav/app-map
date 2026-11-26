@@ -98,7 +98,7 @@ check every number in the text against its constant in the code.
 Take them whenever Xcode (Flutter, iOS) or the Android SDK (Android) is installed: no simulator
 needs to be running, the scenario creates and boots its own. Follow the platform's guide:
 [Flutter](reference/screenshots-flutter.md), [iOS](reference/screenshots-ios.md),
-[Android](reference/screenshots-android.md). Pick module screenshots into
+[Android](reference/screenshots-android.md), [React Native](reference/screenshots-react-native.md). Pick module screenshots into
 `<map>/shots/<module>/`, then `app-map crop` cuts a picture for every page and widget. Visit
 every screen the diagrams name, and show states before changing them (an empty list before
 adding to it). `crop` ends with **no picture yet for …**: add steps for those; leave out only

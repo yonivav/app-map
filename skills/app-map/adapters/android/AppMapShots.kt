@@ -99,6 +99,52 @@ class AppMapShots(classes: Collection<String>) {
             val hits = if (index in hidden) 0 else 5
             log("SHOT RECT $name $type ${dp(rect.left)} ${dp(rect.top)} ${dp(rect.width())} ${dp(rect.height())} $hits")
         }
+        reactNativeRects(name).forEach { log(it) }
+    }
+
+    /** React Native: the app's JS helper measures the map's components, through the host relay. */
+    private fun reactNativeRects(name: String): List<String> {
+        val relay = InstrumentationRegistry.getArguments().getString("appMapRelay") ?: return emptyList()
+        // The helper measures with measureInWindow, which on Android leaves out the status bar (and
+        // is relative to React Native's root view): shift by both to get screen coordinates.
+        var origin = Rect()
+        var statusBar = 0
+        instrumentation.runOnMainSync {
+            fun find(view: View): View? {
+                var type: Class<*>? = view.javaClass
+                while (type != null) {
+                    if (type.simpleName in setOf("ReactSurfaceView", "ReactRootView")) return view
+                    type = type.superclass
+                }
+                if (view is ViewGroup) for (index in 0 until view.childCount) find(view.getChildAt(index))?.let { return it }
+                return null
+            }
+            rootViews().firstNotNullOfOrNull { find(it) }?.let { root ->
+                origin = root.screenRect()
+                val insets = root.rootWindowInsets
+                if (insets != null) statusBar = if (Build.VERSION.SDK_INT >= 30)
+                    insets.getInsets(android.view.WindowInsets.Type.statusBars()).top
+                else @Suppress("DEPRECATION") insets.systemWindowInsetTop
+            }
+        }
+        val dx = origin.left / density
+        val dy = (origin.top + statusBar) / density
+        return try {
+            val connection = java.net.URL("$relay/snap?id=" + java.net.URLEncoder.encode(name, "UTF-8"))
+                .openConnection() as java.net.HttpURLConnection
+            connection.connectTimeout = 3_000
+            connection.readTimeout = 20_000
+            if (connection.responseCode != 200) emptyList()
+            else connection.inputStream.bufferedReader().readLines().filter { it.startsWith("SHOT RECT ") }.map { line ->
+                val parts = line.split(" ").toMutableList()  // SHOT RECT <id> <type> <x> <y> <w> <h> <hits>
+                parts[4] = "%.1f".format(parts[4].toFloat() + dx)
+                parts[5] = "%.1f".format(parts[5].toFloat() + dy)
+                parts.joinToString(" ")
+            }
+        } catch (error: Exception) {
+            log("SHOT RELAY FAILED $name: ${error.message}")
+            emptyList()
+        }
     }
 
     /** The last line of the scenario: what ran and what didn't. */

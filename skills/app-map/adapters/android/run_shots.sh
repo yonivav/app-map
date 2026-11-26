@@ -2,6 +2,7 @@
 # Runs an App map screenshot scenario on an Android emulator of its own.
 #
 #   run_shots.sh <app module dir> <Scenario.kt> <out dir> [--variant Debug] [--minutes 20] [--real-app]
+#                [--relay http://localhost:8765]
 #
 # <app module dir> is the Gradle module of the app (e.g. app/). The scenario is an
 # instrumented test in package `appmap` (see example_scenario.kt); it and AppMapShots.kt are
@@ -15,12 +16,13 @@ set -euo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
 module="$(cd "${1:?app module dir}" && pwd)"; scenario="$(cd "$(dirname "${2:?scenario}")" && pwd)/$(basename "$2")"
 out="${3:?out dir}"; shift 3
-variant=Debug minutes=20 real_app=no
+variant=Debug minutes=20 real_app=no relay=
 while [ $# -gt 0 ]; do
   case "$1" in
     --variant) variant="$2"; shift ;;
     --minutes) minutes="$2"; shift ;;
     --real-app) real_app=yes ;;
+    --relay) relay="$2"; shift ;;  # React Native: the host relay (adapters/react-native)
     *) echo "unknown option: $1" >&2; exit 2 ;;
   esac
   shift
@@ -84,6 +86,8 @@ if [ "$real_app" = yes ]; then
   cp "$here/AppMapRunner.kt" "$dest/AppMapRunner.kt"
   init=(-I "$here/app-map.init.gradle")
 fi
+# The React Native adapter adds the test libraries a React Native app lacks.
+[ -n "${APP_MAP_EXTRA_INIT:-}" ] && init+=(-I "$APP_MAP_EXTRA_INIT")
 (cd "$root" && ./gradlew -q ${init[@]+"${init[@]}"} "$gradle_path:assemble$variant" "$gradle_path:assemble${variant}AndroidTest")
 outputs="$module/build/outputs/apk"
 suffix="$(python3 -c 'import re,sys; print(re.sub(r"(?<!^)([A-Z])", r"-\1", sys.argv[1]).lower())' "$variant")"
@@ -98,7 +102,12 @@ if [ "$real_app" = yes ]; then runner="$test_id/appmap.AppMapRunner"
 else runner="$("$adb" shell pm list instrumentation | tr -d '\r' | grep "^instrumentation:$test_id/" | sed 's/^instrumentation:\([^ ]*\) .*/\1/' | head -1)"; fi
 "$adb" shell pm clear "$app_id" >/dev/null
 echo "running the scenario on $serial ($app_id)…"
-"$adb" shell am instrument -w -e class appmap.AppMapScenario "$runner" >"$out.instrument.log" 2>&1 &
+relay_args=()
+if [ -n "$relay" ]; then
+  "$adb" reverse tcp:8081 tcp:8081 >/dev/null; "$adb" reverse tcp:8765 tcp:8765 >/dev/null
+  relay_args=(-e appMapRelay "$relay")
+fi
+"$adb" shell am instrument -w -e class appmap.AppMapScenario ${relay_args[@]+"${relay_args[@]}"} "$runner" >"$out.instrument.log" 2>&1 &
 pid=$!
 for _ in $(seq $((minutes * 30))); do kill -0 "$pid" 2>/dev/null || break; sleep 2; done
 kill "$pid" 2>/dev/null || true
