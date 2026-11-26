@@ -105,8 +105,9 @@ class AppMapShots(classes: Collection<String>) {
     /** React Native: the app's JS helper measures the map's components, through the host relay. */
     private fun reactNativeRects(name: String): List<String> {
         val relay = InstrumentationRegistry.getArguments().getString("appMapRelay") ?: return emptyList()
-        // The helper measures with measureInWindow, which on Android leaves out the status bar (and
-        // is relative to React Native's root view): shift by both to get screen coordinates.
+        // The helper measures with measureInWindow, whose origin depends on the app: it leaves out the
+        // status bar unless the app draws edge to edge. So calibrate: the largest component (the app's
+        // root) sits where React Native's root view sits on screen; shift every rect by the difference.
         var origin = Rect()
         var statusBar = 0
         instrumentation.runOnMainSync {
@@ -127,16 +128,19 @@ class AppMapShots(classes: Collection<String>) {
                 else @Suppress("DEPRECATION") insets.systemWindowInsetTop
             }
         }
-        val dx = origin.left / density
-        val dy = (origin.top + statusBar) / density
         return try {
             val connection = java.net.URL("$relay/snap?id=" + java.net.URLEncoder.encode(name, "UTF-8"))
                 .openConnection() as java.net.HttpURLConnection
             connection.connectTimeout = 3_000
             connection.readTimeout = 20_000
-            if (connection.responseCode != 200) emptyList()
-            else connection.inputStream.bufferedReader().readLines().filter { it.startsWith("SHOT RECT ") }.map { line ->
-                val parts = line.split(" ").toMutableList()  // SHOT RECT <id> <type> <x> <y> <w> <h> <hits>
+            if (connection.responseCode != 200) return emptyList()
+            // SHOT RECT <id> <type> <x> <y> <w> <h> <hits>
+            val rows = connection.inputStream.bufferedReader().readLines().filter { it.startsWith("SHOT RECT ") }
+                .map { it.split(" ").toMutableList() }
+            val root = rows.maxByOrNull { it[6].toFloat() * it[7].toFloat() }
+            val dx = origin.left / density - (root?.get(4)?.toFloat() ?: 0f)
+            val dy = if (root != null) origin.top / density - root[5].toFloat() else (origin.top + statusBar) / density
+            rows.map { parts ->
                 parts[4] = "%.1f".format(parts[4].toFloat() + dx)
                 parts[5] = "%.1f".format(parts[5].toFloat() + dy)
                 parts.joinToString(" ")

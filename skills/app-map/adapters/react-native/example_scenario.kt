@@ -28,9 +28,16 @@ class AppMapScenario {
 
     /** An Expo development build opens its launcher and, the first time, its developer menu. */
     private fun openExpoDevBuild(firstScreenText: String) {
-        device.wait(Until.findObject(By.textContains(":8081")), 30_000)?.click()
-        for (attempt in 0 until 3) {
-            if (device.wait(Until.hasObject(By.text(firstScreenText)), 60_000)) break
+        val listed = device.wait(Until.findObject(By.textContains(":8081")), 20_000)
+        if (listed != null) listed.click()
+        else device.findObject(By.clazz("android.widget.EditText"))?.let { field ->
+            // Not discovered: type Metro's address (reachable through adb reverse) and connect.
+            field.text = "http://localhost:8081"
+            device.findObject(By.text("Connect"))?.click()
+        }
+        for (attempt in 0 until 5) {
+            // A large app's first bundle can take minutes to build.
+            if (device.wait(Until.hasObject(By.text(firstScreenText)), 90_000)) break
             device.findObject(By.text("Continue"))?.click()
         }
         if (device.hasObject(By.text("Reload")) && device.hasObject(By.text("Go home"))) {

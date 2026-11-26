@@ -7,6 +7,7 @@ skills/app-map/scripts/dart_declarations/pubspec.lock
 examples/wonderous/wonderous-src
 examples/netnewswire/netnewswire-src
 examples/now-in-android/now-in-android-src
+examples/bluesky/bluesky-src
 examples/wikipedia-android/wikipedia-android-src
 examples/flutter-gallery/flutter-gallery-src
 examples/wikipedia-ios/wikipedia-ios-src

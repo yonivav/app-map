@@ -1,0 +1,5 @@
+{
+  "repo": "bluesky-src",
+  "sourceUrl": "https://github.com/bluesky-social/social-app/blob/f7399a645c08dcf5d15f8cac64417ac73fe6ddf9",
+  "exclude": ["bskyembed", "bskylink", "bskyogcard", "bskyweb", "modules", "scripts", "dev-env", "lint-rules", "plugins", "patches", "jest", "__e2e__", "__tests__", "__mocks__"]
+}
