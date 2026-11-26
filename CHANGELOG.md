@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 — 2026-11-26
 
 - **React Native** (TypeScript/JavaScript, bare or Expo). The indexer reads function and class
   components, hooks, stores (Redux, Zustand, MobX) and contexts, with their props, state and
@@ -11,6 +11,8 @@
   a host relay; inactive tabs and screens under the top of a stack count as hidden.
   `app-map shots react-native android|ios <app> <map> <scenario> <out>`.
 - A component's native file wins over its `.web` variant when names collide.
+- **Seventh live example:** Bluesky (React Native and Expo, ~323k lines), with screenshots of its
+  signed-out screens from the Android emulator.
 
 ## 0.5.0 — 2026-11-26
 
