@@ -115,6 +115,18 @@ def dump_views(pid):
     return [line for line in result.stdout.splitlines() if line.startswith(('W ', 'V '))]
 
 
+def relay_rects(relay, name):
+    """React Native: the components' rects, measured by the app's JS helper (points, on iOS)."""
+    import urllib.parse
+    import urllib.request
+    try:
+        with urllib.request.urlopen(f'{relay}/snap?id={urllib.parse.quote(name)}', timeout=20) as response:
+            return [line for line in response.read().decode().splitlines() if line.startswith('SHOT RECT ')]
+    except Exception as error:  # the relay or the app didn't answer: keep the native rects
+        print(f'  {name}: no React Native rects ({error})', flush=True)
+        return []
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('scenario')
@@ -123,6 +135,8 @@ def main():
     parser.add_argument('--map', required=True)
     parser.add_argument('--app')
     parser.add_argument('--minutes', type=float, default=20)
+    # React Native: the host relay (adapters/react-native) that asks the app for its components' rects.
+    parser.add_argument('--relay')
     args = parser.parse_args()
     out = os.path.abspath(args.out)
     shutil.rmtree(out, ignore_errors=True)
@@ -181,6 +195,8 @@ def main():
                     raw, left, top, width, height, hits = parts[1:7]
                     for type_name in dict.fromkeys(name for name in type_names(raw) if name in classes):
                         lines.append(f'SHOT RECT {name} {type_name} {left} {top} {width} {height} {hits}')
+            if args.relay:
+                lines += relay_rects(args.relay, name)
             lines.append(f'SHOT TAKEN {name} ({len(views)} views)')
             print(f'  {name}: {len(views)} views', flush=True)
             open(os.path.join(requests, name + '.done'), 'w').close()

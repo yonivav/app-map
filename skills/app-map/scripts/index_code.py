@@ -261,7 +261,9 @@ def load_declarations(root):
     # iOS/Mac target's same-named class) would otherwise order however the filesystem happened
     # to walk them, which differs by OS and made the committed output non-reproducible.
     for found in by_name.values():
-        found.sort(key=lambda decl: (decl['file'].count('example'), len(decl['file']), decl['file']))
+        # React Native: `Foo.web.tsx` is the website's variant of `Foo.tsx`; the app's comes first.
+        found.sort(key=lambda decl: (decl['file'].count('example'), '.web.' in decl['file'],
+                                     len(decl['file']), decl['file']))
     merge_reopened(by_name)
     return by_name, parsed, len(cache.seen)
 

@@ -2,13 +2,15 @@
 # Runs an App map screenshot scenario on a React Native app (bare or Expo), in a debug build.
 #
 #   run_shots.sh android <app dir> <map dir> <Scenario.kt> <out dir> [--minutes 20]
+#   run_shots.sh ios <app dir> <map dir> <Scenario.swift> <out dir> [--minutes 20]
 #
 # 1. Copies appMapShots.js into the app and imports it first from the entry file (restored when
 #    the run ends; the copy is listed in .git/info/exclude).
 # 2. Starts the relay (relay.py) with the class names the map draws, and Metro.
-# 3. Runs the Android adapter on <app dir>/android/app with --relay: each snap takes the
-#    screenshot natively and gets the components' rects from the helper through the relay.
-# Expo apps without an android/ folder get one from `npx expo prebuild --platform android`.
+# 3. Runs the Android adapter on <app dir>/android/app, or builds the iOS app for the simulator and
+#    runs the iOS adapter, with --relay: each snap takes the screenshot natively and gets the
+#    components' rects from the helper through the relay.
+# Expo apps without an android/ or ios/ folder get one from `npx expo prebuild`.
 set -uo pipefail
 
 platform="${1:?usage: run_shots.sh android <app dir> <map dir> <Scenario.kt> <out dir>}"
@@ -18,7 +20,7 @@ scenario="$(cd "$(dirname "${4:?scenario}")" && pwd)/$(basename "$4")"
 out="${5:?out dir}"; shift 5
 here="$(cd "$(dirname "$0")" && pwd)"
 port=8765
-[ "$platform" = android ] || { echo "only android is supported so far" >&2; exit 2; }
+case "$platform" in android|ios) ;; *) echo "platform: android or ios" >&2; exit 2 ;; esac
 
 # The entry file: package.json "main", else index.js/ts/tsx.
 entry="$(cd "$app" && node -p "require('./package.json').main || ''" 2>/dev/null)"
@@ -60,9 +62,9 @@ logs="$out.react-native"; mkdir -p "$logs"
 python3 "$here/relay.py" "$map" --port "$port" >"$logs/relay.log" 2>&1 &
 relay_pid=$!
 
-if [ "$platform" = android ] && [ ! -d "$app/android" ]; then
-  echo "no android/ folder: npx expo prebuild --platform android…"
-  (cd "$app" && CI=1 npx expo prebuild --platform android --no-install >"$logs/prebuild.log" 2>&1) ||
+if [ ! -d "$app/$platform" ]; then
+  echo "no $platform/ folder: npx expo prebuild --platform $platform…"
+  (cd "$app" && CI=1 npx expo prebuild --platform "$platform" >"$logs/prebuild.log" 2>&1) ||
     { echo "prebuild failed, see $logs/prebuild.log" >&2; exit 1; }
 fi
 
@@ -76,9 +78,24 @@ metro_pid=$!
 for _ in $(seq 60); do curl -s localhost:8081/status 2>/dev/null | grep -q running && break; sleep 2; done
 echo "metro: $(curl -s localhost:8081/status)"
 
-APP_MAP_EXTRA_INIT="$here/react-native.init.gradle" \
-  "$here/../android/run_shots.sh" "$app/android/app" "$scenario" "$out" --real-app --relay "http://localhost:$port" "$@"
-status=$?
-cp "$logs"/*.log "$out"/ 2>/dev/null; rm -rf "$logs"
+if [ "$platform" = android ]; then
+  APP_MAP_EXTRA_INIT="$here/react-native.init.gradle" \
+    "$here/../android/run_shots.sh" "$app/android/app" "$scenario" "$out" --real-app --relay "http://localhost:$port" "$@"
+  status=$?
+else
+  # A Debug build for the simulator (it loads its JavaScript from Metro), then the iOS adapter.
+  workspace="$(ls -d "$app"/ios/*.xcworkspace | head -1)"
+  scheme="$(basename "$workspace" .xcworkspace)"
+  echo "building $scheme for the simulator…"
+  xcodebuild -workspace "$workspace" -scheme "$scheme" -configuration Debug -sdk iphonesimulator \
+    -derivedDataPath "$logs/build" CODE_SIGNING_ALLOWED=NO build >"$logs/xcodebuild.log" 2>&1 ||
+    { echo "build failed, see $logs/xcodebuild.log" >&2; exit 1; }
+  app_bundle="$(ls -d "$logs"/build/Build/Products/Debug-iphonesimulator/*.app | head -1)"
+  bundle_id="$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "$app_bundle/Info.plist")"
+  python3 "$here/../ios/run_shots.py" --bundle "$bundle_id" --map "$map" --app "$app_bundle" \
+    --relay "http://localhost:$port" "$scenario" "$out" "$@"
+  status=$?
+fi
+cp "$logs"/*.log "$out"/ 2>/dev/null; rm -rf "$logs"/*.log
 echo "relay: $(grep -c ' components$' "$out/relay.log") snap(s) answered by the app"
 exit $status
